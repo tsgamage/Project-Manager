@@ -7,7 +7,7 @@ const taskSchema = mongoose.Schema({
 });
 
 const projectSchema = mongoose.Schema({
-  title: { type: String, requred: true },
+  title: { type: String, required: true },
   description: { type: String, required: true },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },

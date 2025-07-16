@@ -1,18 +1,57 @@
-import express from "express";
+import express, {json} from "express";
 import dotenv from "dotenv";
-import { connectionDB } from "./config/db.js";
+import {connectionDB} from "./config/db.js";
 import Project from "./models/projects.model.js";
 
 const app = express();
+app.use(express.json())
 dotenv.config();
+
 const PORT = process.env.PORT || 3000;
 
-app.get("/", (req, res) => {
-  const projects = Project.find();
-  res.send("<center><h1>Hello Princess</h1></center>");
+app.get("/api/project", async (req, res) => {
+    try {
+        const project = await Project.find({});
+        console.log(project);
+        res.status(200).json({success: true, data: project});
+    } catch (e) {
+        console.log("cannot get project", e.message);
+        res.status(500).json({success: false, message: e.message});
+    }
+
 });
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("Server is running on port", PORT);
-  connectionDB();
+app.post("/api/project/new", (req, res) => {
+    const projectData = req.body;
+
+    if (
+        !projectData.title ||
+        !projectData.description ||
+        !projectData.startDate ||
+        !projectData.endDate ||
+        !projectData.status
+    ) {
+        return res
+            .status(400)
+            .json({success: false, message: "All fields are required"});
+    }
+
+    try {
+        const newProject = Project(projectData)
+        newProject.save()
+
+        return res.status(201).json({
+            success: true,
+            message: "Created project",
+            data: newProject
+        })
+    } catch {
+        return res.status(500).json({success: false, message: "Something went wrong"});
+    }
+
+});
+
+app.listen(PORT, "0.0.0.0", async () => {
+    console.log("Server is running on port", PORT);
+    await connectionDB();
 });
