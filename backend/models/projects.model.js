@@ -15,5 +15,5 @@ const projectSchema = mongoose.Schema({
   tasks: { type: [taskSchema], default: [] },
 });
 
-const Project = mongoose.model("Project", projectSchema);
+const Project = mongoose.model("project", projectSchema);
 export default Project;
