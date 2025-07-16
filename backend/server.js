@@ -44,7 +44,7 @@ app.get("/api/project/:projectID", async (req, res) => {
     }
 })
 
-app.post("/api/project/new", (req, res) => {
+app.post("/api/project/new", async (req, res) => {
     const projectData = req.body;
 
     if (
@@ -61,7 +61,7 @@ app.post("/api/project/new", (req, res) => {
 
     try {
         const newProject = Project(projectData)
-        newProject.save()
+        await newProject.save()
 
         return res.status(201).json({
             success: true,
@@ -73,6 +73,22 @@ app.post("/api/project/new", (req, res) => {
     }
 
 });
+
+app.put("/api/project/:projectID", async (req, res) => {
+    const {projectID} = req.params
+    const projectData = req.body;
+
+    if(!mongoose.Types.ObjectId.isValid(projectID)) {
+        return res.status(400).json({success: false, message: "Invalid projectID"});
+    }
+
+    try{
+        const updatedProject = await Project.findByIdAndUpdate(projectID, projectData, {new: true});
+        return res.status(200).json({success: true, data: updatedProject});
+    }catch (e) {
+        return res.status(500).json({success: false, message: e.message});
+    }
+})
 
 app.listen(PORT, "0.0.0.0", async () => {
     console.log("Server is running on port", PORT);
