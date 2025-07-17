@@ -5,7 +5,7 @@ export default function Sidebar({ isSidebarOpen, onClose }) {
     <aside
       className={`${
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-      } md:translate-x-0 fixed md:static inset-y-0 left-0 z-50 w-72 bg-stone-800 border-r border-stone-700 transition-transform duration-300 ease-in-out overflow-y-auto`}
+      } md:translate-x-0 fixed md:static inset-y-0 left-0 z-50 md:z-0 w-72 bg-stone-800 border-r border-stone-700 transition-transform duration-300 ease-in-out overflow-y-auto`}
     >
       <div className="p-4 md:p-6">
         <div className="flex justify-between items-center mb-6">

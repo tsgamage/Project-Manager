@@ -1,4 +1,9 @@
+import { useContext } from "react";
+import ProjectContext from "../../../store/project.context";
+
 export default function Memeber({ member }) {
+  const { removeMember } = useContext(ProjectContext);
+
   return (
     <div className="flex items-center justify-between bg-white dark:bg-stone-800 rounded-lg p-4 shadow-sm">
       <div className="flex items-center">
@@ -15,6 +20,7 @@ export default function Memeber({ member }) {
         </div>
       </div>
       <button
+        onClick={() => removeMember(member._id)}
         className="text-red-500 hover:text-red-700 dark:hover:text-red-400 p-1"
         title="Remove member"
       >

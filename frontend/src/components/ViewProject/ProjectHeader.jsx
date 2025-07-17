@@ -46,13 +46,13 @@ export default function ProjectHeader({ project }) {
 
         {/* Progress Bar */}
         <div className="mt-6">
-          <div className="flex justify-between text-sm text-stone-600 dark:text-stone-400 mb-2">
-            <span>Progress: {project.progress}%</span>
-            <span>
-              {new Date(project.startDate).toLocaleDateString()} -{" "}
-              {new Date(project.endDate).toLocaleDateString()}
-            </span>
-          </div>
+          <p className="text-sm text-stone-600 dark:text-stone-400 mb-5">
+            {new Date(project.startDate).toLocaleDateString()} -{" "}
+            {new Date(project.endDate).toLocaleDateString()}
+          </p>
+          <p className="text-sm text-stone-600 dark:text-stone-400 mb-2">
+            Progress: {project.progress}%
+          </p>
           <div className="w-full bg-stone-200 dark:bg-stone-700 rounded-full h-2.5">
             <div
               className={`h-2.5 rounded-full ${

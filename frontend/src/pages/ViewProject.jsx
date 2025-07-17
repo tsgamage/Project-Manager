@@ -2,14 +2,23 @@ import Project from "../components/ViewProject/Project";
 import Sidebar from "../components/ViewProject/SideBar";
 import FloatingSidebarToggle from "../components/ViewProject/FloatingSidebarToggle";
 import { useRouteLoaderData } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import ProjectContext from "../store/project.context";
 
 export default function ViewProjectPage() {
   const loaderData = useRouteLoaderData("project");
   const projectData = loaderData.data.projects;
 
-  const [project, setProject] = useState(projectData);
+  const { project, setProject } = useContext(ProjectContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    setProject(projectData);
+  }, [setProject, projectData]);
+
+  console.log(project);
+
+  console.log;
 
   function handleSideBarToggle() {
     setIsSidebarOpen((preValue) => !preValue);

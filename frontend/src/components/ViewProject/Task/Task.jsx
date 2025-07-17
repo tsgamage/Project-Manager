@@ -1,4 +1,9 @@
+import { useContext } from "react";
+import ProjectContext from "../../../store/project.context";
+
 export default function Task({ task }) {
+  const { removeTask } = useContext(ProjectContext);
+
   return (
     <li>
       <div className="flex items-center p-3 rounded-lg group hover:bg-stone-50 dark:hover:bg-stone-700/50">
@@ -18,6 +23,7 @@ export default function Task({ task }) {
           {task.taskName}
         </span>
         <button
+          onClick={() => removeTask(task._id)}
           className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 dark:hover:text-red-400 p-1 ml-2 transition-opacity"
           title="Delete task"
         >

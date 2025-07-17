@@ -5,6 +5,7 @@ import ViewProjectPage, { viewProjectLoader } from "./pages/ViewProject";
 import { projectsLoader } from "./pages/Home";
 import AddProjectPage from "./pages/AddProject";
 import EditProjectPage from "./pages/EditProject";
+import { ProjectContextProvider } from "./store/project.context";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -29,5 +30,9 @@ export default function App() {
     },
   ]);
 
-  return <RouterProvider router={router}></RouterProvider>;
+  return (
+    <ProjectContextProvider>
+      <RouterProvider router={router}></RouterProvider>
+    </ProjectContextProvider>
+  );
 }

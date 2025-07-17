@@ -6,8 +6,8 @@ import Search from "../components/Home/Search";
 
 export default function HomePage() {
   const loaderData = useRouteLoaderData("root");
+  const projectsData = loaderData.data;
 
-  let projectsData = loaderData.data;
   return (
     <div className="min-h-screen bg-theme-light dark:bg-theme-dark">
       <main className="container mx-auto px-4 py-8">
@@ -18,7 +18,7 @@ export default function HomePage() {
         {/* Projects Grid */}
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {projectsData.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <ProjectCard key={project._id} project={project} />
           ))}
         </div>
 
