@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import userIcon from "../assets/user.svg";
 // import login from "../assets/login.svg";
 // import logout from "../assets/logout.svg";
@@ -7,12 +8,15 @@ export default function Navbar() {
     console.log("I got Clicked");
   }
   return (
-    <main className="w-full flex items-center justify-center bg-stone-300">
+    <main className="w-full flex items-center justify-center bg-stone-900">
       <section className="container mx-5">
-        <nav className="w-full flex items-center justify-between h-14">
+        <nav className="w-full flex items-center justify-between h-24">
+          <Link to="/" className="hidden md:block text-xl lg:text-2xl font-bold text-stone-200">
+            Project Manager
+          </Link>
           <input
             type="text"
-            className="border-3 border-stone-400 w-2/3 h-10 p-3 rounded-4xl bg-[#f5f5f5] outline-none"
+            className="border-2 border-stone-700 w-2/3 h-10 p-3 rounded-4xl text-stone-200 bg-stone-700"
             placeholder="Search for projects (CTRL + K)"
           />
           <button
