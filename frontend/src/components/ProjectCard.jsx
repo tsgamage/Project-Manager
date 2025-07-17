@@ -26,8 +26,6 @@ export default function ProjectCard({ project }) {
   const timeDiff = Math.abs(end - today);
   const daysRemaining = Math.floor(timeDiff / (1000 * 3600 * 24));
 
-  console.log(daysRemaining);
-
   // Format date range
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
