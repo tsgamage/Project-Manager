@@ -1,39 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const dropdownRef = useRef(null);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  // Handle keyboard shortcuts
-  useEffect(() => {
-    function handleKeyDown(e) {
-      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
-        e.preventDefault();
-        document.getElementById("search-input").focus();
-      } else if (e.key === "Escape") {
-        setIsDropdownOpen(false);
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  //   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   const handleProfileClick = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -54,7 +24,7 @@ export default function Navbar() {
           </Link>
 
           {/* Search Bar */}
-          <div className="relative flex-1 max-w-2xl mx-6">
+          {/* <div className="relative flex-1 max-w-2xl mx-6">
             <div
               className={`flex items-center border-2 rounded-full overflow-hidden transition-all duration-300 ${
                 isSearchFocused
@@ -77,8 +47,6 @@ export default function Navbar() {
               <input
                 id="search-input"
                 type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={() => setIsSearchFocused(false)}
                 className="w-full h-12 px-4 py-2 text-stone-200 bg-transparent border-0 focus:ring-0 focus:outline-none"
@@ -88,7 +56,7 @@ export default function Navbar() {
                 Ctrl+K
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
@@ -112,7 +80,7 @@ export default function Navbar() {
             </button>
 
             {/* Profile Dropdown */}
-            <div className="relative" ref={dropdownRef}>
+            <div className="relative">
               <button
                 onClick={handleProfileClick}
                 className="flex items-center space-x-2 focus:outline-none group"
