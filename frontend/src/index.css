@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+@theme {
+    --color-theme-dark: var(--color-stone-900);
+    --color-theme-light: var(--color-stone-100);
+    --color-header-dark: var(--color-stone-200);
+    --color-header-light: var(--color-stone-700);
+    --color-para-dark: var(--color-stone-400);
+    --color-para-light: var(--color-stone-600);
+}
