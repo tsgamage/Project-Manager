@@ -1,6 +1,23 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
+
+// Array of 10 Tailwind background colors
+const MEMBER_COLORS = [
+  "bg-blue-500", // Blue
+  "bg-green-500", // Green
+  "bg-red-500", // Red
+  "bg-yellow-500", // Yellow
+  "bg-purple-500", // Purple
+  "bg-pink-500", // Pink
+  "bg-indigo-500", // Indigo
+  "bg-teal-500", // Teal
+  "bg-orange-500", // Orange
+  "bg-cyan-500", // Cyan
+];
 
 export default function AddProjectPage() {
+  const [memberColor, setMemberColor] = useState(MEMBER_COLORS[0]);
+
   return (
     <div className="min-h-screen bg-theme-light dark:bg-theme-dark">
       <main className="container mx-auto px-4 py-6 sm:py-8">
@@ -131,7 +148,9 @@ export default function AddProjectPage() {
                 {/* Existing Team Members */}
                 <div className="flex flex-wrap gap-3 sm:gap-4">
                   <div className="flex items-center bg-stone-100 dark:bg-stone-700 rounded-lg p-2 sm:p-3 w-full sm:w-auto">
-                    <div className="bg-blue-500 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-semibold">
+                    <div
+                      className={`${memberColor} w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-semibold`}
+                    >
                       AJ
                     </div>
                     <div className="ml-2 sm:ml-3 flex-1 min-w-0">
@@ -167,7 +186,7 @@ export default function AddProjectPage() {
                   <h4 className="text-base sm:text-lg font-medium text-stone-700 dark:text-stone-300 mb-2 sm:mb-3">
                     Add Team Member
                   </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 sm:gap-4">
                     <div className="sm:col-span-1">
                       <label
                         htmlFor="memberName"
@@ -195,6 +214,26 @@ export default function AddProjectPage() {
                         className="block w-full px-3 py-2 text-xs sm:text-sm border border-stone-300 dark:border-stone-700 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-200 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="Member role"
                       />
+                    </div>
+                    <div className="sm:col-span-1">
+                      <label
+                        htmlFor="memberColor"
+                        className="block text-xs sm:text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
+                      >
+                        Color
+                      </label>
+                      <select
+                        id="memberColor"
+                        className="block w-full px-3 py-2 text-xs sm:text-sm border border-stone-300 dark:border-stone-700 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        value={memberColor}
+                        onChange={(e) => setMemberColor(e.target.value)}
+                      >
+                        {MEMBER_COLORS.map((color) => (
+                          <option key={color} value={color}>
+                            {color.replace("bg-", "").replace("-500", "")}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                     <div className="sm:col-span-1 flex items-end">
                       <button

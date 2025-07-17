@@ -1,6 +1,12 @@
+import { Link, useRouteLoaderData } from "react-router-dom";
 import ProjectCard from "../components/ProjectCard";
 import { DUMMY_DATA } from "../util/dummyData";
 export default function HomePage() {
+  const loaderData = useRouteLoaderData("root");
+
+  let projectsData = loaderData.data;
+  projectsData = DUMMY_DATA;
+
   return (
     <div className="min-h-screen bg-theme-light dark:bg-theme-dark">
       <main className="container mx-auto px-4 py-8">
@@ -52,21 +58,23 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-wrap gap-4">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium flex items-center transition-colors">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mr-2"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              New Project
-            </button>
+            <Link to="/project/new">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium flex items-center transition-colors cursor-pointer">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                New Project
+              </button>
+            </Link>
           </div>
         </div>
 
@@ -146,13 +154,13 @@ export default function HomePage() {
 
         {/* Projects Grid */}
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {DUMMY_DATA.map((project) => (
+          {projectsData.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
         </div>
 
         {/* Empty State */}
-        {DUMMY_DATA.length === 0 && (
+        {projectsData.length === 0 && (
           <div className="text-center py-20">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -193,6 +201,7 @@ export default function HomePage() {
 
 export async function loader() {
   try {
+    console.log("I called");
     const response = await fetch("http://localhost:3000/api/project/");
 
     if (!response.ok) {
@@ -200,6 +209,7 @@ export async function loader() {
         status: 500,
       });
     }
+    console.log(`response: ${response}}`);
     return response;
   } catch (e) {
     return new Response(JSON.stringify({ message: e.message }), {

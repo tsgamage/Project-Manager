@@ -8,6 +8,7 @@ import AddProjectPage from "./pages/AddProject";
 export default function App() {
   const router = createBrowserRouter([
     {
+      id: "root",
       path: "/",
       element: <RootLayout />,
       loader: projectsLoader,
