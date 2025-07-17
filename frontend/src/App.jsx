@@ -3,6 +3,7 @@ import RootLayout from "./pages/Root";
 import HomePage from "./pages/Home";
 import ViewProjectPage from "./pages/ViewProject";
 import { loader as projectsLoader } from "./pages/Home";
+import AddProjectPage from "./pages/AddProject";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -15,7 +16,7 @@ export default function App() {
         {
           path: "project",
           children: [
-            { path: "new", element: <p>Helloooooo</p> },
+            { path: "new", element: <AddProjectPage /> },
             { path: "view/:projectID", element: <ViewProjectPage /> },
             { path: "edit/:projectID", element: <ViewProjectPage /> },
           ],
