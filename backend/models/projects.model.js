@@ -6,6 +6,12 @@ const taskSchema = mongoose.Schema({
   completed: { type: Boolean, required: true },
 });
 
+const teamMemberSchema = mongoose.Schema({
+  memberID: { type: String, required: true },
+  name: { type: String, required: true },
+  role: { type: String, required: true },
+});
+
 const projectSchema = mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
@@ -13,6 +19,7 @@ const projectSchema = mongoose.Schema({
   endDate: { type: Date, required: true },
   status: { type: String, required: true },
   tasks: { type: [taskSchema], default: [] },
+  team: { type: [teamMemberSchema], default: [] },
 });
 
 const Project = mongoose.model("project", projectSchema);
