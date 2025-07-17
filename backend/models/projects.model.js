@@ -10,6 +10,7 @@ const teamMemberSchema = mongoose.Schema({
   memberID: { type: String, required: true },
   name: { type: String, required: true },
   role: { type: String, required: true },
+  color: { type: String, required: true },
 });
 
 const projectSchema = mongoose.Schema({
