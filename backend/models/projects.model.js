@@ -1,13 +1,11 @@
 import mongoose from "mongoose";
 
 const taskSchema = mongoose.Schema({
-  taskID: { type: String, required: true },
   taskName: { type: String, required: true },
   completed: { type: Boolean, required: true },
 });
 
 const teamMemberSchema = mongoose.Schema({
-  memberID: { type: String, required: true },
   name: { type: String, required: true },
   role: { type: String, required: true },
   color: { type: String, required: true },
