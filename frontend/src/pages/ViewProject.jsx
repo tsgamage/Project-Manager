@@ -1,24 +1,25 @@
 import Project from "../components/ViewProject/Project";
 import Sidebar from "../components/ViewProject/SideBar";
 import FloatingSidebarToggle from "../components/ViewProject/FloatingSidebarToggle";
-import { useRouteLoaderData } from "react-router-dom";
+import { useParams, useRouteLoaderData } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import ProjectContext from "../store/project.context";
 
 export default function ViewProjectPage() {
   const loaderData = useRouteLoaderData("project");
-  const projectData = loaderData.data.projects;
+  const params = useParams();
 
-  const { project, setProject } = useContext(ProjectContext);
+  const { project, setProject, setSelectedProject } =
+    useContext(ProjectContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
+
+  const projectData = loaderData.data.projects;
 
   useEffect(() => {
     setProject(projectData);
-  }, [setProject, projectData]);
-
-  console.log(project);
-
-  console.log;
+    setSelectedProject(params.projectID);
+  }, []);
 
   function handleSideBarToggle() {
     setIsSidebarOpen((preValue) => !preValue);
@@ -26,6 +27,11 @@ export default function ViewProjectPage() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-theme-light dark:bg-theme-dark">
+      <AddMemberModal
+        isOpen={isMemberModalOpen}
+        onClose={() => setIsMemberModalOpen(false)}
+        onAddMember={(member) => console.log(member)}
+      />
       <FloatingSidebarToggle onToggle={handleSideBarToggle} />
       <Sidebar isSidebarOpen={isSidebarOpen} onClose={handleSideBarToggle} />
       <Project project={project} />

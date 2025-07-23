@@ -2,26 +2,28 @@ import { useContext } from "react";
 import ProjectContext from "../../../store/project.context";
 
 export default function Task({ task }) {
-  const { removeTask } = useContext(ProjectContext);
+  const { removeTask, toggleSelectTask } = useContext(ProjectContext);
 
   return (
     <li>
-      <div className="flex items-center p-3 rounded-lg group hover:bg-stone-50 dark:hover:bg-stone-700/50">
+      <div className="flex cursor-pointer items-center p-3 rounded-lg group hover:bg-stone-50 dark:hover:bg-stone-700/50">
         <input
           type="checkbox"
           checked={task.completed}
-          onChange={() => {}}
+          id={task._id}
+          onChange={() => toggleSelectTask(task._id)}
           className="h-4 w-4 rounded border-stone-300 dark:border-stone-600 text-blue-500 focus:ring-blue-400"
         />
-        <span
-          className={`ml-3 flex-1 ${
+        <label
+          htmlFor={task._id}
+          className={`ml-3 flex-1 select-none  ${
             task.completed
               ? "line-through text-stone-500 dark:text-stone-500"
               : "text-stone-800 dark:text-stone-200"
           }`}
         >
           {task.taskName}
-        </span>
+        </label>
         <button
           onClick={() => removeTask(task._id)}
           className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 dark:hover:text-red-400 p-1 ml-2 transition-opacity"

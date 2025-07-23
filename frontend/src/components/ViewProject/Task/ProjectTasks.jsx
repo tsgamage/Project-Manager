@@ -2,9 +2,6 @@ import { useContext, useState } from "react";
 import Task from "./Task";
 import ProjectContext from "../../../store/project.context";
 
-// TODO : Handle The CRUD operations for the tasks
-//TODO : Make other components work
-
 export default function ProjectTasks({ tasks }) {
   const { addTask } = useContext(ProjectContext);
   const [taskName, setTaskName] = useState("");
