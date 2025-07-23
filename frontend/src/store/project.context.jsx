@@ -62,8 +62,14 @@ export function ProjectContextProvider({ children }) {
     setProject(resData);
   }
 
-  function handleRemoveMember(id) {
-    console.log({ id });
+  async function handleRemoveMember(id) {
+    const updatedProject = {
+      ...project,
+      team: [...project.team.filter((meamber) => meamber._id !== id)],
+    };
+
+    const resData = await updateRequest(updatedProject);
+    setProject(resData);
   }
 
   async function handleAddTask(taskName) {
