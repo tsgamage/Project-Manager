@@ -1,6 +1,9 @@
-export default function AddMember() {
+export default function AddMember({ onAdd }) {
   return (
-    <button className="flex items-center justify-center bg-white dark:bg-stone-800 rounded-lg p-4 shadow-sm border-2 border-dashed border-stone-300 dark:border-stone-600 hover:bg-stone-50 dark:hover:bg-stone-700/50 transition-colors">
+    <button
+      onClick={onAdd}
+      className="flex items-center justify-center bg-white dark:bg-stone-800 rounded-lg p-4 shadow-sm border-2 border-dashed border-stone-300 dark:border-stone-600 hover:bg-stone-50 dark:hover:bg-stone-700/50 transition-colors"
+    >
       <div className="bg-stone-100 dark:bg-stone-700 w-12 h-12 rounded-full flex items-center justify-center text-stone-400">
         <svg
           xmlns="http://www.w3.org/2000/svg"

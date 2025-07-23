@@ -7,7 +7,12 @@ export default function Memeber({ member }) {
   return (
     <div className="flex items-center justify-between bg-white dark:bg-stone-800 rounded-lg p-4 shadow-sm">
       <div className="flex items-center">
-        <div className="bg-gradient-to-br from-blue-500 to-purple-600 w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold">
+        <div
+          className={
+            member.color +
+            " w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold"
+          }
+        >
           {member.name.charAt(0)}
         </div>
         <div className="ml-4">

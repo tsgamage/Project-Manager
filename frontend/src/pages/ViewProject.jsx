@@ -12,7 +12,6 @@ export default function ViewProjectPage() {
   const { project, setProject, setSelectedProject } =
     useContext(ProjectContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
 
   const projectData = loaderData.data.projects;
 
@@ -27,11 +26,6 @@ export default function ViewProjectPage() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-theme-light dark:bg-theme-dark">
-      <AddMemberModal
-        isOpen={isMemberModalOpen}
-        onClose={() => setIsMemberModalOpen(false)}
-        onAddMember={(member) => console.log(member)}
-      />
       <FloatingSidebarToggle onToggle={handleSideBarToggle} />
       <Sidebar isSidebarOpen={isSidebarOpen} onClose={handleSideBarToggle} />
       <Project project={project} />
