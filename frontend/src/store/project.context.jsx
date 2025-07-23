@@ -23,6 +23,28 @@ export function ProjectContextProvider({ children }) {
   });
   const [selectedProjectID, setSelectedProjectID] = useState(0);
 
+  async function updateRequest(projectData) {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/project/${selectedProjectID}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(projectData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Something went wrong");
+      }
+      const resData = await response.json();
+      return resData.data;
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+
   function handleProjectSelect(projectID) {
     setSelectedProjectID(projectID);
   }
@@ -31,8 +53,13 @@ export function ProjectContextProvider({ children }) {
     setProject(project);
   }
 
-  function handleAddMember({ name, role, color }) {
-    console.log({ name, role, color });
+  async function handleAddMember(member) {
+    const updatedProject = {
+      ...project,
+      team: [...project.team, member],
+    };
+    const resData = await updateRequest(updatedProject);
+    setProject(resData);
   }
 
   function handleRemoveMember(id) {
@@ -49,26 +76,8 @@ export function ProjectContextProvider({ children }) {
       ...project,
       tasks: [...project.tasks, taskObj],
     };
-
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/project/${selectedProjectID}`,
-        {
-          method: "PUT",
-          body: JSON.stringify(updatedProject),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Something went wrong");
-      }
-      const resData = await response.json();
-      setProject(resData.data);
-    } catch (e) {
-      console.log(e.message);
-    }
+    const resData = await updateRequest(updatedProject);
+    setProject(resData);
   }
   async function handleRemoveTask(id) {
     const updatedProject = {
@@ -76,26 +85,8 @@ export function ProjectContextProvider({ children }) {
       tasks: [...project.tasks.filter((task) => task._id !== id)],
     };
 
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/project/${selectedProjectID}`,
-        {
-          method: "PUT",
-          body: JSON.stringify(updatedProject),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Something went wrong");
-      }
-      const resData = await response.json();
-      setProject(resData.data);
-    } catch (e) {
-      console.log(e.message);
-      setProject(project);
-    }
+    const resData = await updateRequest(updatedProject);
+    setProject(resData);
   }
   async function handleSelectTask(id) {
     let task = project.tasks.find((task) => task._id === id);
@@ -108,26 +99,8 @@ export function ProjectContextProvider({ children }) {
       tasks: [...project.tasks.filter((task) => task._id !== id), task],
     };
 
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/project/${selectedProjectID}`,
-        {
-          method: "PUT",
-          body: JSON.stringify(updatedProject),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Something went wrong");
-      }
-      const resData = await response.json();
-      setProject(resData.data);
-    } catch (e) {
-      console.log(e.message);
-      setProject(project);
-    }
+    const resData = await updateRequest(updatedProject);
+    setProject(resData);
   }
 
   const ctxValue = {
