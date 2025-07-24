@@ -1,5 +1,4 @@
 import { createContext, useState } from "react";
-import { deleteProject } from "../../../backend/controller/project.controller";
 
 const ProjectContext = createContext({
   projects: [],
