@@ -9,6 +9,7 @@ import ProjectContext from "../store/project.context";
 export default function HomePage() {
   const loaderData = useRouteLoaderData("root");
   const { projects, setProjects } = useContext(ProjectContext);
+  window.scrollTo({ top: 0, behavior: "smooth" });
 
   useEffect(() => {
     setProjects(projects[projects.length - 1]._id === "DUMMY" ? loaderData.data : projects);

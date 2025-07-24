@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import ProjectContext from "../store/project.context";
 
 export default function ViewProjectPage() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
   const params = useParams();
   const loaderData = useRouteLoaderData("project");
 
@@ -25,7 +26,9 @@ export default function ViewProjectPage() {
     <div className="flex flex-col md:flex-row min-h-screen bg-theme-light dark:bg-theme-dark">
       <FloatingSidebarToggle onToggle={handleSideBarToggle} />
       <Sidebar isSidebarOpen={isSidebarOpen} onClose={handleSideBarToggle} />
-      <Project project={selectedProject} />
+      {/* checking this because if not the component renders 4 times and first 2 time it gets the old
+      projects data */}
+      {selectedProject._id === params.projectID && <Project project={selectedProject} />}
     </div>
   );
 }

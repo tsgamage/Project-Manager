@@ -18,12 +18,15 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
     close: () => dialog.current.close(),
   }));
 
+  console.log(`project: `, project);
+
   async function editAction(preData, formData) {
     const dataObj = Object.fromEntries(formData);
     try {
       await onSave(dataObj);
       onClose();
       window.scrollTo({ top: 0, behavior: "smooth" });
+      return { title: "", startDate: "", endDate: "", description: "" };
     } catch {
       return dataObj;
     }

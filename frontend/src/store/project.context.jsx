@@ -135,6 +135,8 @@ export function ProjectContextProvider({ children }) {
   async function handleUpdateProject(projectData) {
     const response = await updateRequest(projectData);
     setSelectedProject(response);
+    const updatedProjects = [response, ...projects.filter((p) => p._id !== selectedProject._id)];
+    setProjects(updatedProjects);
   }
 
   const ctxValue = {
