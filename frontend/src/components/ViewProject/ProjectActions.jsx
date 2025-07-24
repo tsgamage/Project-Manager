@@ -1,3 +1,7 @@
+import { useContext } from "react";
+import ProjectContext from "../../store/project.context";
+import { useNavigate } from "react-router-dom";
+
 const deleteIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +36,14 @@ const editIcon = (
   </svg>
 );
 
-export default function ProjectActions({ onDelete, onEdit }) {
+export default function ProjectActions({ onEdit }) {
+  const navigate = useNavigate();
+  const { deleteProject } = useContext(ProjectContext);
+
+  function handleDeleteProject() {
+    deleteProject();
+    navigate("/");
+  }
   const editBtnClasses =
     "px-4 py-2 bg-stone-200 hover:bg-stone-300 dark:bg-stone-700 dark:hover:bg-stone-600 rounded-lg text-stone-800 dark:text-stone-200 flex items-center justify-center gap-2 transition-colors";
 
@@ -44,7 +55,7 @@ export default function ProjectActions({ onDelete, onEdit }) {
       <button onClick={onEdit} className={editBtnClasses}>
         {editIcon} Edit Project
       </button>
-      <button onClick={onDelete} className={deleteBtnClasses}>
+      <button onClick={handleDeleteProject} className={deleteBtnClasses}>
         {deleteIcon} Delete Project
       </button>
     </div>

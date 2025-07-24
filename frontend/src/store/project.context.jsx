@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import { deleteProject } from "../../../backend/controller/project.controller";
 
 const ProjectContext = createContext({
   projects: [],
@@ -13,6 +14,7 @@ const ProjectContext = createContext({
   toggleSelectTask: () => {},
   updateProject: () => {},
   addNewProject: () => {},
+  deleteProject: () => {},
 });
 
 const EMPTY_PROJECT = {
@@ -163,6 +165,16 @@ export function ProjectContextProvider({ children }) {
     }
   }
 
+  async function handleDeleteProject() {
+    const response = await fetch(`http://localhost:3000/api/project/${selectedProjectID}`, {
+      method: "DELETE",
+    });
+    const data = await response.json();
+    console.log(data);
+    setSelectedProject(EMPTY_PROJECT);
+    setProjects(projects.filter((p) => p._id !== selectedProjectID));
+  }
+
   const ctxValue = {
     projects,
     setProjects: handleSetProjects,
@@ -176,6 +188,7 @@ export function ProjectContextProvider({ children }) {
     toggleSelectTask: handleSelectTask,
     updateProject: handleUpdateProject,
     addNewProject: handleAddNewProject,
+    deleteProject: handleDeleteProject,
   };
 
   return <ProjectContext.Provider value={ctxValue}>{children}</ProjectContext.Provider>;

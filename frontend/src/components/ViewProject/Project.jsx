@@ -22,7 +22,7 @@ export default function Project({ project }) {
           <ProjectHeader project={project} />
           <TeamMembers team={project.team} />
           <ProjectTasks tasks={project.tasks} />
-          <ProjectActions onDelete={() => {}} onEdit={() => editModal.current.open()} />
+          <ProjectActions onEdit={() => editModal.current.open()} />
         </div>
       </main>
     </>
