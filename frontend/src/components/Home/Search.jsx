@@ -1,4 +1,4 @@
-export default function Search() {
+export default function Search({ setFilter, setSortOption }) {
   return (
     <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-md mb-12">
       <div className="flex flex-col md:flex-row gap-6">

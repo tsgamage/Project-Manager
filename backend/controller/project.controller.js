@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 export const getAllProjects = async (req, res) => {
   try {
-    const project = await Project.find({});
+    const project = await Project.find().sort({ _id: -1 });
     res.status(200).json({ success: true, data: project });
   } catch (e) {
     console.log("cannot get project", e.message);

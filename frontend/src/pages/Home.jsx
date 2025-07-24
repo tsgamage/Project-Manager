@@ -3,28 +3,72 @@ import ProjectCard from "../components/Home/ProjectCard";
 import Stats from "../components/Home/Stats";
 import Header from "../components/Home/Header";
 import Search from "../components/Home/Search";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import ProjectContext from "../store/project.context";
 
 export default function HomePage() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
   const loaderData = useRouteLoaderData("root");
   const { projects, setProjects } = useContext(ProjectContext);
-  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  const [sortOption, setSortOption] = useState("newest");
+  const [sortedProjects, setSortedProjects] = useState(projects);
+  const [filter, setFilter] = useState("All");
+  const [filteredProjects, setFilteredPRojects] = useState(projects);
 
   useEffect(() => {
     setProjects(projects[projects.length - 1]._id === "DUMMY" ? loaderData.data : projects);
+    setFilteredPRojects(projects[projects.length - 1]._id === "DUMMY" ? loaderData.data : projects);
+    setSortedProjects(projects[projects.length - 1]._id === "DUMMY" ? loaderData.data : projects);
   }, []);
+
+  useEffect(() => {
+    if (sortOption === "newest") {
+      setSortedProjects(projects);
+    } else if (sortOption === "oldest") {
+      setSortedProjects(projects.toReversed());
+    } else if (sortOption === "deadline") {
+      console.log("Hello Deadline");
+    }
+  }, [sortOption, projects]);
+
+  useEffect(() => {
+    if (filter === "All") {
+      setFilteredPRojects(sortedProjects);
+      return;
+    } else if (filter === "Completed") {
+      setFilteredPRojects(() => {
+        return sortedProjects.filter((project) =>
+          project.tasks.every((task) => task.completed === true)
+        );
+      });
+    } else if (filter === "Not Started") {
+      setFilteredPRojects(() => {
+        return sortedProjects.filter((project) =>
+          project.tasks.every((task) => task.completed === false)
+        );
+      });
+    } else if (filter === "In Progress") {
+      setFilteredPRojects(() => {
+        return sortedProjects.filter((project) => {
+          const totalTasks = project.tasks.length;
+          const completedTasks = project.tasks.filter((task) => task.completed).length;
+          return completedTasks > 0 && completedTasks < totalTasks;
+        });
+      });
+    }
+  }, [sortedProjects, filter]);
 
   return (
     <div className="min-h-screen bg-theme-light dark:bg-theme-dark">
       <main className="container mx-auto px-4 py-8">
         <Stats />
         <Header />
-        <Search />
+        <Search setFilter={setFilter} setSortOption={setSortOption} />
 
         {/* Projects Grid */}
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
+          {filteredProjects.map((project) => (
             <ProjectCard key={project._id} project={project} />
           ))}
         </div>
