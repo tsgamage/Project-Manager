@@ -1,54 +1,71 @@
 import { useRouteLoaderData } from "react-router-dom";
-import ProjectCard from "../components/Home/ProjectCard";
-import Stats from "../components/Home/Stats";
-import Header from "../components/Home/Header";
-import Search from "../components/Home/Search";
 import { useContext, useEffect, useState } from "react";
-import ProjectContext from "../store/project.context";
+import ProjectCard from "../components/Home/ProjectCard.jsx";
+import Stats from "../components/Home/Stats.jsx";
+import Header from "../components/Home/Header.jsx";
+import Sortings from "../components/Home/Sortings.jsx";
+import ProjectContext from "../store/project.context.jsx";
+
+let FILTER = "All";
+let SORTOPTION = "newest";
+let SEARCHQUERY = "";
 
 export default function HomePage() {
-  window.scrollTo({ top: 0, behavior: "smooth" });
   const loaderData = useRouteLoaderData("root");
   const { projects, setProjects } = useContext(ProjectContext);
 
-  const [sortOption, setSortOption] = useState("newest");
+  const [sortOption, setSortOption] = useState(SORTOPTION);
   const [sortedProjects, setSortedProjects] = useState(projects);
-  const [filter, setFilter] = useState("All");
+  const [filter, setFilter] = useState(FILTER);
   const [filteredProjects, setFilteredPRojects] = useState(projects);
+  const [searchQuery, setSearchQuery] = useState(SEARCHQUERY);
+  const [searchedProjects, setSearchedProjects] = useState([]);
 
   useEffect(() => {
     setProjects(projects[projects.length - 1]._id === "DUMMY" ? loaderData.data : projects);
-    setFilteredPRojects(projects[projects.length - 1]._id === "DUMMY" ? loaderData.data : projects);
-    setSortedProjects(projects[projects.length - 1]._id === "DUMMY" ? loaderData.data : projects);
   }, []);
 
   useEffect(() => {
+    setFilteredPRojects(projects);
+    setSortedProjects(projects);
+  }, [projects]);
+
+  useEffect(() => {
     if (sortOption === "newest") {
+      SORTOPTION = "newest";
       setSortedProjects(projects);
     } else if (sortOption === "oldest") {
+      SORTOPTION = "oldest";
       setSortedProjects(projects.toReversed());
     } else if (sortOption === "deadline") {
+      SORTOPTION = "deadline";
       console.log("Hello Deadline");
     }
   }, [sortOption, projects]);
 
   useEffect(() => {
     if (filter === "All") {
+      FILTER = "All";
       setFilteredPRojects(sortedProjects);
       return;
     } else if (filter === "Completed") {
+      FILTER = "Completed";
       setFilteredPRojects(() => {
-        return sortedProjects.filter((project) =>
-          project.tasks.every((task) => task.completed === true)
-        );
+        return sortedProjects.filter((project) => {
+          if (project.tasks.length > 0) {
+            return project.tasks.every((task) => task.completed === true);
+          }
+        });
       });
     } else if (filter === "Not Started") {
+      FILTER = "Not Started";
       setFilteredPRojects(() => {
         return sortedProjects.filter((project) =>
           project.tasks.every((task) => task.completed === false)
         );
       });
     } else if (filter === "In Progress") {
+      FILTER = "In Progress";
       setFilteredPRojects(() => {
         return sortedProjects.filter((project) => {
           const totalTasks = project.tasks.length;
@@ -59,22 +76,45 @@ export default function HomePage() {
     }
   }, [sortedProjects, filter]);
 
+  useEffect(() => {
+    SEARCHQUERY = searchQuery;
+    const wildcard = `*${searchQuery.trim()}*`;
+    try {
+      const regex = new RegExp(`^${wildcard.replace(/\*/g, ".*")}$`, "i");
+      const titleSeachResearch = filteredProjects.filter((project) => regex.test(project.title));
+      const descriptionSeachResearch = filteredProjects.filter((project) =>
+        regex.test(project.description)
+      );
+      const allResult = [...new Set([...titleSeachResearch, ...descriptionSeachResearch])];
+      setSearchedProjects(allResult);
+    } catch {
+      console.log("Tho wage harakek yakow moda musalayek!");
+    }
+  }, [filteredProjects, searchQuery]);
+
   return (
     <div className="min-h-screen bg-theme-light dark:bg-theme-dark">
       <main className="container mx-auto px-4 py-8">
         <Stats />
         <Header />
-        <Search setFilter={setFilter} setSortOption={setSortOption} />
+        <Sortings
+          filter={filter}
+          setFilter={setFilter}
+          sortOption={sortOption}
+          setSortOption={setSortOption}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
 
         {/* Projects Grid */}
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredProjects.map((project) => (
+          {searchedProjects.map((project) => (
             <ProjectCard key={project._id} project={project} />
           ))}
         </div>
 
         {/* Empty State */}
-        {projects.length === 0 && (
+        {searchedProjects.length === 0 && (
           <div className="text-center py-20">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -99,6 +139,7 @@ export default function HomePage() {
             <button
               onClick={() => {
                 setFilter("All");
+                setSortOption("newest");
                 setSearchQuery("");
               }}
               className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"

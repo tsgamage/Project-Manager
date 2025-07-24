@@ -81,9 +81,8 @@ export default function ProjectHeader({ project }) {
         </h2>
         <p className="text-para-light dark:text-para-dark leading-relaxed">
           {project.description.length < 300 && project.description}
-          {project.description.length > 300 && expandText
-            ? project.description
-            : project.description.slice(0, 300)}
+          {project.description.length > 300 &&
+            (expandText ? project.description : project.description.slice(0, 300))}
           {project.description.length > 300 && (
             <span
               className="cursor-pointer text-blue-500"
