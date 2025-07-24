@@ -8,15 +8,11 @@ import ProjectContext from "../store/project.context";
 
 export default function HomePage() {
   const loaderData = useRouteLoaderData("root");
-  const projectsData = loaderData.data;
-
   const { projects, setProjects } = useContext(ProjectContext);
 
   useEffect(() => {
-    setProjects(projectsData);
-  }, [projectsData, setProjects]);
-
-  console.log(`projects:`, projects);
+    setProjects(projects[projects.length - 1]._id === "DUMMY" ? loaderData.data : projects);
+  }, []);
 
   return (
     <div className="min-h-screen bg-theme-light dark:bg-theme-dark">
@@ -33,7 +29,7 @@ export default function HomePage() {
         </div>
 
         {/* Empty State */}
-        {projectsData.length === 0 && (
+        {projects.length === 0 && (
           <div className="text-center py-20">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -53,8 +49,7 @@ export default function HomePage() {
               No projects found
             </h3>
             <p className="text-stone-600 dark:text-stone-400 mt-3 max-w-md mx-auto">
-              Try adjusting your search or filter to find what you're looking
-              for.
+              Try adjusting your search or filter to find what you're looking for.
             </p>
             <button
               onClick={() => {

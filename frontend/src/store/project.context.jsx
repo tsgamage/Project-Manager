@@ -2,49 +2,49 @@ import { createContext, useState } from "react";
 
 const ProjectContext = createContext({
   projects: [],
-  setProjects: (project) => {},
-  selectedProjectID: 0,
-  setSelectedProject: (projectID) => {},
-  addMember: ({ name, role, color }) => {},
-  removeMember: (id) => {},
-  addTask: (taskName) => {},
-  removeTask: (id) => {},
-  toggleSelectTask: (id) => {},
+  setProjects: () => {},
+  selectedProject: {},
+  setSelectedProject: () => {},
+  setSelectedProjectID: () => {},
+  addMember: () => {},
+  removeMember: () => {},
+  addTask: () => {},
+  removeTask: () => {},
+  toggleSelectTask: () => {},
 });
 
+const EMPTY_PROJECT = {
+  _id: "DUMMY",
+  name: "",
+  description: "",
+  status: "",
+  team: [],
+  tasks: [],
+};
+
 export function ProjectContextProvider({ children }) {
-  const [projects, setProjects] = useState([
-    {
-      _id: "",
-      name: "",
-      description: "",
-      status: "",
-      team: [],
-      tasks: [],
-    },
-  ]);
+  const [projects, setProjects] = useState([EMPTY_PROJECT]);
+  const [selectedProject, setSelectedProject] = useState(EMPTY_PROJECT);
   const [selectedProjectID, setSelectedProjectID] = useState(0);
 
-  function handleProjectSelect(projectID) {
+  function handleSetSelectedProject(projectData) {
+    setSelectedProject(projectData);
+  }
+  function handleSelectedProjectID(projectID) {
     setSelectedProjectID(projectID);
   }
-
-  function handleSetProject(project) {
+  function handleSetProjects(project) {
     setProjects(project);
   }
-
   async function updateRequest(projectData) {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/project/${selectedProjectID}`,
-        {
-          method: "PUT",
-          body: JSON.stringify(projectData),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`http://localhost:3000/api/project/${selectedProjectID}`, {
+        method: "PUT",
+        body: JSON.stringify(projectData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       if (!response.ok) {
         throw new Error("Something went wrong");
       }
@@ -57,65 +57,87 @@ export function ProjectContextProvider({ children }) {
 
   async function handleAddMember(member) {
     const updatedProject = {
-      ...project,
-      team: [...project.team, member],
+      ...selectedProject,
+      team: [...selectedProject.team, member],
     };
+    const updatedProjects = [
+      updatedProject,
+      ...projects.filter((p) => p._id !== selectedProject._id),
+    ];
     const resData = await updateRequest(updatedProject);
-    setProject(resData);
+    setSelectedProject(resData);
+    setProjects(updatedProjects);
   }
-
   async function handleRemoveMember(id) {
     const updatedProject = {
-      ...project,
-      team: [...project.team.filter((meamber) => meamber._id !== id)],
+      ...selectedProject,
+      team: [...selectedProject.team.filter((p) => p._id !== id)],
     };
-
+    const updatedProjects = [
+      updatedProject,
+      ...projects.filter((p) => p._id !== selectedProject._id),
+    ];
     const resData = await updateRequest(updatedProject);
-    setProject(resData);
+    setSelectedProject(resData);
+    setProjects(updatedProjects);
   }
-
   async function handleAddTask(taskName) {
     const taskObj = {
       taskName,
       completed: false,
     };
-
     const updatedProject = {
-      ...project,
-      tasks: [...project.tasks, taskObj],
+      ...selectedProject,
+      tasks: [...selectedProject.tasks, taskObj],
     };
+    const updatedProjects = [
+      updatedProject,
+      ...projects.filter((p) => p._id !== selectedProject._id),
+    ];
     const resData = await updateRequest(updatedProject);
-    setProject(resData);
+    setSelectedProject(resData);
+    setProjects(updatedProjects);
   }
   async function handleRemoveTask(id) {
     const updatedProject = {
-      ...project,
-      tasks: [...project.tasks.filter((task) => task._id !== id)],
+      ...selectedProject,
+      tasks: [...selectedProject.tasks.filter((t) => t._id !== id)],
     };
-
+    const updatedProjects = [
+      updatedProject,
+      ...projects.filter((p) => p._id !== selectedProject._id),
+    ];
     const resData = await updateRequest(updatedProject);
-    setProject(resData);
+    setSelectedProject(resData);
+    setProjects(updatedProjects);
   }
   async function handleSelectTask(id) {
-    let task = project.tasks.find((task) => task._id === id);
+    let task = selectedProject.tasks.find((task) => task._id === id);
     task = {
       ...task,
       completed: !task.completed,
     };
     const updatedProject = {
-      ...project,
-      tasks: [...project.tasks.filter((task) => task._id !== id), task],
+      ...selectedProject,
+      tasks: [...selectedProject.tasks.filter((task) => task._id !== id), task],
     };
 
+    const updatedProjects = [
+      updatedProject,
+      ...projects.filter((p) => p._id !== selectedProject._id),
+    ];
+
     const resData = await updateRequest(updatedProject);
-    setProject(resData);
+    setSelectedProject(resData);
+    setProjects(updatedProjects);
   }
 
   const ctxValue = {
     projects,
-    selectedProjectID,
-    setSelectedProject: handleProjectSelect,
-    setProjects: handleSetProject,
+    setProjects: handleSetProjects,
+    selectedProject,
+    setSelectedProject: handleSetSelectedProject,
+    setSelectedProjectID: handleSelectedProjectID,
     addMember: handleAddMember,
     removeMember: handleRemoveMember,
     addTask: handleAddTask,
@@ -123,11 +145,7 @@ export function ProjectContextProvider({ children }) {
     toggleSelectTask: handleSelectTask,
   };
 
-  return (
-    <ProjectContext.Provider value={ctxValue}>
-      {children}
-    </ProjectContext.Provider>
-  );
+  return <ProjectContext.Provider value={ctxValue}>{children}</ProjectContext.Provider>;
 }
 
 export default ProjectContext;
