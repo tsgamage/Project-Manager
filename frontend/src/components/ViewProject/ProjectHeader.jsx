@@ -60,7 +60,7 @@ export default function ProjectHeader({ project }) {
             {new Date(project.startDate).toLocaleDateString()} -{" "}
             {new Date(project.endDate).toLocaleDateString()}
           </p>
-          <p className="text-sm text-stone-600 dark:text-stone-400 mb-2">Progress: {progress}%</p>
+          <p className="text-sm text-stone-600 dark:text-stone-400 mb-2">Progress: {progress || 0}%</p>
           <div className="w-full bg-stone-200 dark:bg-stone-700 rounded-full h-2.5">
             <div
               className={`h-2.5 rounded-full ${
