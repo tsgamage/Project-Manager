@@ -4,7 +4,6 @@ import HomePage from "./pages/Home";
 import ViewProjectPage, { viewProjectLoader } from "./pages/ViewProject";
 import { projectsLoader } from "./pages/Home";
 import AddProjectPage from "./pages/AddProject";
-import EditProjectPage from "./pages/EditProject";
 import { ProjectContextProvider } from "./store/project.context";
 
 export default function App() {
@@ -23,7 +22,7 @@ export default function App() {
           children: [
             { path: "new", element: <AddProjectPage /> },
             { path: "view/:projectID", element: <ViewProjectPage /> },
-            { path: "edit/:projectID", element: <EditProjectPage /> },
+            { path: "edit/:projectID" },
           ],
         },
       ],

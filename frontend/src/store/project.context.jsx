@@ -11,6 +11,7 @@ const ProjectContext = createContext({
   addTask: () => {},
   removeTask: () => {},
   toggleSelectTask: () => {},
+  updateProject: () => {},
 });
 
 const EMPTY_PROJECT = {
@@ -27,15 +28,6 @@ export function ProjectContextProvider({ children }) {
   const [selectedProject, setSelectedProject] = useState(EMPTY_PROJECT);
   const [selectedProjectID, setSelectedProjectID] = useState(0);
 
-  function handleSetSelectedProject(projectData) {
-    setSelectedProject(projectData);
-  }
-  function handleSelectedProjectID(projectID) {
-    setSelectedProjectID(projectID);
-  }
-  function handleSetProjects(project) {
-    setProjects(project);
-  }
   async function updateRequest(projectData) {
     try {
       const response = await fetch(`http://localhost:3000/api/project/${selectedProjectID}`, {
@@ -54,7 +46,15 @@ export function ProjectContextProvider({ children }) {
       console.log(e.message);
     }
   }
-
+  function handleSetSelectedProject(projectData) {
+    setSelectedProject(projectData);
+  }
+  function handleSelectedProjectID(projectID) {
+    setSelectedProjectID(projectID);
+  }
+  function handleSetProjects(project) {
+    setProjects(project);
+  }
   async function handleAddMember(member) {
     const updatedProject = {
       ...selectedProject,
@@ -132,6 +132,11 @@ export function ProjectContextProvider({ children }) {
     setProjects(updatedProjects);
   }
 
+  async function handleUpdateProject(projectData) {
+    const response = await updateRequest(projectData);
+    setSelectedProject(response);
+  }
+
   const ctxValue = {
     projects,
     setProjects: handleSetProjects,
@@ -143,6 +148,7 @@ export function ProjectContextProvider({ children }) {
     addTask: handleAddTask,
     removeTask: handleRemoveTask,
     toggleSelectTask: handleSelectTask,
+    updateProject: handleUpdateProject,
   };
 
   return <ProjectContext.Provider value={ctxValue}>{children}</ProjectContext.Provider>;

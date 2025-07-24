@@ -1,5 +1,3 @@
-import { Link, useParams } from "react-router-dom";
-
 const deleteIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -34,10 +32,7 @@ const editIcon = (
   </svg>
 );
 
-export default function ProjectActions({ onDelete }) {
-  const params = useParams();
-  const projectID = params.projectID;
-
+export default function ProjectActions({ onDelete, onEdit }) {
   const editBtnClasses =
     "px-4 py-2 bg-stone-200 hover:bg-stone-300 dark:bg-stone-700 dark:hover:bg-stone-600 rounded-lg text-stone-800 dark:text-stone-200 flex items-center justify-center gap-2 transition-colors";
 
@@ -46,9 +41,9 @@ export default function ProjectActions({ onDelete }) {
 
   return (
     <div className="flex flex-col sm:flex-row gap-3 justify-end">
-      <Link to={`/project/edit/${projectID}`} className={editBtnClasses}>
+      <button onClick={onEdit} className={editBtnClasses}>
         {editIcon} Edit Project
-      </Link>
+      </button>
       <button onClick={onDelete} className={deleteBtnClasses}>
         {deleteIcon} Delete Project
       </button>
