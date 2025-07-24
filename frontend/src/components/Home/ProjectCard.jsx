@@ -1,32 +1,12 @@
 import { Link } from "react-router-dom";
+import useProgress from "../../hooks/useProgress";
+import useStatusClasses from "../../hooks/useStatusClasses";
 
 export default function ProjectCard({ project }) {
-  const {
-    _id,
-    title,
-    description,
-    startDate,
-    endDate,
-    status,
-    progress,
-    team,
-  } = project;
+  const { _id, title, description, startDate, endDate, team } = project;
 
-  // Helper to get status-specific colors
-  const getStatusClasses = (status) => {
-    switch (status) {
-      case "In Progress":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
-      case "Completed":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
-      case "Pending":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300";
-      case "Not Started":
-        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
-      default:
-        return "";
-    }
-  };
+  const progress = useProgress(project);
+  const { status, statusClasses } = useStatusClasses(progress);
 
   // Calculate days remaining
   const end = new Date(endDate);
@@ -53,9 +33,7 @@ export default function ProjectCard({ project }) {
             {title}
           </h3>
           <span
-            className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${getStatusClasses(
-              status
-            )}`}
+            className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${statusClasses}`}
           >
             {status}
           </span>

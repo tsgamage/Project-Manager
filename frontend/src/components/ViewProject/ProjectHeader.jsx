@@ -1,9 +1,13 @@
-import getStatusClasses from "./util/getStatusClasses";
+import useProgress from "../../hooks/useProgress";
+import useStatusClasses from "../../hooks/useStatusClasses";
 
 export default function ProjectHeader({ project }) {
   const endDate = new Date(project.endDate);
   const today = new Date();
   const daysRemaining = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
+
+  const progress = useProgress(project);
+  const { status, statusClasses } = useStatusClasses(progress);
 
   return (
     <>
@@ -20,11 +24,9 @@ export default function ProjectHeader({ project }) {
 
           <div className="flex flex-wrap items-center gap-3">
             <span
-              className={`text-sm font-medium px-3 py-1 rounded-full ${getStatusClasses(
-                project.status
-              )}`}
+              className={`text-sm font-medium px-3 py-1 rounded-full ${statusClasses}`}
             >
-              {project.status}
+              {status}
             </span>
             <span
               className={`text-sm font-medium px-3 py-1 rounded-full ${
@@ -51,18 +53,18 @@ export default function ProjectHeader({ project }) {
             {new Date(project.endDate).toLocaleDateString()}
           </p>
           <p className="text-sm text-stone-600 dark:text-stone-400 mb-2">
-            Progress: {project.progress}%
+            Progress: {progress}%
           </p>
           <div className="w-full bg-stone-200 dark:bg-stone-700 rounded-full h-2.5">
             <div
               className={`h-2.5 rounded-full ${
-                project.progress < 30
+                progress < 30
                   ? "bg-red-500"
-                  : project.progress < 70
+                  : progress < 70
                   ? "bg-yellow-500"
                   : "bg-green-500"
               }`}
-              style={{ width: `${project.progress}%` }}
+              style={{ width: `${progress}%` }}
             ></div>
           </div>
         </div>

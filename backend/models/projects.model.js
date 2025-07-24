@@ -16,7 +16,7 @@ const projectSchema = mongoose.Schema({
   description: { type: String, required: true },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
-  status: { type: String, required: true },
+  // status: { type: String, required: true },
   tasks: { type: [taskSchema], default: [] },
   team: { type: [teamMemberSchema], default: [] },
 });
