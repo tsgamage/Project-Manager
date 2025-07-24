@@ -40,9 +40,7 @@ export default function ProjectCard({ project }) {
     >
       <div className="p-6 flex-1">
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-xl font-bold text-stone-800 dark:text-stone-100">
-            {title?.length > 30 ? title.slice(0, 20) + "..." : title}
-          </h3>
+          <h3 className="text-xl font-bold text-stone-800 dark:text-stone-100 truncate">{title}</h3>
           <span
             className={`text-xs font-semibold px-2.5 py-0.5 rounded-full whitespace-nowrap ${statusClasses}`}
           >
