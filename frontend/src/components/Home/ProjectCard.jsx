@@ -9,10 +9,9 @@ export default function ProjectCard({ project }) {
   const { status, statusClasses } = useStatusClasses(progress);
 
   // Calculate days remaining
-  const end = new Date(endDate);
+  const end = new Date(project.endDate);
   const today = new Date();
-  const timeDiff = Math.abs(end - today);
-  const daysRemaining = Math.floor(timeDiff / (1000 * 3600 * 24));
+  const daysRemaining = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
 
   // Format date range
   const formatDate = (dateString) => {

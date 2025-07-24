@@ -1,5 +1,5 @@
-import useProgress from "../../hooks/useProgress";
-import useStatusClasses from "../../hooks/useStatusClasses";
+import useProgress from "../../hooks/useProgress.jsx";
+import useStatusClasses from "../../hooks/useStatusClasses.jsx";
 
 export default function ProjectHeader({ project }) {
   const endDate = new Date(project.endDate);
@@ -23,9 +23,7 @@ export default function ProjectHeader({ project }) {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <span
-              className={`text-sm font-medium px-3 py-1 rounded-full ${statusClasses}`}
-            >
+            <span className={`text-sm font-medium px-3 py-1 rounded-full ${statusClasses}`}>
               {status}
             </span>
             <span
@@ -39,9 +37,7 @@ export default function ProjectHeader({ project }) {
                   : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
               }`}
             >
-              {daysRemaining > 0
-                ? `${daysRemaining} days left`
-                : "Deadline passed"}
+              {daysRemaining > 0 ? `${daysRemaining} days left` : "Deadline passed"}
             </span>
           </div>
         </div>
@@ -52,17 +48,11 @@ export default function ProjectHeader({ project }) {
             {new Date(project.startDate).toLocaleDateString()} -{" "}
             {new Date(project.endDate).toLocaleDateString()}
           </p>
-          <p className="text-sm text-stone-600 dark:text-stone-400 mb-2">
-            Progress: {progress}%
-          </p>
+          <p className="text-sm text-stone-600 dark:text-stone-400 mb-2">Progress: {progress}%</p>
           <div className="w-full bg-stone-200 dark:bg-stone-700 rounded-full h-2.5">
             <div
               className={`h-2.5 rounded-full ${
-                progress < 30
-                  ? "bg-red-500"
-                  : progress < 70
-                  ? "bg-yellow-500"
-                  : "bg-green-500"
+                progress < 30 ? "bg-red-500" : progress < 70 ? "bg-yellow-500" : "bg-green-500"
               }`}
               style={{ width: `${progress}%` }}
             ></div>
@@ -73,9 +63,7 @@ export default function ProjectHeader({ project }) {
         <h2 className="text-xl font-semibold text-header-light dark:text-header-dark mb-3">
           Project Overview
         </h2>
-        <p className="text-para-light dark:text-para-dark leading-relaxed">
-          {project.description}
-        </p>
+        <p className="text-para-light dark:text-para-dark leading-relaxed">{project.description}</p>
       </div>
     </>
   );

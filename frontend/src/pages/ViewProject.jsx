@@ -1,9 +1,9 @@
-import Project from "../components/ViewProject/Project";
-import Sidebar from "../components/ViewProject/SideBar";
-import FloatingSidebarToggle from "../components/ViewProject/FloatingSidebarToggle";
 import { useParams, useRouteLoaderData } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import ProjectContext from "../store/project.context";
+import ProjectContext from "../store/project.context.jsx";
+import Project from "../components/ViewProject/Project.jsx";
+import Sidebar from "../components/ViewProject/SideBar.jsx";
+import FloatingSidebarToggle from "../components/ViewProject/FloatingSidebarToggle.jsx";
 
 export default function ViewProjectPage() {
   window.scrollTo({ top: 0, behavior: "smooth" });
