@@ -12,6 +12,7 @@ const ProjectContext = createContext({
   removeTask: () => {},
   toggleSelectTask: () => {},
   updateProject: () => {},
+  addNewProject: () => {},
 });
 
 const EMPTY_PROJECT = {
@@ -131,12 +132,35 @@ export function ProjectContextProvider({ children }) {
     setSelectedProject(resData);
     setProjects(updatedProjects);
   }
-
   async function handleUpdateProject(projectData) {
     const response = await updateRequest(projectData);
     setSelectedProject(response);
     const updatedProjects = [response, ...projects.filter((p) => p._id !== selectedProject._id)];
     setProjects(updatedProjects);
+  }
+  async function handleAddNewProject(projectData) {
+    try {
+      const response = await fetch("http://localhost:3000/api/project/new", {
+        method: "POST",
+        body: JSON.stringify(projectData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Response(JSON.stringify({ message: "Something went wrong" }), {
+          status: 500,
+        });
+      }
+      const resData = await response.json();
+      console.log(resData.data._id);
+
+      setProjects([resData.data, ...projects]);
+    } catch (e) {
+      throw new Response(JSON.stringify({ message: e.message }), {
+        status: 500,
+      });
+    }
   }
 
   const ctxValue = {
@@ -151,6 +175,7 @@ export function ProjectContextProvider({ children }) {
     removeTask: handleRemoveTask,
     toggleSelectTask: handleSelectTask,
     updateProject: handleUpdateProject,
+    addNewProject: handleAddNewProject,
   };
 
   return <ProjectContext.Provider value={ctxValue}>{children}</ProjectContext.Provider>;
