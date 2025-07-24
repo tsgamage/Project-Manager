@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import useProgress from "../../hooks/useProgress.jsx";
 import useStatusClasses from "../../hooks/useStatusClasses.jsx";
 
@@ -13,13 +14,24 @@ export default function ProjectHeader({ project }) {
     <>
       <div className="mb-6 pb-6 border-b border-stone-200 dark:border-stone-700">
         <div className="flex flex-col gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-header-light dark:text-header-dark">
-              {project.title}
-            </h1>
-            <p className="text-sm text-stone-500 dark:text-stone-400 mt-1">
-              Project ID: {project._id}
-            </p>
+          <div className="flex justify-between items-center mb-3">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-header-light dark:text-header-dark">
+                {project.title}
+              </h1>
+              <p className="text-sm text-stone-500 dark:text-stone-400 mt-1">
+                Project ID: {project._id}
+              </p>
+            </div>
+
+            <div className="flex gap-3 sm:gap-4">
+              <Link
+                to="/"
+                className="px-4 py-2 sm:px-6 sm:py-3 border border-stone-300 dark:border-stone-700 rounded-lg font-medium flex items-center transition-colors text-sm sm:text-base text-stone-800 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-700"
+              >
+                Cancel
+              </Link>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
