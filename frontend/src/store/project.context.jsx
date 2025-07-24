@@ -1,10 +1,10 @@
 import { createContext, useState } from "react";
 
 const ProjectContext = createContext({
-  project: {},
-  selectedProject: 0,
+  projects: [],
+  setProjects: (project) => {},
+  selectedProjectID: 0,
   setSelectedProject: (projectID) => {},
-  setProject: (project) => {},
   addMember: ({ name, role, color }) => {},
   removeMember: (id) => {},
   addTask: (taskName) => {},
@@ -13,15 +13,25 @@ const ProjectContext = createContext({
 });
 
 export function ProjectContextProvider({ children }) {
-  const [project, setProject] = useState({
-    _id: "",
-    name: "",
-    description: "",
-    status: "",
-    team: [],
-    tasks: [],
-  });
+  const [projects, setProjects] = useState([
+    {
+      _id: "",
+      name: "",
+      description: "",
+      status: "",
+      team: [],
+      tasks: [],
+    },
+  ]);
   const [selectedProjectID, setSelectedProjectID] = useState(0);
+
+  function handleProjectSelect(projectID) {
+    setSelectedProjectID(projectID);
+  }
+
+  function handleSetProject(project) {
+    setProjects(project);
+  }
 
   async function updateRequest(projectData) {
     try {
@@ -43,14 +53,6 @@ export function ProjectContextProvider({ children }) {
     } catch (e) {
       console.log(e.message);
     }
-  }
-
-  function handleProjectSelect(projectID) {
-    setSelectedProjectID(projectID);
-  }
-
-  function handleSetProject(project) {
-    setProject(project);
   }
 
   async function handleAddMember(member) {
@@ -110,10 +112,10 @@ export function ProjectContextProvider({ children }) {
   }
 
   const ctxValue = {
-    project,
-    selectedProject: selectedProjectID,
+    projects,
+    selectedProjectID,
     setSelectedProject: handleProjectSelect,
-    setProject: handleSetProject,
+    setProjects: handleSetProject,
     addMember: handleAddMember,
     removeMember: handleRemoveMember,
     addTask: handleAddTask,

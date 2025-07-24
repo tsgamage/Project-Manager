@@ -9,16 +9,14 @@ export default function ViewProjectPage() {
   const loaderData = useRouteLoaderData("project");
   const params = useParams();
 
-  const { project, setProject, setSelectedProject } =
-    useContext(ProjectContext);
+  const { setSelectedProject } = useContext(ProjectContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const projectData = loaderData.data.projects;
 
   useEffect(() => {
-    setProject(projectData);
     setSelectedProject(params.projectID);
-  }, []);
+  }, [params.projectID, setSelectedProject]);
 
   function handleSideBarToggle() {
     setIsSidebarOpen((preValue) => !preValue);

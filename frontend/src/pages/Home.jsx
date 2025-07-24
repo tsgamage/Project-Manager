@@ -3,10 +3,20 @@ import ProjectCard from "../components/Home/ProjectCard";
 import Stats from "../components/Home/Stats";
 import Header from "../components/Home/Header";
 import Search from "../components/Home/Search";
+import { useContext, useEffect } from "react";
+import ProjectContext from "../store/project.context";
 
 export default function HomePage() {
   const loaderData = useRouteLoaderData("root");
   const projectsData = loaderData.data;
+
+  const { projects, setProjects } = useContext(ProjectContext);
+
+  useEffect(() => {
+    setProjects(projectsData);
+  }, [projectsData, setProjects]);
+
+  console.log(`projects:`, projects);
 
   return (
     <div className="min-h-screen bg-theme-light dark:bg-theme-dark">
@@ -17,7 +27,7 @@ export default function HomePage() {
 
         {/* Projects Grid */}
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {projectsData.map((project) => (
+          {projects.map((project) => (
             <ProjectCard key={project._id} project={project} />
           ))}
         </div>
