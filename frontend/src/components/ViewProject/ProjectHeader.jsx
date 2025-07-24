@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import useProgress from "../../hooks/useProgress.jsx";
 import useStatusClasses from "../../hooks/useStatusClasses.jsx";
+import { useState } from "react";
 
 export default function ProjectHeader({ project }) {
   const endDate = new Date(project.endDate);
@@ -9,6 +10,7 @@ export default function ProjectHeader({ project }) {
 
   const progress = useProgress(project);
   const { status, statusClasses } = useStatusClasses(progress);
+  const [expandText, setExpandText] = useState(false);
 
   return (
     <>
@@ -60,7 +62,9 @@ export default function ProjectHeader({ project }) {
             {new Date(project.startDate).toLocaleDateString()} -{" "}
             {new Date(project.endDate).toLocaleDateString()}
           </p>
-          <p className="text-sm text-stone-600 dark:text-stone-400 mb-2">Progress: {progress || 0}%</p>
+          <p className="text-sm text-stone-600 dark:text-stone-400 mb-2">
+            Progress: {progress || 0}%
+          </p>
           <div className="w-full bg-stone-200 dark:bg-stone-700 rounded-full h-2.5">
             <div
               className={`h-2.5 rounded-full ${
@@ -75,7 +79,20 @@ export default function ProjectHeader({ project }) {
         <h2 className="text-xl font-semibold text-header-light dark:text-header-dark mb-3">
           Project Overview
         </h2>
-        <p className="text-para-light dark:text-para-dark leading-relaxed">{project.description}</p>
+        <p className="text-para-light dark:text-para-dark leading-relaxed">
+          {project.description.length < 300 && project.description}
+          {project.description.length > 300 && expandText
+            ? project.description
+            : project.description.slice(0, 300)}
+          {project.description.length > 300 && (
+            <span
+              className="cursor-pointer text-blue-500"
+              onClick={() => setExpandText((preValue) => !preValue)}
+            >
+              {expandText ? " See Less" : " ... See More"}
+            </span>
+          )}
+        </p>
       </div>
     </>
   );

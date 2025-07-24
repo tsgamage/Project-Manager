@@ -6,7 +6,6 @@ import Sidebar from "../components/ViewProject/SideBar.jsx";
 import FloatingSidebarToggle from "../components/ViewProject/FloatingSidebarToggle.jsx";
 
 export default function ViewProjectPage() {
-  window.scrollTo({ top: 0, left: 0 });
   const params = useParams();
   const loaderData = useRouteLoaderData("project");
 

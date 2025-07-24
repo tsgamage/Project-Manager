@@ -154,7 +154,6 @@ export function ProjectContextProvider({ children }) {
         });
       }
       const resData = await response.json();
-      console.log(resData.data._id);
 
       setProjects([resData.data, ...projects]);
     } catch (e) {
