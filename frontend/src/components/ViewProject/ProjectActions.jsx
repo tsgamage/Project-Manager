@@ -1,6 +1,7 @@
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import ProjectContext from "../../store/project.context";
 import { useNavigate } from "react-router-dom";
+import DeleteWarningModal from "../UI/Modals/DeleteWarningModal";
 
 const deleteIcon = (
   <svg
@@ -37,13 +38,14 @@ const editIcon = (
 );
 
 export default function ProjectActions({ onEdit }) {
+  const deleteModal = useRef();
   const navigate = useNavigate();
   const { deleteProject } = useContext(ProjectContext);
 
   function handleDeleteProject() {
-    deleteProject();
-    navigate("/");
+    deleteModal.current.open();
   }
+
   const editBtnClasses =
     "px-4 py-2 bg-stone-200 hover:bg-stone-300 dark:bg-stone-700 dark:hover:bg-stone-600 rounded-lg text-stone-800 dark:text-stone-200 flex items-center justify-center gap-2 transition-colors";
 
@@ -51,13 +53,26 @@ export default function ProjectActions({ onEdit }) {
     "px-4 py-2 bg-red-500/10 hover:bg-red-500/20 dark:bg-red-900/20 dark:hover:bg-red-900/30 rounded-lg text-red-600 dark:text-red-400 flex items-center justify-center gap-2 transition-colors cursor-pointer";
 
   return (
-    <div className="flex flex-col sm:flex-row gap-3 justify-end">
-      <button onClick={onEdit} className={editBtnClasses}>
-        {editIcon} Edit Project
-      </button>
-      <button onClick={handleDeleteProject} className={deleteBtnClasses}>
-        {deleteIcon} Delete Project
-      </button>
-    </div>
+    <>
+      <DeleteWarningModal
+        ref={deleteModal}
+        message="Are you sure you want to delete this project? This action cannot be undone."
+        onCancel={() => deleteModal.current.close()}
+        onConfirm={() => {
+          deleteProject();
+          deleteModal.current.close();
+          navigate("/");
+        }}
+      />
+      
+      <div className="flex flex-col sm:flex-row gap-3 justify-end">
+        <button onClick={onEdit} className={editBtnClasses}>
+          {editIcon} Edit Project
+        </button>
+        <button onClick={handleDeleteProject} className={deleteBtnClasses}>
+          {deleteIcon} Delete Project
+        </button>
+      </div>
+    </>
   );
 }

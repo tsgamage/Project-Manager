@@ -168,8 +168,9 @@ export function ProjectContextProvider({ children }) {
     const response = await fetch(`http://localhost:3000/api/project/${selectedProjectID}`, {
       method: "DELETE",
     });
-    const data = await response.json();
-    console.log(data);
+    if (!response.ok) {
+      throw new Error("Something went wrong");
+    }
     setSelectedProject(EMPTY_PROJECT);
     setProjects(projects.filter((p) => p._id !== selectedProjectID));
   }
