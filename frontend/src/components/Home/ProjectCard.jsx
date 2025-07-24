@@ -29,37 +29,27 @@ export default function ProjectCard({ project }) {
     >
       <div className="p-6 flex-1">
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-xl font-bold text-stone-800 dark:text-stone-100">
-            {title}
-          </h3>
+          <h3 className="text-xl font-bold text-stone-800 dark:text-stone-100">{title}</h3>
           <span
-            className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${statusClasses}`}
+            className={`text-xs font-semibold px-2.5 py-0.5 rounded-full whitespace-nowrap ${statusClasses}`}
           >
             {status}
           </span>
         </div>
 
-        <p className="text-stone-600 dark:text-stone-300 mb-6 min-h-[60px]">
-          {description}
-        </p>
+        <p className="text-stone-600 dark:text-stone-300 mb-6 min-h-[60px]">{description}</p>
 
         {/* Progress Bar */}
 
         <div className="mb-6">
           <div className="flex justify-between text-sm text-stone-600 dark:text-stone-400 mb-1">
             <span>Progress: {progress}%</span>
-            <span>
-              {daysRemaining > 0 ? `${daysRemaining} days left` : "Overdue"}
-            </span>
+            <span>{daysRemaining > 0 ? `${daysRemaining} days left` : "Overdue"}</span>
           </div>
           <div className="w-full bg-stone-200 dark:bg-stone-700 rounded-full h-2">
             <div
               className={`h-2 rounded-full ${
-                progress < 30
-                  ? "bg-red-500"
-                  : progress < 70
-                  ? "bg-yellow-500"
-                  : "bg-green-500"
+                progress < 30 ? "bg-red-500" : progress < 70 ? "bg-yellow-500" : "bg-green-500"
               }`}
               style={{ width: `${progress}%` }}
             ></div>
