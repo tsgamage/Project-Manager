@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html, body {
+  @apply bg-theme-light dark:bg-theme-dark;
+}
+
 @theme {
     --color-theme-dark: var(--color-stone-900);
     --color-theme-light: var(--color-stone-100);
