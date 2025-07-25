@@ -40,7 +40,7 @@ export default function HomePage() {
       setSortedProjects(projects.toReversed());
     } else if (sortOption === "deadline") {
       SORTOPTION = "deadline";
-      setSortedProjects(sortListAccordingToDealine(projects))
+      setSortedProjects(sortListAccordingToDealine(projects));
     }
   }, [sortOption, projects]);
 
@@ -121,6 +121,11 @@ export default function HomePage() {
           setSearchQuery={setSearchQuery}
           onReset={resetFilters}
         />
+
+        {/* All Projects Title */}
+        <h2 className="text-2xl md:text-3xl lg:text-3xl font-bold text-header-light dark:text-header-dark mb-6 mt-8 text-center md:text-left">
+          {filter} Projects
+        </h2>
 
         {/* Projects Grid */}
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
