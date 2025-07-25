@@ -5,6 +5,7 @@ import Stats from "../components/Home/Stats.jsx";
 import Header from "../components/Home/Header.jsx";
 import Sortings from "../components/Home/Sortings.jsx";
 import ProjectContext from "../store/project.context.jsx";
+import { sortListAccordingToDealine } from "../util/Sorting.js";
 
 let FILTER = "All";
 let SORTOPTION = "newest";
@@ -39,7 +40,7 @@ export default function HomePage() {
       setSortedProjects(projects.toReversed());
     } else if (sortOption === "deadline") {
       SORTOPTION = "deadline";
-      console.log("Hello Deadline");
+      setSortedProjects(sortListAccordingToDealine(projects))
     }
   }, [sortOption, projects]);
 
