@@ -92,6 +92,20 @@ export default function HomePage() {
     }
   }, [filteredProjects, searchQuery]);
 
+  function resetFilters(name) {
+    if (name === "all") {
+      setFilter("All");
+      setSortOption("newest");
+      setSearchQuery("");
+    } else if (name === "filter") {
+      setFilter("All");
+    } else if (name === "sort") {
+      setSortOption("newest");
+    } else if (name === "search") {
+      setSearchQuery("");
+    }
+  }
+
   return (
     <div className="min-h-screen bg-theme-light dark:bg-theme-dark">
       <main className="container mx-auto px-4 py-8">
@@ -104,6 +118,7 @@ export default function HomePage() {
           setSortOption={setSortOption}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
+          onReset={resetFilters}
         />
 
         {/* Projects Grid */}
@@ -137,11 +152,7 @@ export default function HomePage() {
               Try adjusting your search or filter to find what you're looking for.
             </p>
             <button
-              onClick={() => {
-                setFilter("All");
-                setSortOption("newest");
-                setSearchQuery("");
-              }}
+              onClick={() => resetFilters("all")}
               className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
             >
               Reset Filters

@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 
-export default forwardRef(function Search({ onSearch, ...props }, ref) {
+export default forwardRef(function Search({ onSearch, onReset, ...props }, ref) {
   return (
     <>
       <div className="flex-1">
@@ -30,10 +30,33 @@ export default forwardRef(function Search({ onSearch, ...props }, ref) {
             type="text"
             ref={ref}
             onChange={(e) => onSearch(e.target.value)}
-            className="block w-full pl-10 pr-3 py-3 border border-stone-300 dark:border-stone-700 rounded-lg bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-200 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="block w-full pl-10 pr-8 py-3 border border-stone-300 dark:border-stone-700 rounded-lg bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-200 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="Search by project name or description..."
             {...props}
           />
+
+          {props.value && props.value.length > 0 && (
+            <button
+              type="button"
+              aria-label="Clear search"
+              className="absolute inset-y-0 right-0 pr-2 flex items-center hover:text-stone-600 dark:hover:text-stone-200 transition-colors"
+              onClick={() => onReset("search")}
+              tabIndex={0}
+            >
+              <svg
+                className="h-6 w-6 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 transition-colors"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 8.586l3.536-3.535a1 1 0 111.415 1.414L11.414 10l3.537 3.536a1 1 0 01-1.415 1.414L10 11.414l-3.536 3.536a1 1 0 01-1.414-1.414L8.586 10 5.05 6.464A1 1 0 016.464 5.05L10 8.586z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          )}
         </div>
       </div>
     </>
