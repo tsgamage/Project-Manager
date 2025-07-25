@@ -23,7 +23,7 @@ export default function ViewProjectPage() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-theme-light dark:bg-theme-dark">
-      <FloatingSidebarToggle onToggle={handleSideBarToggle} />
+      <FloatingSidebarToggle sideBarState={isSidebarOpen} onToggle={handleSideBarToggle} />
       <Sidebar isSidebarOpen={isSidebarOpen} onClose={handleSideBarToggle} />
       {/* checking this because if not the component renders 4 times and first 2 time it gets the old
       projects data */}
