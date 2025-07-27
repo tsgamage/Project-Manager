@@ -1,15 +1,16 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import RootLayout from "./pages/Root";
-import HomePage from "./pages/Home";
 import ViewProjectPage, { viewProjectLoader } from "./pages/ViewProject";
 import { projectsLoader } from "./pages/Home";
-import AddProjectPage from "./pages/AddProject";
-import LoginPage from "./pages/Login";
-import SignupPage from "./pages/Signup";
-import ForgotPasswordPage from "./pages/ForgotPassword";
-import VerifyCodePage from "./pages/VerifyCode";
-import ResetPasswordPage from "./pages/ResetPassword";
 import { ProjectContextProvider } from "./store/project.context";
+import RootLayout from "./pages/Root";
+import HomePage from "./pages/Home";
+import AddProjectPage from "./pages/AddProject";
+import AuthRoot from "./pages/auth/AuthRoot";
+import LoginPage from "./pages/auth/Login";
+import SignupPage from "./pages/auth/Signup";
+import ForgotPasswordPage from "./pages/auth/ForgotPassword";
+import VerifyCodePage from "./pages/auth/VerifyCode";
+import ResetPasswordPage from "./pages/auth/ResetPassword";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -33,24 +34,15 @@ export default function App() {
       ],
     },
     {
-      path: "/login",
-      element: <LoginPage />,
-    },
-    {
-      path: "/signup",
-      element: <SignupPage />,
-    },
-    {
-      path: "/forgot-password",
-      element: <ForgotPasswordPage />,
-    },
-    {
-      path: "/verify-code",
-      element: <VerifyCodePage />,
-    },
-    {
-      path: "/reset-password",
-      element: <ResetPasswordPage />,
+      path: "/auth",
+      element: <AuthRoot />,
+      children: [
+        { path: "login", element: <LoginPage /> },
+        { path: "signup", element: <SignupPage /> },
+        { path: "forgot-password", element: <ForgotPasswordPage /> },
+        { path: "verify-code", element: <VerifyCodePage /> },
+        { path: "reset-password", element: <ResetPasswordPage /> },
+      ],
     },
   ]);
 

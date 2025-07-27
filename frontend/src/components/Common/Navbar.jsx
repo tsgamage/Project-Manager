@@ -21,7 +21,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`w-full bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-700 sticky top-0 z-50 transition-all duration-300 ${
+      className={`w-full bg-white dark:bg-stone-800 border-b border-stone-200 dark:border-stone-700 sticky top-0 z-50 transition-all duration-300 ${
         isScrolled ? "py-2 shadow-md" : "py-4"
       }`}
     >
@@ -99,7 +99,7 @@ export default function Navbar() {
 
             {/* Auth Button - Show when not authenticated */}
             <Link
-              to="/login"
+              to="/auth/login"
               className="text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition-colors font-medium"
             >
               Sign in
