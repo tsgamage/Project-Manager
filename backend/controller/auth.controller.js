@@ -154,3 +154,38 @@ export async function forgotPassword(req, res) {
     res.status(400).json({ success: false, message: err.message });
   }
 }
+
+export async function resetPassword(req, res) {
+  const { email, password } = req.body;
+  const { token } = req.params;
+  try {
+    if (!token) {
+      return res.status(400).json({ success: false, message: "Token is required" });
+    }
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "All fields are required" });
+    }
+
+    const user = await User.findOne({
+      email,
+      resetPasswordToken: token,
+      resetPasswordExpiresAt: { $gt: new Date().toISOString() },
+    });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired password reset token" });
+    }
+
+    const hashedPassword = await bcryptjs.hash(password, 10);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ success: true, message: "Password reset successfully" });
+  } catch (err) {
+    console.log("Error while resetting password:", err);
+    res.status(400).json({ success: false, message: err.message });
+  }
+}
