@@ -3,7 +3,7 @@ import { AtSign, Loader } from "lucide-react";
 import { useActionState, useContext } from "react";
 import TextLink from "./common/TextLink";
 import InputAuth from "./common/InputAuth";
-import { toast, Toaster } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import AuthContext from "../../store/auth.context";
 
 export default function LoginPage() {
@@ -28,7 +28,6 @@ export default function LoginPage() {
   const [formState, formStateAction, pending] = useActionState(signupAction);
   return (
     <div className="min-h-screen bg-stone-100 dark:bg-stone-900">
-      <Toaster />
       {/* Main Content */}
       <div className="flex items-center justify-center px-4 py-12">
         <div className="max-w-md w-full space-y-8">

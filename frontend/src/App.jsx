@@ -12,6 +12,7 @@ import SignupPage from "./pages/auth/Signup";
 import ForgotPasswordPage from "./pages/auth/ForgotPassword";
 import VerifyCodePage from "./pages/auth/VerifyCode";
 import ResetPasswordPage from "./pages/auth/ResetPassword";
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -50,6 +51,7 @@ export default function App() {
   return (
     <AuthContextProvider>
       <ProjectContextProvider>
+        <Toaster />
         <RouterProvider router={router}></RouterProvider>
       </ProjectContextProvider>
     </AuthContextProvider>
