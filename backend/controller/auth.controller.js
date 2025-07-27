@@ -88,3 +88,37 @@ export async function logout(req, res) {
   res.clearCookie("token");
   res.status(200).json({ success: true, message: "Logged out successfully" });
 }
+
+export async function verifyEmail(req, res) {
+  const { code, email } = req.body;
+  try {
+    const user = await User.findOne({
+      email,
+      verificationToken: code,
+      verificationTokenExpiresAt: { $gt: new Date().toISOString() },
+    });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired verification code" });
+    }
+
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpiresAt = undefined;
+
+    await user.save();
+
+    // await sendWelcomeEmail(user.email, user.name);
+
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully",
+      user: { ...user._doc, password: undefined },
+    });
+  } catch (err) {
+    console.log("Error while verifying email:", err);
+    res.status(400).json({ success: false, message: err.message });
+  }
+}
