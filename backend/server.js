@@ -9,14 +9,14 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
 const PORT = process.env.PORT || 3000;
 
 app.use("/api/project", projectRoutes);
 app.use("/api/auth/", authRoutes);
 
-app.listen(PORT, "0.0.0.0", async () => {
-  console.log("Server is running on port", PORT);
+app.listen(PORT, async () => {
   await connectionDB();
+  console.log("Server is running on port", PORT);
 });
