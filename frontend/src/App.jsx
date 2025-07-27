@@ -42,7 +42,7 @@ export default function App() {
         { path: "login", element: <LoginPage /> },
         { path: "signup", element: <SignupPage /> },
         { path: "forgot-password", element: <ForgotPasswordPage /> },
-        { path: "verify-code", element: <VerifyCodePage /> },
+        { path: "verify-mail", element: <VerifyCodePage /> },
         { path: "reset-password", element: <ResetPasswordPage /> },
       ],
     },
