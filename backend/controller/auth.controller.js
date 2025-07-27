@@ -1,5 +1,6 @@
 import { User } from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
+import crypto from "crypto";
 import generateTokenAndSetCookie from "../utils/generateTokenAndSetCookie.js";
 
 export async function signup(req, res) {
@@ -119,6 +120,37 @@ export async function verifyEmail(req, res) {
     });
   } catch (err) {
     console.log("Error while verifying email:", err);
+    res.status(400).json({ success: false, message: err.message });
+  }
+}
+
+export async function forgotPassword(req, res) {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+
+    // Do not reveal if the user exists or not
+    if (!user) {
+      return res
+        .status(200)
+        .json({ success: true, message: "Password reset email sent successfully" });
+    }
+
+    const passwordResetToken = crypto.randomBytes(20).toString("hex");
+    const passwordResetTokenExpiresIn = new Date(
+      Date.now() + parseInt(process.env.FORGOT_PASSWORD_CODE_EXPIRES_IN)
+    ).toISOString();
+
+    user.resetPasswordToken = passwordResetToken;
+    user.resetPasswordExpiresAt = passwordResetTokenExpiresIn;
+
+    await user.save();
+
+    // await sendPasswordResetEmail(user.email, passwordResetToken);
+
+    res.status(200).json({ success: true, message: "Password reset email sent successfully" });
+  } catch (err) {
+    console.log("Error while sending forgot password email:", err);
     res.status(400).json({ success: false, message: err.message });
   }
 }
