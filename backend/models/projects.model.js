@@ -12,11 +12,11 @@ const teamMemberSchema = mongoose.Schema({
 });
 
 const projectSchema = mongoose.Schema({
+  userID: { type: mongoose.Schema.Types.ObjectId, required: true },
   title: { type: String, required: true },
   description: { type: String, required: true },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
-  // status: { type: String, required: true },
   tasks: { type: [taskSchema], default: [] },
   team: { type: [teamMemberSchema], default: [] },
 });
