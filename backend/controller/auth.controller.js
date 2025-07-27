@@ -189,3 +189,24 @@ export async function resetPassword(req, res) {
     res.status(400).json({ success: false, message: err.message });
   }
 }
+
+export async function checkAuth(req, res) {
+  const userID = req.userID;
+  console.log(userID);
+
+  if (!userID) {
+    return res.status(401).json({ success: false, message: "Unauthorized - No user ID found" });
+  }
+
+  try {
+    const user = await User.findOne({ _id: userID }).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({ success: true, user });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+}
