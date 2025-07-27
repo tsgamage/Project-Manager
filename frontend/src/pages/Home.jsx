@@ -172,7 +172,9 @@ export default function HomePage() {
 
 export async function projectsLoader() {
   try {
-    const response = await fetch("http://localhost:3000/api/project/");
+    const response = await fetch("http://localhost:3000/api/project/", {
+      credentials: "include",
+    });
 
     if (!response.ok) {
       return new Response(JSON.stringify({ message: "Something went wrong" }), {

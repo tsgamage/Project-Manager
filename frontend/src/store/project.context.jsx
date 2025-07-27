@@ -38,6 +38,7 @@ export function ProjectContextProvider({ children }) {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       });
       if (!response.ok) {
         throw new Error("Something went wrong");
@@ -147,6 +148,7 @@ export function ProjectContextProvider({ children }) {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       });
       if (!response.ok) {
         throw new Response(JSON.stringify({ message: "Something went wrong" }), {
@@ -166,6 +168,7 @@ export function ProjectContextProvider({ children }) {
   async function handleDeleteProject() {
     const response = await fetch(`http://localhost:3000/api/project/${selectedProjectID}`, {
       method: "DELETE",
+      credentials: "include",
     });
     if (!response.ok) {
       throw new Error("Something went wrong");

@@ -34,7 +34,9 @@ export default function ViewProjectPage() {
 
 export async function viewProjectLoader({ params }) {
   try {
-    const response = await fetch(`http://localhost:3000/api/project/${params.projectID}`);
+    const response = await fetch(`http://localhost:3000/api/project/${params.projectID}`, {
+      credentials: "include",
+    });
 
     if (!response.ok) {
       return new Response(

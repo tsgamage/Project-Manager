@@ -1,7 +1,8 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ViewProjectPage, { viewProjectLoader } from "./pages/ViewProject";
-import { projectsLoader } from "./pages/Home";
+import { AuthContextProvider } from "./store/auth.context";
 import { ProjectContextProvider } from "./store/project.context";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { projectsLoader } from "./pages/Home";
+import ViewProjectPage, { viewProjectLoader } from "./pages/ViewProject";
 import RootLayout from "./pages/Root";
 import HomePage from "./pages/Home";
 import AddProjectPage from "./pages/AddProject";
@@ -47,8 +48,10 @@ export default function App() {
   ]);
 
   return (
-    <ProjectContextProvider>
-      <RouterProvider router={router}></RouterProvider>
-    </ProjectContextProvider>
+    <AuthContextProvider>
+      <ProjectContextProvider>
+        <RouterProvider router={router}></RouterProvider>
+      </ProjectContextProvider>
+    </AuthContextProvider>
   );
 }

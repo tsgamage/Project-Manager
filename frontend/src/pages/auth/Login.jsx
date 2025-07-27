@@ -1,34 +1,34 @@
-import { Link, redirect } from "react-router-dom";
-import { AtSign } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { AtSign, Loader } from "lucide-react";
 import { useActionState, useContext } from "react";
 import TextLink from "./common/TextLink";
 import InputAuth from "./common/InputAuth";
-import { toast } from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 import AuthContext from "../../store/auth.context";
 
 export default function LoginPage() {
-  const { login, error } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   async function signupAction(preState, formData) {
     const dataObj = Object.fromEntries(formData);
 
-    await login(dataObj);
+    const resData = await login(dataObj);
 
-    if (error) {
-      toast.error(error);
+    if (resData.error) {
+      toast.error(resData.error);
       return dataObj;
     } else {
-      toast.success("Login Success!");
-      redirect("/");
+      toast.success("Login successful");
+      navigate("/");
+      return { email: "", password: "" };
     }
   }
 
-  const [formState, formStateAction, pending] = useActionState(signupAction, {
-    email: "",
-    password: "",
-  });
+  const [formState, formStateAction, pending] = useActionState(signupAction);
   return (
     <div className="min-h-screen bg-stone-100 dark:bg-stone-900">
+      <Toaster />
       {/* Main Content */}
       <div className="flex items-center justify-center px-4 py-12">
         <div className="max-w-md w-full space-y-8">
@@ -47,14 +47,14 @@ export default function LoginPage() {
                 label="Email Address"
                 icon={<AtSign />}
                 placeholder="Enter your email"
-                defaultValue={formState.email}
+                defaultValue={formState?.email}
               />
               <InputAuth
                 name="password"
                 label="Password"
                 password
                 placeholder="Enter your password"
-                defaultValue={formState.password}
+                defaultValue={formState?.password}
               />
 
               {/* Remember Me & Forgot Password */}
