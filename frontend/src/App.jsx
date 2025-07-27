@@ -4,6 +4,11 @@ import HomePage from "./pages/Home";
 import ViewProjectPage, { viewProjectLoader } from "./pages/ViewProject";
 import { projectsLoader } from "./pages/Home";
 import AddProjectPage from "./pages/AddProject";
+import LoginPage from "./pages/Login";
+import SignupPage from "./pages/Signup";
+import ForgotPasswordPage from "./pages/ForgotPassword";
+import VerifyCodePage from "./pages/VerifyCode";
+import ResetPasswordPage from "./pages/ResetPassword";
 import { ProjectContextProvider } from "./store/project.context";
 
 export default function App() {
@@ -26,6 +31,26 @@ export default function App() {
           ],
         },
       ],
+    },
+    {
+      path: "/login",
+      element: <LoginPage />,
+    },
+    {
+      path: "/signup",
+      element: <SignupPage />,
+    },
+    {
+      path: "/forgot-password",
+      element: <ForgotPasswordPage />,
+    },
+    {
+      path: "/verify-code",
+      element: <VerifyCodePage />,
+    },
+    {
+      path: "/reset-password",
+      element: <ResetPasswordPage />,
     },
   ]);
 

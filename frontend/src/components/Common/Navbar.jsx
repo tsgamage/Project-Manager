@@ -97,8 +97,16 @@ export default function Navbar() {
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
 
-            {/* Profile Dropdown */}
-            <div className="relative">
+            {/* Auth Button - Show when not authenticated */}
+            <Link
+              to="/login"
+              className="text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition-colors font-medium"
+            >
+              Sign in
+            </Link>
+
+            {/* Profile Dropdown - Show when authenticated */}
+            {/* <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="flex items-center space-x-2 focus:outline-none group"
@@ -118,47 +126,44 @@ export default function Navbar() {
                 </span>
               </button>
 
-              {/* Dropdown Menu */}
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-stone-800 rounded-lg shadow-xl border border-stone-200 dark:border-stone-700 overflow-hidden z-50 animate-fade-in">
-                  <div className="px-4 py-3 border-b border-stone-200 dark:border-stone-700">
-                    <p className="text-sm font-medium text-stone-900 dark:text-stone-200">
-                      User Name
-                    </p>
-                    <p className="text-sm text-stone-500 dark:text-stone-400 truncate">
-                      user@example.com
-                    </p>
-                  </div>
-
-                  <div className="py-1">
-                    <Link
-                      to="/profile"
-                      className="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-700 transition-colors"
-                    >
-                      Your Profile
-                    </Link>
-                    <Link
-                      to="/settings"
-                      className="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-700 transition-colors"
-                    >
-                      Settings
-                    </Link>
-                    <Link
-                      to="/projects"
-                      className="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-700 transition-colors"
-                    >
-                      Your Projects
-                    </Link>
-                  </div>
-
-                  <div className="py-1 border-t border-stone-200 dark:border-stone-700">
-                    <button className="w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-red-50 hover:text-red-600 dark:text-stone-300 dark:hover:bg-red-900/30 dark:hover:text-red-400 transition-colors">
-                      Sign out
-                    </button>
-                  </div>
+              <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-stone-800 rounded-lg shadow-xl border border-stone-200 dark:border-stone-700 overflow-hidden z-50 animate-fade-in">
+                <div className="px-4 py-3 border-b border-stone-200 dark:border-stone-700">
+                  <p className="text-sm font-medium text-stone-900 dark:text-stone-200">
+                    User Name
+                  </p>
+                  <p className="text-sm text-stone-500 dark:text-stone-400 truncate">
+                    user@example.com
+                  </p>
                 </div>
-              )}
-            </div>
+
+                <div className="py-1">
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-700 transition-colors"
+                  >
+                    Your Profile
+                  </Link>
+                  <Link
+                    to="/settings"
+                    className="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-700 transition-colors"
+                  >
+                    Settings
+                  </Link>
+                  <Link
+                    to="/projects"
+                    className="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-700 transition-colors"
+                  >
+                    Your Projects
+                  </Link>
+                </div>
+
+                <div className="py-1 border-t border-stone-200 dark:border-stone-700">
+                  <button className="w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-red-50 hover:text-red-600 dark:text-stone-300 dark:hover:bg-red-900/30 dark:hover:text-red-400 transition-colors">
+                    Sign out
+                  </button>
+                </div>
+              </div>
+            </div> */}
           </div>
         </nav>
       </div>
