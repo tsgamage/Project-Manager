@@ -12,6 +12,8 @@ const AuthContext = createContext({
   login: () => {},
   signup: () => {},
   logout: () => {},
+  verifyEmail: () => {},
+  checkAuthStatus: () => {},
 });
 
 const API_URL = "http://localhost:3000/api/auth";
@@ -70,6 +72,28 @@ export function AuthContextProvider({ children }) {
     }
   }
 
+  async function verifyEmail(code) {
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/verify-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ code }),
+        credentials: "include",
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        return { error: data.message || "Verification failed" };
+      } else {
+        return { success: true, message: data.message || "Email verified successfully" };
+      }
+    } catch (err) {
+      return { error: err.message || "Verification failed" };
+    }
+  }
+
   async function checkAuthStatus() {
     setIsCheckingAuth(true);
     console.log("Checking authentication status...");
@@ -109,6 +133,8 @@ export function AuthContextProvider({ children }) {
     isCheckingAuth,
     login: handleLogin,
     signup: handleSignup,
+    verifyEmail,
+    checkAuthStatus,
   };
   return <AuthContext.Provider value={authCtxValue}>{children}</AuthContext.Provider>;
 }
