@@ -12,15 +12,13 @@ import verifyToken from "../middleware/verifyToken.js";
 
 const router = Router();
 
-router.use(verifyToken)
-
-router.get("/check-auth", checkAuth);
+router.get("/check-auth", verifyToken, checkAuth);
 
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/logout", logout);
 
-router.post("/verify-email", verifyEmail);
+router.post("/verify-email", verifyToken, verifyEmail);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
 
