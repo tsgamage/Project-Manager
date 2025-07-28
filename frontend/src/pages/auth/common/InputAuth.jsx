@@ -1,5 +1,6 @@
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import ErrorText from "./ErrorText";
 
 export default function InputAuth({
   name,
@@ -8,6 +9,7 @@ export default function InputAuth({
   placeholder,
   label,
   checkbox,
+  errorText,
   ...props
 }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -52,6 +54,7 @@ export default function InputAuth({
               </button>
             )}
           </div>
+          {errorText && <ErrorText text={errorText} />}
         </div>
       )}
 
