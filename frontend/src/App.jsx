@@ -1,6 +1,6 @@
 import { AuthContextProvider } from "./store/auth.context";
 import { ProjectContextProvider } from "./store/project.context";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import { projectsLoader } from "./pages/Home";
 import ViewProjectPage, { viewProjectLoader } from "./pages/ViewProject";
 import RootLayout from "./pages/Root";
@@ -13,13 +13,19 @@ import ForgotPasswordPage from "./pages/auth/ForgotPassword";
 import VerifyCodePage from "./pages/auth/VerifyCode";
 import ResetPasswordPage from "./pages/auth/ResetPassword";
 import { Toaster } from "react-hot-toast";
+import ProtectedRoute from "./components/Auth/ProtectedRoute.jsx";
+import RedirectUserIfAuthenticated from "./components/Auth/RedirectUserIfAuthenticated.jsx";
 
 export default function App() {
   const router = createBrowserRouter([
     {
       id: "root",
       path: "/",
-      element: <RootLayout />,
+      element: (
+        <ProtectedRoute>
+          <RootLayout />
+        </ProtectedRoute>
+      ),
       loader: projectsLoader,
       children: [
         { index: true, element: <HomePage /> },
@@ -37,7 +43,11 @@ export default function App() {
     },
     {
       path: "/auth",
-      element: <AuthRoot />,
+      element: (
+        <RedirectUserIfAuthenticated>
+          <AuthRoot />
+        </RedirectUserIfAuthenticated>
+      ),
       children: [
         { path: "login", element: <LoginPage /> },
         { path: "signup", element: <SignupPage /> },
@@ -45,6 +55,10 @@ export default function App() {
         { path: "verify-mail", element: <VerifyCodePage /> },
         { path: "reset-password", element: <ResetPasswordPage /> },
       ],
+    },
+    {
+      path: "*",
+      element: <Navigate to="/" replace />,
     },
   ]);
 

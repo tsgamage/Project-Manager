@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createContext } from "react";
 
 const AuthContext = createContext({
@@ -11,14 +11,15 @@ const AuthContext = createContext({
   isCheckingAuth: false,
   login: () => {},
   signup: () => {},
+  logout: () => {},
 });
 
 const API_URL = "http://localhost:3000/api/auth";
 
 export function AuthContextProvider({ children }) {
   const [user, setUser] = useState();
-  const [isCheckingAuth, _setIsCheckingAuth] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(undefined);
+  const [isAuthenticated, setIsAuthenticated] = useState(undefined);
 
   async function handleLogin({ email, password }) {
     try {
@@ -68,6 +69,39 @@ export function AuthContextProvider({ children }) {
       return { error: err.message || "Signup failed" };
     }
   }
+
+  async function checkAuthStatus() {
+    setIsCheckingAuth(true);
+    console.log("Checking authentication status...");
+    try {
+      const response = await fetch(`${API_URL}/check-auth`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      console.log("Auth status response:", data);
+
+      if (response.ok) {
+        setUser(data.user);
+        setIsAuthenticated(true);
+      } else {
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+    } catch (err) {
+      console.error("Failed to check auth status:", err);
+      setUser(null);
+      setIsAuthenticated(false);
+    } finally {
+      setIsCheckingAuth(false);
+    }
+  }
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
 
   const authCtxValue = {
     user,
