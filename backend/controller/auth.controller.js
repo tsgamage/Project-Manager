@@ -93,10 +93,10 @@ export async function logout(req, res) {
 export async function verifyEmail(req, res) {
   const { code } = req.body;
   const userID = req.userID;
-  console.log(userID)
+  
   try {
     const user = await User.findOne({
-      userID,
+      _id: userID,
       verificationToken: code,
       verificationTokenExpiresAt: { $gt: new Date().toISOString() },
     });
