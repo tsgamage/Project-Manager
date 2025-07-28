@@ -91,10 +91,12 @@ export async function logout(req, res) {
 }
 
 export async function verifyEmail(req, res) {
-  const { code, email } = req.body;
+  const { code } = req.body;
+  const userID = req.userID;
+  console.log(userID)
   try {
     const user = await User.findOne({
-      email,
+      userID,
       verificationToken: code,
       verificationTokenExpiresAt: { $gt: new Date().toISOString() },
     });
