@@ -212,6 +212,9 @@ export async function resetPassword(req, res) {
     const hashedPassword = await bcryptjs.hash(password, 10);
 
     user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiresAt = undefined;
+
     await user.save();
 
     res.status(200).json({ success: true, message: "Password reset successfully" });
