@@ -93,7 +93,7 @@ export async function logout(req, res) {
 export async function verifyEmail(req, res) {
   const { code } = req.body;
   const userID = req.userID;
-  
+
   try {
     const user = await User.findOne({
       _id: userID,
@@ -122,6 +122,35 @@ export async function verifyEmail(req, res) {
     });
   } catch (err) {
     console.log("Error while verifying email:", err);
+    res.status(400).json({ success: false, message: err.message });
+  }
+}
+
+export async function resendVerificationCode(req, res) {
+  const userID = req.userID;
+  try {
+    const user = await User.findOne({ _id: userID });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    if (user.isVerified) {
+      return res.status(400).json({ success: false, message: "Email is already verified" });
+    }
+
+    const newVerificationToken = Math.floor(100000 + Math.random() * 900000).toString();
+    const newVerificationTokenExpiresAt = new Date(
+      Date.now() + parseInt(process.env.EMAIL_VERIFICATION_CODE_EXPIRES_IN, 10)
+    ).toISOString();
+
+    user.verificationToken = newVerificationToken;
+    user.verificationTokenExpiresAt = newVerificationTokenExpiresAt;
+    await user.save();
+
+    // await sendVerificationEmail(user.email, newVerificationToken);
+
+    res.status(200).json({ success: true, message: "Verification code resent successfully" });
+  } catch (err) {
+    console.log("Error while resending verification code:", err);
     res.status(400).json({ success: false, message: err.message });
   }
 }
