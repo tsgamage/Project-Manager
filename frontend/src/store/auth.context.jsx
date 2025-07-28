@@ -14,6 +14,7 @@ const AuthContext = createContext({
   logout: () => {},
   verifyEmail: () => {},
   checkAuthStatus: () => {},
+  resendVerificationCode: () => {},
 });
 
 const API_URL = "http://localhost:3000/api/auth";
@@ -84,13 +85,40 @@ export function AuthContextProvider({ children }) {
       });
       const data = await response.json();
 
+      if (response.status === 401) {
+        checkAuthStatus();
+      }
+
       if (!response.ok) {
-        return { error: data.message || "Verification failed" };
+        return { success: false, message: data.message || "Verification failed" };
       } else {
         return { success: true, message: data.message || "Email verified successfully" };
       }
     } catch (err) {
-      return { error: err.message || "Verification failed" };
+      return { success: false, message: err.message || "Verification failed" };
+    }
+  }
+
+  async function resendVerificationCode() {
+    try {
+      const response = await fetch(`${API_URL}/resend-verification`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      if (response.status === 401) {
+        checkAuthStatus();
+      }
+
+      if (!response.ok) {
+        return { success: false, message: data.message || "Resend failed" };
+      } else {
+        return { success: true, message: data.message || "Verification code resent successfully" };
+      }
+    } catch (err) {
+      return { success: false, message: err.message || "Resend failed" };
     }
   }
 
@@ -135,6 +163,7 @@ export function AuthContextProvider({ children }) {
     signup: handleSignup,
     verifyEmail,
     checkAuthStatus,
+    resendVerificationCode,
   };
   return <AuthContext.Provider value={authCtxValue}>{children}</AuthContext.Provider>;
 }
