@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, use, useEffect, useState } from "react";
 
 const ProjectContext = createContext({
   projects: [],
@@ -14,6 +14,7 @@ const ProjectContext = createContext({
   updateProject: () => {},
   addNewProject: () => {},
   deleteProject: () => {},
+  fetchProjects: () => {},
 });
 
 const EMPTY_PROJECT = {
@@ -49,6 +50,31 @@ export function ProjectContextProvider({ children }) {
       console.log(e.message);
     }
   }
+
+  async function fetchProjects() {
+    try {
+      const response = await fetch("http://localhost:3000/api/project/", {
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        return new Response(JSON.stringify({ message: "Something went wrong" }), {
+          status: 500,
+        });
+      }
+      const resData = await response.json();
+      setProjects(resData.data);
+      console.log("Projects fetched successfully", resData.data);
+    } catch (e) {
+      return new Response(JSON.stringify({ message: e.message }), {
+        status: 500,
+      });
+    }
+  }
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
   function handleSetSelectedProject(projectData) {
     setSelectedProject(projectData);
   }
@@ -164,7 +190,6 @@ export function ProjectContextProvider({ children }) {
       });
     }
   }
-
   async function handleDeleteProject() {
     const response = await fetch(`http://localhost:3000/api/project/${selectedProjectID}`, {
       method: "DELETE",
@@ -191,6 +216,7 @@ export function ProjectContextProvider({ children }) {
     updateProject: handleUpdateProject,
     addNewProject: handleAddNewProject,
     deleteProject: handleDeleteProject,
+    fetchProjects,
   };
 
   return <ProjectContext.Provider value={ctxValue}>{children}</ProjectContext.Provider>;
