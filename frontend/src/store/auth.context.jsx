@@ -11,7 +11,6 @@ const AuthContext = createContext({
   isCheckingAuth: false,
   login: () => {},
   signup: () => {},
-  logout: () => {},
   verifyEmail: () => {},
   checkAuthStatus: () => {},
   resendVerificationCode: () => {},
