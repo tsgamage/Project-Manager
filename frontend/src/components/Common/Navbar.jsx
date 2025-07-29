@@ -1,10 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, use } from "react";
 import { Link } from "react-router-dom";
+import AuthContext from "../../store/auth.context";
+import { ChevronUp, LogOut, Settings, SquareArrowOutUpRight, User } from "lucide-react";
+import { toast } from "react-hot-toast";
+import ProjectContext from "../../store/project.context";
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+
+  const { isAuthenticated, user, logout } = useContext(AuthContext);
+  const { projects } = useContext(ProjectContext);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,6 +20,24 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isDropdownOpen && !event.target.closest(".profile-dropdown")) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isDropdownOpen]);
+
+  function handleLogout() {
+    logout();
+    setIsDropdownOpen(false);
+    toast.success("Logged out successfully");
+  }
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -98,72 +123,126 @@ export default function Navbar() {
             </button>
 
             {/* Auth Button - Show when not authenticated */}
-            <Link
-              to="/auth/login"
-              className="text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition-colors font-medium"
-            >
-              Sign in
-            </Link>
+            {!isAuthenticated && !user && (
+              <Link
+                to="/auth/login"
+                className="text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition-colors font-medium"
+              >
+                Sign in
+              </Link>
+            )}
 
             {/* Profile Dropdown - Show when authenticated */}
-            {/* <div className="relative">
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center space-x-2 focus:outline-none group"
-              >
-                <div className="relative">
-                  <div
-                    className={`bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center rounded-full transition-all duration-300 ${
-                      isScrolled ? "w-8 h-8" : "w-10 h-10"
-                    }`}
-                  >
-                    <span className="text-white font-semibold">U</span>
+            {isAuthenticated && user && user.isVerified && (
+              <div className="relative profile-dropdown">
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="flex items-center space-x-3 focus:outline-none group"
+                >
+                  <div className="relative">
+                    <div
+                      className={`bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center rounded-full transition-all duration-300 shadow-lg ${
+                        isScrolled ? "w-8 h-8" : "w-10 h-10"
+                      }`}
+                    >
+                      <span className="text-white font-semibold text-sm">
+                        {user ? user.name[0] : "P"}
+                      </span>
+                    </div>
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 rounded-full border-2 border-white dark:border-stone-900 shadow-sm"></div>
                   </div>
-                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-stone-900"></div>
-                </div>
-                <span className="hidden lg:block text-stone-700 group-hover:text-stone-900 dark:text-stone-300 dark:group-hover:text-white transition-colors">
-                  User Name
-                </span>
-              </button>
+                  <div className="hidden lg:flex lg:flex-col lg:items-start">
+                    <span className="text-sm font-medium text-stone-700 group-hover:text-stone-900 dark:text-stone-300 dark:group-hover:text-white transition-colors truncate">
+                      {user ? user.name : "User Name"}
+                    </span>
+                    <span className="text-xs text-stone-500 dark:text-stone-400">Online</span>
+                  </div>
+                  <ChevronUp
+                    className={`hidden lg:block w-4 h-4 text-stone-400 transition-transform duration-200 ${
+                      isDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
 
-              <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-stone-800 rounded-lg shadow-xl border border-stone-200 dark:border-stone-700 overflow-hidden z-50 animate-fade-in">
-                <div className="px-4 py-3 border-b border-stone-200 dark:border-stone-700">
-                  <p className="text-sm font-medium text-stone-900 dark:text-stone-200">
-                    User Name
-                  </p>
-                  <p className="text-sm text-stone-500 dark:text-stone-400 truncate">
-                    user@example.com
-                  </p>
-                </div>
+                {/* Dropdown Menu */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-3 w-72 sm:w-80 bg-white dark:bg-stone-800 rounded-xl shadow-2xl border border-stone-200 dark:border-stone-700 overflow-hidden z-50 transform transition-all duration-200 ease-out">
+                    {/* Backdrop for mobile */}
+                    <div
+                      className="fixed inset-0 z-40 lg:hidden"
+                      onClick={() => setIsDropdownOpen(false)}
+                    ></div>
 
-                <div className="py-1">
-                  <Link
-                    to="/profile"
-                    className="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-700 transition-colors"
-                  >
-                    Your Profile
-                  </Link>
-                  <Link
-                    to="/settings"
-                    className="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-700 transition-colors"
-                  >
-                    Settings
-                  </Link>
-                  <Link
-                    to="/projects"
-                    className="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-700 transition-colors"
-                  >
-                    Your Projects
-                  </Link>
-                </div>
+                    {/* Header */}
+                    <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-b border-stone-200 dark:border-stone-700">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                          <span className="text-white font-semibold">U</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-stone-900 dark:text-stone-100 truncate">
+                            {user ? user.name : "User Name"}
+                          </p>
+                          <p className="text-sm text-stone-500 dark:text-stone-400 truncate">
+                            {user ? user.email : "user@example.com"}
+                          </p>
+                          <div className="flex items-center mt-1">
+                            <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+                            <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+                              Online
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-                <div className="py-1 border-t border-stone-200 dark:border-stone-700">
-                  <button className="w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-red-50 hover:text-red-600 dark:text-stone-300 dark:hover:bg-red-900/30 dark:hover:text-red-400 transition-colors">
-                    Sign out
-                  </button>
-                </div>
+                    {/* Menu Items */}
+                    <div className="py-2">
+                      <Link
+                        to="/profile"
+                        className="flex items-center px-6 py-3 text-sm text-stone-700 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-700/50 transition-colors group"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        <User className="w-4 h-4 mr-3 text-stone-400 group-hover:text-stone-600 dark:group-hover:text-stone-300" />
+                        Your Profile
+                      </Link>
+
+                      <Link
+                        to="/settings"
+                        className="flex items-center px-6 py-3 text-sm text-stone-700 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-700/50 transition-colors group"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        <Settings className="w-4 h-4 mr-3 text-stone-400 group-hover:text-stone-600 dark:group-hover:text-stone-300" />
+                        Settings
+                      </Link>
+
+                      <Link
+                        to="/projects"
+                        className="flex items-center px-6 py-3 text-sm text-stone-700 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-700/50 transition-colors group"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        <SquareArrowOutUpRight className="w-4 h-4 mr-3 text-stone-400 group-hover:text-stone-600 dark:group-hover:text-stone-300" />
+                        Your Projects ({projects && projects?.length})
+                      </Link>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="border-t border-stone-200 dark:border-stone-700"></div>
+
+                    {/* Sign Out */}
+                    <div className="py-2">
+                      <button
+                        className="flex items-center w-full px-6 py-3 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors group"
+                        onClick={handleLogout}
+                      >
+                        <LogOut className="w-4 h-4 mr-3 text-red-500 group-hover:text-red-600 dark:group-hover:text-red-400" />
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div> */}
+            )}
           </div>
         </nav>
       </div>

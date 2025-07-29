@@ -16,6 +16,7 @@ const AuthContext = createContext({
   checkAuthStatus: () => {},
   resendVerificationCode: () => {},
   forgotPassword: () => {},
+  logout: () => {},
 });
 
 const API_URL = "http://localhost:3000/api/auth";
@@ -150,6 +151,27 @@ export function AuthContextProvider({ children }) {
     }
   }
 
+  async function logout() {
+    try {
+      const response = await fetch(`${API_URL}/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return { success: false, message: "Logout failed" };
+      }
+      setUser(null);
+      setIsAuthenticated(false);
+      isCheckingAuth(false);
+      return { success: true, message: data.message || "Logged out successfully" };
+    } catch (err) {
+      return { success: false, message: err.message || "Logout failed" };
+    }
+  }
+
   async function checkAuthStatus() {
     setIsCheckingAuth(true);
     console.log("Checking authentication status...");
@@ -193,6 +215,7 @@ export function AuthContextProvider({ children }) {
     checkAuthStatus,
     resendVerificationCode,
     forgotPassword,
+    logout,
   };
   return <AuthContext.Provider value={authCtxValue}>{children}</AuthContext.Provider>;
 }
