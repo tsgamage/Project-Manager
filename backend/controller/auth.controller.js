@@ -226,7 +226,6 @@ export async function resetPassword(req, res) {
 
 export async function checkAuth(req, res) {
   const userID = req.userID;
-  console.log(userID);
 
   if (!userID) {
     return res.status(401).json({ success: false, message: "Unauthorized - No user ID found" });

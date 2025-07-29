@@ -2,8 +2,9 @@ import Project from "../models/projects.model.js";
 import mongoose from "mongoose";
 
 export const getAllProjects = async (req, res) => {
+  const userID = req.userID;
   try {
-    const project = await Project.find().sort({ _id: -1 });
+    const project = await Project.find({ userID }).sort({ _id: -1 });
     res.status(200).json({ success: true, data: project });
   } catch (e) {
     console.log("cannot get project", e.message);
