@@ -61,7 +61,6 @@ export const newProject = async (req, res) => {
 };
 
 export const updateProject = async (req, res) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   const { projectID } = req.params;
   const projectData = req.body;
 
