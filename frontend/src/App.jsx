@@ -6,6 +6,7 @@ import ViewProjectPage, { viewProjectLoader } from "./pages/ViewProject";
 import RootLayout from "./pages/Root";
 import HomePage from "./pages/Home";
 import AddProjectPage from "./pages/AddProject";
+import ProfilePage from "./pages/Profile";
 import AuthRoot from "./pages/auth/AuthRoot";
 import LoginPage from "./pages/auth/Login";
 import SignupPage from "./pages/auth/Signup";
@@ -22,7 +23,7 @@ export default function App() {
       id: "root",
       path: "/",
       element: (
-        <ProtectedRoute>
+        <ProtectedRoute viewing="root">
           <RootLayout />
         </ProtectedRoute>
       ),
@@ -55,6 +56,15 @@ export default function App() {
         { path: "verify-mail", element: <VerifyCodePage /> },
         { path: "reset-password", element: <ResetPasswordPage /> },
       ],
+    },
+    {
+      path: "/user",
+      element: (
+        <ProtectedRoute viewing="user">
+          <RootLayout />
+        </ProtectedRoute>
+      ),
+      children: [{ path: "profile", element: <ProfilePage /> }],
     },
     {
       path: "*",
