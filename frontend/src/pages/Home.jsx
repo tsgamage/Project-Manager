@@ -1,4 +1,3 @@
-import { useRouteLoaderData } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import ProjectCard from "../components/Home/ProjectCard.jsx";
 import Stats from "../components/Home/Stats.jsx";
@@ -6,14 +5,15 @@ import Header from "../components/Home/Header.jsx";
 import Sortings from "../components/Home/Sortings.jsx";
 import ProjectContext from "../store/project.context.jsx";
 import { sortListAccordingToDealine } from "../util/Sorting.js";
+import { FolderPlus, FolderSearch } from "lucide-react";
+import { Link } from "react-router-dom";
 
 let FILTER = "All";
 let SORTOPTION = "newest";
 let SEARCHQUERY = "";
 
 export default function HomePage() {
-  const loaderData = useRouteLoaderData("root");
-  const { projects, setProjects } = useContext(ProjectContext);
+  const { projects } = useContext(ProjectContext);
 
   const [sortOption, setSortOption] = useState(SORTOPTION);
   const [sortedProjects, setSortedProjects] = useState(projects);
@@ -21,15 +21,6 @@ export default function HomePage() {
   const [filteredProjects, setFilteredPRojects] = useState(projects);
   const [searchQuery, setSearchQuery] = useState(SEARCHQUERY);
   const [searchedProjects, setSearchedProjects] = useState([]);
-
-  useEffect(() => {
-    setProjects(projects[projects.length - 1]._id === "DUMMY" ? loaderData.data : projects);
-  }, []);
-
-  useEffect(() => {
-    setFilteredPRojects(projects);
-    setSortedProjects(projects);
-  }, [projects]);
 
   useEffect(() => {
     if (sortOption === "newest") {
@@ -108,8 +99,8 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-theme-light dark:bg-theme-dark">
-      <main className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-theme-light dark:bg-theme-dark ">
+      <main className="container lg:w-10/12 mx-auto px-4 py-8">
         <Stats />
         <Header />
         <Sortings
@@ -134,23 +125,30 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Empty State */}
-        {searchedProjects.length === 0 && (
+        {/* No Projects */}
+        {projects.length === 0 && (
           <div className="text-center py-20">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-24 w-24 mx-auto text-stone-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+            <FolderPlus className="h-24 w-24 mx-auto text-stone-400" />
+
+            <h3 className="text-2xl font-bold text-header-light dark:text-header-dark mt-6">
+              No projects found
+            </h3>
+            <p className="text-stone-600 dark:text-stone-400 mt-3 max-w-md mx-auto">
+              Create a new project to get started.
+            </p>
+            <Link
+              to="/project/new"
+              className="block w-fit mx-auto mt-6 px-6 py-3 cursor-pointer justify-center border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
+              Create New Project
+            </Link>
+          </div>
+        )}
+        {/* Empty State  */}
+        {projects.length > 0 && searchedProjects.length === 0 && (
+          <div className="text-center py-20">
+            <FolderSearch className="h-24 w-24 mx-auto text-stone-400" />
+
             <h3 className="text-2xl font-bold text-header-light dark:text-header-dark mt-6">
               No projects found
             </h3>
@@ -159,7 +157,7 @@ export default function HomePage() {
             </p>
             <button
               onClick={() => resetFilters("all")}
-              className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+              className="mt-6 px-6 py-3 cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
             >
               Reset Filters
             </button>
@@ -168,23 +166,4 @@ export default function HomePage() {
       </main>
     </div>
   );
-}
-
-export async function projectsLoader() {
-  try {
-    const response = await fetch("http://localhost:3000/api/project/", {
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      return new Response(JSON.stringify({ message: "Something went wrong" }), {
-        status: 500,
-      });
-    }
-    return response;
-  } catch (e) {
-    return new Response(JSON.stringify({ message: e.message }), {
-      status: 500,
-    });
-  }
 }

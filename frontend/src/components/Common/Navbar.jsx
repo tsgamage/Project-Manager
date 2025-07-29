@@ -11,7 +11,7 @@ export default function Navbar() {
   const [darkMode, setDarkMode] = useState(false);
 
   const { isAuthenticated, user, logout } = useContext(AuthContext);
-  const { projects } = useContext(ProjectContext);
+  const { projects, setProjects } = useContext(ProjectContext);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,6 +37,7 @@ export default function Navbar() {
     logout();
     setIsDropdownOpen(false);
     toast.success("Logged out successfully");
+    setProjects([]);
   }
 
   const toggleDarkMode = () => {

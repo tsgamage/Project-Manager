@@ -1,34 +1,25 @@
+import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Header() {
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 sm:gap-6">
       <div>
-        <h2 className="text-3xl font-bold text-header-light dark:text-header-dark">
+        <h2 className="text-2xl sm:text-3xl font-bold text-header-light dark:text-header-dark">
           Your Projects
         </h2>
-        <p className="text-stone-600 dark:text-stone-400 mt-2">
+        <p className="text-stone-600 dark:text-stone-400 mt-2 text-sm sm:text-base">
           Manage and track all your active projects
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-4">
-        <Link to="/project/new">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium flex items-center transition-colors cursor-pointer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 mr-2"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                clipRule="evenodd"
-              />
-            </svg>
-            New Project
-          </button>
+      <div className="flex flex-wrap gap-4 w-full sm:w-auto">
+        <Link
+          to="/project/new"
+          className="w-full sm:w-auto flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
+        >
+          <Plus className="w-5 h-5 mr-2" />
+          New Project
         </Link>
       </div>
     </div>

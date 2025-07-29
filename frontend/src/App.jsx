@@ -1,7 +1,6 @@
 import { AuthContextProvider } from "./store/auth.context";
 import { ProjectContextProvider } from "./store/project.context";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
-import { projectsLoader } from "./pages/Home";
 import ViewProjectPage, { viewProjectLoader } from "./pages/ViewProject";
 import RootLayout from "./pages/Root";
 import HomePage from "./pages/Home";
@@ -28,7 +27,6 @@ export default function App() {
           <RootLayout />
         </ProtectedRoute>
       ),
-      loader: projectsLoader,
       children: [
         { index: true, element: <HomePage /> },
         {
