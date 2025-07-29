@@ -1,35 +1,42 @@
-import { useState } from "react";
+import { useActionState, useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import AuthContext from "../../store/auth.context";
+import InputAuth from "./common/InputAuth";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const { forgotPassword } = useContext(AuthContext);
+
+  async function forgotPasswordAction(preState, formData) {
+    const dataObj = Object.fromEntries(formData);
     setError("");
 
-    if (!email.trim()) {
+    if (!dataObj.email.trim()) {
       setError("Please enter your email address");
       return;
     }
 
-    if (!/\S+@\S+\.\S+/.test(email)) {
+    if (!/\S+@\S+\.\S+/.test(dataObj.email)) {
       setError("Please enter a valid email address");
       return;
     }
 
-    setIsLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+    const response = await forgotPassword(dataObj.email);
+    if (response.error) {
+      return setError(response.error);
+    } else {
       setIsSubmitted(true);
-      // Handle forgot password logic here
-    }, 1000);
-  };
+      setEmail(dataObj.email);
+      setError("");
+    }
+
+    return dataObj;
+  }
+
+  const [formState, formStateAction, pending] = useActionState(forgotPasswordAction);
 
   if (isSubmitted) {
     return (
@@ -61,8 +68,8 @@ export default function ForgotPasswordPage() {
                   Check your email
                 </h2>
                 <p className="text-stone-600 dark:text-stone-400 mb-6">
-                  We've sent a 6-digit verification code to{" "}
-                  <span className="font-medium text-stone-900 dark:text-stone-100">{email}</span>
+                  We've sent a password reset link to
+                  <p className="font-medium text-stone-900 dark:text-stone-100">{email}</p>
                 </p>
 
                 <div className="space-y-4">
@@ -77,7 +84,7 @@ export default function ForgotPasswordPage() {
                     onClick={() => setIsSubmitted(false)}
                     className="w-full flex justify-center py-3 px-4 border border-stone-300 dark:border-stone-600 rounded-lg shadow-sm text-sm font-medium text-stone-700 dark:text-stone-300 bg-white dark:bg-stone-700 hover:bg-stone-50 dark:hover:bg-stone-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
                   >
-                    Resend code
+                    Edit email address
                   </button>
                 </div>
               </div>
@@ -85,10 +92,10 @@ export default function ForgotPasswordPage() {
               {/* Back to Login */}
               <div className="text-center mt-6">
                 <Link
-                  to="/login"
+                  to="/auth/login"
                   className="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
                 >
-                  ← Back to sign in
+                  ← Back to log in
                 </Link>
               </div>
             </div>
@@ -115,91 +122,36 @@ export default function ForgotPasswordPage() {
 
           {/* Forgot Password Form */}
           <div className="bg-white dark:bg-stone-800 rounded-2xl shadow-xl border border-stone-200 dark:border-stone-700 p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form action={formStateAction} className="space-y-6">
               {/* Email Field */}
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2"
-                >
-                  Email address
-                </label>
-                <div className="relative">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={`w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 placeholder-stone-500 dark:placeholder-stone-400 transition-colors ${
-                      error ? "border-red-500" : "border-stone-300 dark:border-stone-600"
-                    }`}
-                    placeholder="Enter your email address"
-                  />
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <svg
-                      className="h-5 w-5 text-stone-400"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                {error && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{error}</p>}
-              </div>
+              <InputAuth
+                name="email"
+                type="email"
+                label="Email address"
+                placeholder="Enter your email"
+                value={email}
+                defaultValue={formState?.email || ""}
+                onChange={(e) => setEmail(e.target.value)}
+                errorText={error}
+              />
 
               {/* Submit Button */}
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={pending}
                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
-                {isLoading ? (
-                  <div className="flex items-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Sending code...
-                  </div>
-                ) : (
-                  "Send verification code"
-                )}
+                {pending ? "Sending code..." : "Send verification code"}
               </button>
             </form>
 
             {/* Back to Login */}
             <div className="mt-6 text-center">
               <Link
-                to="/login"
+                to="/auth/login"
                 className="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
               >
-                ← Back to sign in
+                ← Back to log in
               </Link>
             </div>
           </div>

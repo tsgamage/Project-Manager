@@ -15,6 +15,7 @@ const AuthContext = createContext({
   verifyEmail: () => {},
   checkAuthStatus: () => {},
   resendVerificationCode: () => {},
+  forgotPassword: () => {},
 });
 
 const API_URL = "http://localhost:3000/api/auth";
@@ -122,6 +123,33 @@ export function AuthContextProvider({ children }) {
     }
   }
 
+  async function forgotPassword(email) {
+    try {
+      const response = await fetch(`${API_URL}/forgot-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 401) {
+        checkAuthStatus();
+      }
+
+      if (!response.ok) {
+        return { success: false, message: data.message || "Forgot password failed" };
+      } else {
+        return { success: true, message: data.message || "Password reset link sent to your email" };
+      }
+    } catch (err) {
+      return { success: false, message: err.message || "Forgot password failed" };
+    }
+  }
+
   async function checkAuthStatus() {
     setIsCheckingAuth(true);
     console.log("Checking authentication status...");
@@ -164,6 +192,7 @@ export function AuthContextProvider({ children }) {
     verifyEmail,
     checkAuthStatus,
     resendVerificationCode,
+    forgotPassword,
   };
   return <AuthContext.Provider value={authCtxValue}>{children}</AuthContext.Provider>;
 }
