@@ -34,6 +34,7 @@ export const getProjectById = async (req, res) => {
 };
 
 export const newProject = async (req, res) => {
+  const userID = req.userID;
   const projectData = req.body;
 
   if (
@@ -46,7 +47,7 @@ export const newProject = async (req, res) => {
   }
 
   try {
-    const newProject = Project(projectData);
+    const newProject = Project({ ...projectData, userID });
     await newProject.save();
 
     return res.status(201).json({
