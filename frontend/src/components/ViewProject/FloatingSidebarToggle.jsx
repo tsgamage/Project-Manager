@@ -2,7 +2,7 @@ export default function FloatingSidebarToggle({ onToggle, sideBarState }) {
   return (
     <button
       onClick={onToggle}
-      className="md:hidden fixed bottom-6 right-6 z-[60] bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-transform hover:scale-105"
+      className="lg:hidden fixed bottom-6 right-6 z-[60] bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-transform hover:scale-105"
     >
       {!sideBarState ? (
         <svg

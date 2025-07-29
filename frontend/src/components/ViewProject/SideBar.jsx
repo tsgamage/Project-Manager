@@ -10,7 +10,7 @@ export default function Sidebar({ isSidebarOpen, onClose }) {
     <aside
       className={`${
         isSidebarOpen ? "translate-x-0 shadow-xl" : "-translate-x-full"
-      } md:translate-x-0 fixed md:sticky top-0 left-0 z-50 w-72 h-screen bg-white dark:bg-stone-800 border-r border-stone-200 dark:border-stone-700 transition-transform duration-300 ease-in-out overflow-y-auto`}
+      } lg:translate-x-0 fixed lg:sticky top-0 left-0 z-50 w-72 h-screen bg-white dark:bg-stone-800 border-r border-stone-200 dark:border-stone-700 transition-transform duration-300 ease-in-out overflow-y-auto`}
     >
       {/* Sticky header */}
       <div className="flex justify-between items-center sticky top-0 z-10 bg-white dark:bg-stone-800 p-6 pb-4 border-b border-stone-200 dark:border-stone-700">
