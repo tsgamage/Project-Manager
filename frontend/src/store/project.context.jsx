@@ -1,4 +1,7 @@
-import { createContext, use, useEffect, useState } from "react";
+import { useEffect } from "react";
+import { createContext, useState } from "react";
+import AuthContext from "./auth.context";
+import { useContext } from "react";
 
 const ProjectContext = createContext({
   projects: [],
@@ -18,18 +21,20 @@ const ProjectContext = createContext({
 });
 
 const EMPTY_PROJECT = {
-  _id: "DUMMY",
-  name: "",
+  _id: "",
+  title: "",
   description: "",
-  status: "",
+  startDate: "",
+  endDate: "",
   team: [],
   tasks: [],
 };
 
 export function ProjectContextProvider({ children }) {
-  const [projects, setProjects] = useState([EMPTY_PROJECT]);
+  const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(EMPTY_PROJECT);
   const [selectedProjectID, setSelectedProjectID] = useState(0);
+  const { user } = useContext(AuthContext);
 
   async function updateRequest(projectData) {
     try {
@@ -41,7 +46,10 @@ export function ProjectContextProvider({ children }) {
         },
         credentials: "include",
       });
-      if (!response.ok) {
+      if (response.status === 401) {
+        window.location.replace("/auth/login");
+        return [EMPTY_PROJECT];
+      } else if (!response.ok) {
         throw new Error("Something went wrong");
       }
       const resData = await response.json();
@@ -73,7 +81,7 @@ export function ProjectContextProvider({ children }) {
   }
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [user]);
 
   function handleSetSelectedProject(projectData) {
     setSelectedProject(projectData);

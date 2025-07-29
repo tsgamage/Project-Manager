@@ -9,7 +9,7 @@ export default function ProtectedRoute({ children, viewing }) {
   useEffect(() => {
     if (!isCheckingAuth && user && user.isVerified === false) {
       navigate("/auth/verify-mail", { replace: true });
-    } else if (!isCheckingAuth && !isAuthenticated && viewing === "auth") {
+    } else if (!isCheckingAuth && !isAuthenticated) {
       navigate("/auth/login", { replace: true });
     } else if (!isCheckingAuth && user && user.isVerified === true && viewing === "auth") {
       navigate("/", { replace: true });
