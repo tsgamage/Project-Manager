@@ -63,10 +63,10 @@ export default function SignupPage() {
 
       const response = await signup(signupData);
 
-      if (response.error) {
-        toast.error(response.error);
+      if (!response.success) {
+        toast.error(response.message);
       } else {
-        toast.success("Accout Created Successfully");
+        toast.success(response.message);
         setTimeout(() => {
           toast("Please verify your email to continue", {
             duration: 5000,

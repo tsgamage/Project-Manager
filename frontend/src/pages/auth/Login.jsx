@@ -13,15 +13,15 @@ export default function LoginPage() {
   async function signupAction(preState, formData) {
     const dataObj = Object.fromEntries(formData);
 
-    const resData = await login(dataObj);
+    const response = await login(dataObj);
 
-    if (resData.error) {
-      toast.error(resData.error);
-      return dataObj;
-    } else {
-      toast.success("Login successful");
+    if (response.success) {
+      toast.success(response.message);
       navigate("/");
       return { email: "", password: "" };
+    } else {
+      toast.error(response.message);
+      return dataObj;
     }
   }
 

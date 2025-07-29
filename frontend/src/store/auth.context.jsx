@@ -39,14 +39,15 @@ export function AuthContextProvider({ children }) {
       const data = await response.json();
 
       if (!response.ok) {
-        return { error: data.message || "Login failed" };
+        return { success: false, message: data.message || "Login failed" };
       }
 
       setUser(data.user);
       setIsAuthenticated(true);
-      return data;
+
+      return { success: true, message: data.message || "Login successful" };
     } catch (err) {
-      return { error: err.message || "Login failed" };
+      return { success: false, message: err.message || "Login failed" };
     }
   }
   async function handleSignup({ email, password, name }) {
@@ -63,14 +64,14 @@ export function AuthContextProvider({ children }) {
       const data = await response.json();
 
       if (!response.ok) {
-        return { error: data.message || "Signup failed" };
+        return { success: false, message: data.message || "Signup failed" };
       }
 
       setIsAuthenticated(true);
       setUser(data.user);
-      return data;
+      return { success: true, message: data.message || "Signup successful" };
     } catch (err) {
-      return { error: err.message || "Signup failed" };
+      return { success: false, message: err.message || "Signup failed" };
     }
   }
 
