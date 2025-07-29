@@ -1,6 +1,7 @@
 import { createContext } from "react";
+import { API_ENDPOINTS } from "../config/api.js";
 
-const API_URL = "http://localhost:3000/api/user";
+const API_URL = API_ENDPOINTS.USER;
 
 const UserContext = createContext({
   updateName: () => {},

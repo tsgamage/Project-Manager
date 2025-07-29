@@ -2,6 +2,9 @@ import { useEffect } from "react";
 import { createContext, useState } from "react";
 import AuthContext from "./auth.context";
 import { useContext } from "react";
+import { API_ENDPOINTS } from "../config/api.js";
+
+const API_URL = API_ENDPOINTS.PROJECT;
 
 const ProjectContext = createContext({
   projects: [],
@@ -19,7 +22,6 @@ const ProjectContext = createContext({
   deleteProject: () => {},
   fetchProjects: () => {},
 });
-
 const EMPTY_PROJECT = {
   _id: "",
   title: "",
@@ -38,7 +40,7 @@ export function ProjectContextProvider({ children }) {
 
   async function updateRequest(projectData) {
     try {
-      const response = await fetch(`http://localhost:3000/api/project/${selectedProjectID}`, {
+      const response = await fetch(`${API_URL}/${selectedProjectID}`, {
         method: "PUT",
         body: JSON.stringify(projectData),
         headers: {
@@ -61,7 +63,7 @@ export function ProjectContextProvider({ children }) {
 
   async function fetchProjects() {
     try {
-      const response = await fetch("http://localhost:3000/api/project/", {
+      const response = await fetch(`${API_URL}/`, {
         credentials: "include",
       });
 
@@ -85,7 +87,7 @@ export function ProjectContextProvider({ children }) {
 
   async function handleSetSelectedProject(selectedProjectID) {
     try {
-      const response = await fetch(`http://localhost:3000/api/project/${selectedProjectID}`, {
+      const response = await fetch(`${API_URL}/${selectedProjectID}`, {
         credentials: "include",
       });
 
@@ -202,7 +204,7 @@ export function ProjectContextProvider({ children }) {
   }
   async function handleAddNewProject(projectData) {
     try {
-      const response = await fetch("http://localhost:3000/api/project/new", {
+      const response = await fetch(`${API_URL}/new`, {
         method: "POST",
         body: JSON.stringify(projectData),
         headers: {
@@ -225,7 +227,7 @@ export function ProjectContextProvider({ children }) {
     }
   }
   async function handleDeleteProject() {
-    const response = await fetch(`http://localhost:3000/api/project/${selectedProjectID}`, {
+    const response = await fetch(`${API_URL}/${selectedProjectID}`, {
       method: "DELETE",
       credentials: "include",
     });

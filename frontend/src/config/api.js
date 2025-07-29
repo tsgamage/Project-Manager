@@ -1,0 +1,10 @@
+// API Configuration
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
+
+export const API_ENDPOINTS = {
+  AUTH: `${API_BASE_URL}/api/auth`,
+  USER: `${API_BASE_URL}/api/user`,
+  PROJECT: `${API_BASE_URL}/api/project`,
+};
+
+export default API_ENDPOINTS;

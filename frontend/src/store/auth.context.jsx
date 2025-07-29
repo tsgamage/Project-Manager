@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { createContext } from "react";
+import { API_ENDPOINTS } from "../config/api.js";
+
+const API_URL = API_ENDPOINTS.AUTH;
 
 const AuthContext = createContext({
   user: {
@@ -17,8 +20,6 @@ const AuthContext = createContext({
   forgotPassword: () => {},
   logout: () => {},
 });
-
-const API_URL = "http://localhost:3000/api/auth";
 
 export function AuthContextProvider({ children }) {
   const [user, setUser] = useState();
@@ -77,7 +78,7 @@ export function AuthContextProvider({ children }) {
 
   async function verifyEmail(code) {
     try {
-      const response = await fetch("http://localhost:3000/api/auth/verify-email", {
+      const response = await fetch(`${API_URL}/verify-email`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
