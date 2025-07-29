@@ -7,13 +7,14 @@ export default function ProtectedRoute({ children, viewing }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isCheckingAuth && !isAuthenticated) {
-      navigate("/auth/login", { replace: true });
-    } else if (!isCheckingAuth && user && user.isVerified === false) {
+    if (!isCheckingAuth && user && user.isVerified === false) {
       navigate("/auth/verify-mail", { replace: true });
+    } else if (!isCheckingAuth && !isAuthenticated && viewing === "auth") {
+      navigate("/auth/login", { replace: true });
     } else if (!isCheckingAuth && user && user.isVerified === true && viewing === "auth") {
       navigate("/", { replace: true });
     }
+    
   }, [isCheckingAuth, isAuthenticated, user, navigate, viewing]);
 
   if (!isAuthenticated) {
