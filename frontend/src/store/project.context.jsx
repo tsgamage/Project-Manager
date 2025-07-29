@@ -83,9 +83,35 @@ export function ProjectContextProvider({ children }) {
     fetchProjects();
   }, [user]);
 
-  function handleSetSelectedProject(projectData) {
-    setSelectedProject(projectData);
+  async function handleSetSelectedProject(selectedProjectID) {
+    try {
+      const response = await fetch(`http://localhost:3000/api/project/${selectedProjectID}`, {
+        credentials: "include",
+      });
+
+      const resData = await response.json();
+
+      if (response.status === 401) {
+        return window.location.replace("/auth/login");
+      } else if (!response.ok) {
+        return { success: false, message: resData.message || "Failed to fetch project data" };
+      }
+
+      setSelectedProject(resData.data.projects);
+    } catch (e) {
+      console.error("Error fetching project data:", e);
+      return {
+        success: false,
+        message: e.message || "An error occurred while fetching project data",
+      };
+    }
   }
+  useEffect(() => {
+    if (selectedProjectID) {
+      handleSetSelectedProject(selectedProjectID);
+    }
+  }, [selectedProjectID]);
+
   function handleSelectedProjectID(projectID) {
     setSelectedProjectID(projectID);
   }

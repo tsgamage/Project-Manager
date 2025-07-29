@@ -1,7 +1,7 @@
 import { AuthContextProvider } from "./store/auth.context";
 import { ProjectContextProvider } from "./store/project.context";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
-import ViewProjectPage, { viewProjectLoader } from "./pages/ViewProject";
+import ViewProjectPage from "./pages/ViewProject";
 import RootLayout from "./pages/Root";
 import HomePage from "./pages/Home";
 import AddProjectPage from "./pages/AddProject";
@@ -32,7 +32,6 @@ export default function App() {
         {
           path: "project",
           id: "project",
-          loader: viewProjectLoader,
           children: [
             { path: "new", element: <AddProjectPage /> },
             { path: "view/:projectID", element: <ViewProjectPage /> },

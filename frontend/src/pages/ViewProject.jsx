@@ -1,4 +1,4 @@
-import { useParams, useRouteLoaderData } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import ProjectContext from "../store/project.context.jsx";
 import Project from "../components/ViewProject/Project.jsx";
@@ -7,15 +7,13 @@ import FloatingSidebarToggle from "../components/ViewProject/FloatingSidebarTogg
 
 export default function ViewProjectPage() {
   const params = useParams();
-  const loaderData = useRouteLoaderData("project");
 
-  const { setSelectedProjectID, setSelectedProject, selectedProject } = useContext(ProjectContext);
+  const { setSelectedProjectID, selectedProject } = useContext(ProjectContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     setSelectedProjectID(params.projectID);
-    setSelectedProject(loaderData.data.projects);
-  }, []);
+  }, [params.projectID, setSelectedProjectID]);
 
   function handleSideBarToggle() {
     setIsSidebarOpen((preValue) => !preValue);
@@ -30,28 +28,4 @@ export default function ViewProjectPage() {
       {selectedProject._id === params.projectID && <Project project={selectedProject} />}
     </div>
   );
-}
-
-export async function viewProjectLoader({ params }) {
-  try {
-    const response = await fetch(`http://localhost:3000/api/project/${params.projectID}`, {
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      return new Response(
-        JSON.stringify({
-          message: "Something went wrong",
-        }),
-        {
-          status: 500,
-        }
-      );
-    }
-    return response;
-  } catch (e) {
-    return new Response(JSON.stringify({ message: e.message }), {
-      status: 500,
-    });
-  }
 }
