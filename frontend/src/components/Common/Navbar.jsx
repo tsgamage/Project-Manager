@@ -167,80 +167,83 @@ export default function Navbar() {
 
                 {/* Dropdown Menu */}
                 {isDropdownOpen && (
-                  <div className="absolute right-0 mt-3 w-72 sm:w-80 bg-white dark:bg-stone-800 rounded-xl shadow-2xl border border-stone-200 dark:border-stone-700 overflow-hidden z-50 transform transition-all duration-200 ease-out">
-                    {/* Backdrop for mobile */}
+                  <>
+                    {/* Backdrop for mobile - positioned behind dropdown */}
                     <div
-                      className="fixed inset-0 z-40 lg:hidden"
+                      className="fixed inset-0 z-40 lg:hidden bg-black/40"
                       onClick={() => setIsDropdownOpen(false)}
                     ></div>
-
-                    {/* Header */}
-                    <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-b border-stone-200 dark:border-stone-700">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-                          <span className="text-white font-semibold">U</span>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-stone-900 dark:text-stone-100 truncate">
-                            {user ? user.name : "User Name"}
-                          </p>
-                          <p className="text-sm text-stone-500 dark:text-stone-400 truncate">
-                            {user ? user.email : "user@example.com"}
-                          </p>
-                          <div className="flex items-center mt-1">
-                            <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
-                            <span className="text-xs text-green-600 dark:text-green-400 font-medium">
-                              Online
-                            </span>
+                    
+                    {/* Dropdown content */}
+                    <div className="absolute right-0 mt-3 w-72 sm:w-80 bg-white dark:bg-stone-800 rounded-xl shadow-2xl border border-stone-200 dark:border-stone-700 overflow-hidden z-50 transform transition-all duration-200 ease-out">
+                      {/* Header */}
+                      <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-b border-stone-200 dark:border-stone-700">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                            <span className="text-white font-semibold">U</span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-stone-900 dark:text-stone-100 truncate">
+                              {user ? user.name : "User Name"}
+                            </p>
+                            <p className="text-sm text-stone-500 dark:text-stone-400 truncate">
+                              {user ? user.email : "user@example.com"}
+                            </p>
+                            <div className="flex items-center mt-1">
+                              <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+                              <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+                                Online
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
+
+                      {/* Menu Items */}
+                      <div className="py-2">
+                        <Link
+                          to="/user/profile"
+                          className="flex items-center px-6 py-3 text-sm text-stone-700 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-700/50 transition-colors group"
+                          onClick={() => setIsDropdownOpen(false)}
+                        >
+                          <User className="w-4 h-4 mr-3 text-stone-400 group-hover:text-stone-600 dark:group-hover:text-stone-300" />
+                          Your Profile
+                        </Link>
+
+                        <Link
+                          to="/settings"
+                          className="flex items-center px-6 py-3 text-sm text-stone-700 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-700/50 transition-colors group"
+                          onClick={() => setIsDropdownOpen(false)}
+                        >
+                          <Settings className="w-4 h-4 mr-3 text-stone-400 group-hover:text-stone-600 dark:group-hover:text-stone-300" />
+                          Settings
+                        </Link>
+
+                        <Link
+                          to="/projects"
+                          className="flex items-center px-6 py-3 text-sm text-stone-700 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-700/50 transition-colors group"
+                          onClick={() => setIsDropdownOpen(false)}
+                        >
+                          <SquareArrowOutUpRight className="w-4 h-4 mr-3 text-stone-400 group-hover:text-stone-600 dark:group-hover:text-stone-300" />
+                          Your Projects ({projects && projects?.length})
+                        </Link>
+                      </div>
+
+                      {/* Divider */}
+                      <div className="border-t border-stone-200 dark:border-stone-700"></div>
+
+                      {/* Sign Out */}
+                      <div className="py-2">
+                        <button
+                          className="flex items-center w-full px-6 py-3 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors group"
+                          onClick={handleLogout}
+                        >
+                          <LogOut className="w-4 h-4 mr-3 text-red-500 group-hover:text-red-600 dark:group-hover:text-red-400" />
+                          Logout
+                        </button>
+                      </div>
                     </div>
-
-                    {/* Menu Items */}
-                    <div className="py-2">
-                      <Link
-                        to="/user/profile"
-                        className="flex items-center px-6 py-3 text-sm text-stone-700 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-700/50 transition-colors group"
-                        onClick={() => setIsDropdownOpen(false)}
-                      >
-                        <User className="w-4 h-4 mr-3 text-stone-400 group-hover:text-stone-600 dark:group-hover:text-stone-300" />
-                        Your Profile
-                      </Link>
-
-                      <Link
-                        to="/settings"
-                        className="flex items-center px-6 py-3 text-sm text-stone-700 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-700/50 transition-colors group"
-                        onClick={() => setIsDropdownOpen(false)}
-                      >
-                        <Settings className="w-4 h-4 mr-3 text-stone-400 group-hover:text-stone-600 dark:group-hover:text-stone-300" />
-                        Settings
-                      </Link>
-
-                      <Link
-                        to="/projects"
-                        className="flex items-center px-6 py-3 text-sm text-stone-700 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-700/50 transition-colors group"
-                        onClick={() => setIsDropdownOpen(false)}
-                      >
-                        <SquareArrowOutUpRight className="w-4 h-4 mr-3 text-stone-400 group-hover:text-stone-600 dark:group-hover:text-stone-300" />
-                        Your Projects ({projects && projects?.length})
-                      </Link>
-                    </div>
-
-                    {/* Divider */}
-                    <div className="border-t border-stone-200 dark:border-stone-700"></div>
-
-                    {/* Sign Out */}
-                    <div className="py-2">
-                      <button
-                        className="flex items-center w-full px-6 py-3 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors group"
-                        onClick={handleLogout}
-                      >
-                        <LogOut className="w-4 h-4 mr-3 text-red-500 group-hover:text-red-600 dark:group-hover:text-red-400" />
-                        Logout
-                      </button>
-                    </div>
-                  </div>
+                  </>
                 )}
               </div>
             )}
