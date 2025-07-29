@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, use } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../../store/auth.context";
 import { ChevronUp, LogOut, Settings, SquareArrowOutUpRight, User } from "lucide-react";
@@ -199,7 +199,7 @@ export default function Navbar() {
                     {/* Menu Items */}
                     <div className="py-2">
                       <Link
-                        to="/profile"
+                        to="/user/profile"
                         className="flex items-center px-6 py-3 text-sm text-stone-700 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-700/50 transition-colors group"
                         onClick={() => setIsDropdownOpen(false)}
                       >
