@@ -16,6 +16,7 @@ import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/Auth/ProtectedRoute.jsx";
 import RedirectUserIfAuthenticated from "./components/Auth/RedirectUserIfAuthenticated.jsx";
 import { UserContextProvider } from "./store/user.context.jsx";
+import { PageLayoutContextProvider } from "./store/pageLayout.context.jsx";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -72,12 +73,14 @@ export default function App() {
 
   return (
     <AuthContextProvider>
-      <UserContextProvider>
-        <ProjectContextProvider>
-          <Toaster />
-          <RouterProvider router={router}></RouterProvider>
-        </ProjectContextProvider>
-      </UserContextProvider>
+      <PageLayoutContextProvider>
+        <UserContextProvider>
+          <ProjectContextProvider>
+            <Toaster />
+            <RouterProvider router={router}></RouterProvider>
+          </ProjectContextProvider>
+        </UserContextProvider>
+      </PageLayoutContextProvider>
     </AuthContextProvider>
   );
 }
