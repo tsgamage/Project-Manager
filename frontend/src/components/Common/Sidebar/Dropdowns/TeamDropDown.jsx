@@ -2,12 +2,13 @@ import { useContext, useState } from "react";
 import PageLayoutContext from "../../../../store/pageLayout.context";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, Users } from "lucide-react";
+import { Tooltip } from "react-tooltip";
 
 export default function TeamDropdown() {
   const [isTeamsDropdownOpen, setIsTeamsDropdownOpen] = useState(false);
   const location = useLocation();
 
-  const { isDesktopSideBarCollapsed } = useContext(PageLayoutContext);
+  const { isDesktopSideBarCollapsed, toggleSidebar } = useContext(PageLayoutContext);
   const isActive = location.pathname === "/team" || location.pathname.startsWith("/team/");
 
   const dummyPeople = [
@@ -32,17 +33,26 @@ export default function TeamDropdown() {
   );
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-1 team-dev">
+      {isDesktopSideBarCollapsed && (
+        <Tooltip anchorSelect=".team-dev" place="right" delayShow={70}>
+          Your Team
+        </Tooltip>
+      )}
       {/* Main Teams Button */}
       <div className="relative">
         <Link
-          to="/team"
-          className={`group flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 ${isActive
-            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-            : "text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-900 dark:hover:text-stone-200"
-            } ${isDesktopSideBarCollapsed ? "justify-center" : "justify-start"}`}
+          to="/user/team"
+          className={`group flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 ${
+            isActive
+              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+              : "text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-900 dark:hover:text-stone-200"
+          } ${isDesktopSideBarCollapsed ? "justify-center" : "justify-start"}`}
         >
-          <Users className={`h-5 w-5 ${isDesktopSideBarCollapsed ? "" : "mr-3"}`} />
+          <Users
+            onDoubleClick={toggleSidebar}
+            className={`h-5 w-5 min-w-[20px] min-h-[20px] ${isDesktopSideBarCollapsed ? "" : "mr-3"}`}
+          />
           {!isDesktopSideBarCollapsed && (
             <>
               <span className="font-medium text-sm flex-1">Teams</span>
@@ -59,8 +69,9 @@ export default function TeamDropdown() {
                   className="p-1 hover:bg-stone-200 dark:hover:bg-stone-700 rounded transition-colors"
                 >
                   <ChevronDown
-                    className={`h-4 w-4 transition-transform duration-200 ${isTeamsDropdownOpen ? "rotate-180" : ""
-                      }`}
+                    className={`h-4 w-4 transition-transform duration-200 ${
+                      isTeamsDropdownOpen ? "rotate-180" : ""
+                    }`}
                   />
                 </button>
               </div>

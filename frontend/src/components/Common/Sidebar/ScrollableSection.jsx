@@ -1,12 +1,21 @@
+import { Home } from "lucide-react";
 import ProjectsDropdown from "./Dropdowns/ProjectsDropdown";
 import TeamDropdown from "./Dropdowns/TeamDropDown";
 import SidebarSection from "./SidebarSection";
 
-export default function ScrollableSection({ items }) {
+export default function ScrollableSection() {
+  const topItems = [
+    {
+      name: "Home",
+      icon: Home,
+      path: "/",
+      top: true,
+    },
+  ];
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="p-4 space-y-6">
-        <SidebarSection items={items} />
+      <div className="p-4 space-y-2">
+        <SidebarSection items={topItems} />
         <TeamDropdown />
         <ProjectsDropdown />
       </div>
