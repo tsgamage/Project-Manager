@@ -22,12 +22,12 @@ export default function TeamDropdown() {
   const TeamsDropdownItem = ({ person }) => (
     <Link
       to={`/team/${person.id}`}
-      className="flex items-center px-6 py-2 text-sm text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-900 dark:hover:text-stone-200 transition-colors duration-200"
+      className="flex items-center px-6 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200"
     >
-      <div className="w-2 h-2 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+      <div className="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></div>
       <div className="flex flex-col">
         <span className="truncate font-medium">{person.name}</span>
-        <span className="truncate text-xs text-stone-500 dark:text-stone-500">{person.role}</span>
+        <span className="truncate text-xs text-gray-400">{person.role}</span>
       </div>
     </Link>
   );
@@ -43,21 +43,21 @@ export default function TeamDropdown() {
       <div className="relative">
         <Link
           to="/team/members"
-          className={`group flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 ${
+          className={`group flex items-center transition-all duration-300 hover-lift ${
             isActive
-              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-              : "text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-900 dark:hover:text-stone-200"
-          } ${isDesktopSideBarCollapsed ? "justify-center" : "justify-start"}`}
+              ? "gradient-blue text-white shadow-lg"
+              : "text-gray-300 hover:bg-gray-700 hover:text-white"
+          } ${isDesktopSideBarCollapsed ? "justify-center w-10 h-10 rounded-xl mx-auto" : "px-3 py-3 rounded-xl justify-start"}`}
         >
           <Users
             onDoubleClick={toggleSidebar}
-            className={`h-5 w-5 min-w-[20px] min-h-[20px] ${isDesktopSideBarCollapsed ? "" : "mr-3"}`}
+            className={`transition-transform duration-200 group-hover:scale-110 ${isDesktopSideBarCollapsed ? "h-5 w-5" : "h-5 w-5 mr-3"}`}
           />
           {!isDesktopSideBarCollapsed && (
             <>
               <span className="font-medium text-sm flex-1">Teams</span>
               <div className="flex items-center space-x-2">
-                <span className="text-xs bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-400 px-2 py-1 rounded-full">
+                <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full">
                   {dummyPeople.length}
                 </span>
                 <button
@@ -66,7 +66,7 @@ export default function TeamDropdown() {
                     e.stopPropagation();
                     setIsTeamsDropdownOpen(!isTeamsDropdownOpen);
                   }}
-                  className="p-1 hover:bg-stone-200 dark:hover:bg-stone-700 rounded transition-colors"
+                  className="p-1 hover:bg-gray-600 rounded transition-colors"
                 >
                   <ChevronDown
                     className={`h-4 w-4 transition-transform duration-200 ${
@@ -82,7 +82,7 @@ export default function TeamDropdown() {
 
       {/* Teams Dropdown */}
       {!isDesktopSideBarCollapsed && isTeamsDropdownOpen && dummyPeople.length > 0 && (
-        <div className="ml-3 mt-1 border-l border-stone-200 dark:border-stone-700">
+        <div className="ml-3 mt-1 border-l border-gray-700">
           <div className="space-y-1">
             {dummyPeople.map((person) => (
               <TeamsDropdownItem key={person.id} person={person} />

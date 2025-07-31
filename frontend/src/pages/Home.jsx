@@ -141,13 +141,13 @@ export default function HomePage() {
   function getStatusColor(status) {
     switch (status) {
       case "Completed":
-        return "text-green-600 bg-green-100 dark:bg-green-900 dark:text-green-400";
+        return "bg-green-500/20 text-green-300 border-green-500/30";
       case "In Progress":
-        return "text-blue-600 bg-blue-100 dark:bg-blue-900 dark:text-blue-400";
+        return "bg-blue-500/20 text-blue-300 border-blue-500/30";
       case "Not Started":
-        return "text-stone-600 bg-stone-100 dark:bg-stone-700 dark:text-stone-400";
+        return "bg-gray-500/20 text-gray-300 border-gray-500/30";
       default:
-        return "text-stone-600 bg-stone-100 dark:bg-stone-700 dark:text-stone-400";
+        return "bg-gray-500/20 text-gray-300 border-gray-500/30";
     }
   }
 
@@ -166,27 +166,26 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-stone-100 dark:from-stone-900 dark:via-stone-800 dark:to-stone-900">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto p-6">
         {/* Welcome Header */}
-        <div className="mb-8">
+        <div className="mb-8 fade-in">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-
               <div>
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-stone-800 to-stone-600 dark:from-stone-200 dark:to-stone-400 bg-clip-text text-transparent mb-2">
+                <h1 className="text-4xl font-bold text-white mb-2">
                   Welcome back, {user?.name || "User"}! 👋
                 </h1>
-                <p className="text-lg text-stone-600 dark:text-stone-400">
+                <p className="text-lg text-gray-400">
                   Here's what's happening with your projects today
                 </p>
               </div>
             </div>
             <div className="hidden md:flex items-center gap-4">
-              <div className="bg-white dark:bg-stone-800 rounded-xl p-4 shadow-lg">
+              <div className="glass rounded-xl p-4 shadow-lg border border-gray-700">
                 <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium text-stone-700 dark:text-stone-300">
+                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium text-white">
                     {stats.productivityScore}% Productive
                   </span>
                 </div>
@@ -197,99 +196,99 @@ export default function HomePage() {
 
         {/* Main Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white dark:bg-stone-800 rounded-2xl p-6 shadow-lg border border-stone-100 dark:border-stone-700 hover:shadow-xl transition-all duration-300">
+          <div className="gradient-card rounded-2xl p-6 shadow-lg hover-lift transition-all duration-300">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 gradient-blue rounded-xl flex items-center justify-center">
                 <FolderOpen className="h-6 w-6 text-white" />
               </div>
-              <TrendingUp className="h-5 w-5 text-green-500" />
+              <TrendingUp className="h-5 w-5 text-green-400" />
             </div>
-            <h3 className="text-2xl font-bold text-stone-800 dark:text-stone-200 mb-1">
+            <h3 className="text-2xl font-bold text-white mb-1">
               {stats.totalProjects}
             </h3>
-            <p className="text-stone-600 dark:text-stone-400 text-sm">Total Projects</p>
+            <p className="text-gray-400 text-sm">Total Projects</p>
           </div>
 
-          <div className="bg-white dark:bg-stone-800 rounded-2xl p-6 shadow-lg border border-stone-100 dark:border-stone-700 hover:shadow-xl transition-all duration-300">
+          <div className="gradient-card rounded-2xl p-6 shadow-lg hover-lift transition-all duration-300">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 gradient-green rounded-xl flex items-center justify-center">
                 <CheckCircle className="h-6 w-6 text-white" />
               </div>
               <div className="text-right">
-                <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+                <span className="text-xs text-green-400 font-medium">
                   +{stats.completedProjects > 0 ? Math.round((stats.completedProjects / stats.totalProjects) * 100) : 0}%
                 </span>
               </div>
             </div>
-            <h3 className="text-2xl font-bold text-stone-800 dark:text-stone-200 mb-1">
+            <h3 className="text-2xl font-bold text-white mb-1">
               {stats.completedProjects}
             </h3>
-            <p className="text-stone-600 dark:text-stone-400 text-sm">Completed</p>
+            <p className="text-gray-400 text-sm">Completed</p>
           </div>
 
-          <div className="bg-white dark:bg-stone-800 rounded-2xl p-6 shadow-lg border border-stone-100 dark:border-stone-700 hover:shadow-xl transition-all duration-300">
+          <div className="gradient-card rounded-2xl p-6 shadow-lg hover-lift transition-all duration-300">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
                 <Clock className="h-6 w-6 text-white" />
               </div>
               <div className="text-right">
-                <span className="text-xs text-yellow-600 dark:text-yellow-400 font-medium">
+                <span className="text-xs text-yellow-400 font-medium">
                   Active
                 </span>
               </div>
             </div>
-            <h3 className="text-2xl font-bold text-stone-800 dark:text-stone-200 mb-1">
+            <h3 className="text-2xl font-bold text-white mb-1">
               {stats.inProgressProjects}
             </h3>
-            <p className="text-stone-600 dark:text-stone-400 text-sm">In Progress</p>
+            <p className="text-gray-400 text-sm">In Progress</p>
           </div>
 
-          <div className="bg-white dark:bg-stone-800 rounded-2xl p-6 shadow-lg border border-stone-100 dark:border-stone-700 hover:shadow-xl transition-all duration-300">
+          <div className="gradient-card rounded-2xl p-6 shadow-lg hover-lift transition-all duration-300">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
                 <Users className="h-6 w-6 text-white" />
               </div>
               <div className="text-right">
-                <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">
+                <span className="text-xs text-purple-400 font-medium">
                   Team
                 </span>
               </div>
             </div>
-            <h3 className="text-2xl font-bold text-stone-800 dark:text-stone-200 mb-1">
+            <h3 className="text-2xl font-bold text-white mb-1">
               {stats.totalTeamMembers}
             </h3>
-            <p className="text-stone-600 dark:text-stone-400 text-sm">Team Members</p>
+            <p className="text-gray-400 text-sm">Team Members</p>
           </div>
         </div>
 
         {/* Secondary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-2xl p-6 border border-blue-200 dark:border-blue-700">
+          <div className="glass rounded-2xl p-6 border border-gray-700">
             <div className="flex items-center gap-3 mb-3">
-              <Target className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-              <h3 className="font-semibold text-blue-800 dark:text-blue-200">Task Completion</h3>
+              <Target className="h-5 w-5 text-blue-400" />
+              <h3 className="font-semibold text-white">Task Completion</h3>
             </div>
             <div className="flex items-end gap-2">
-              <span className="text-3xl font-bold text-blue-800 dark:text-blue-200">
+              <span className="text-3xl font-bold text-white">
                 {stats.completedTasks}
               </span>
-              <span className="text-blue-600 dark:text-blue-400 mb-1">/ {stats.totalTasks}</span>
+              <span className="text-blue-400 mb-1">/ {stats.totalTasks}</span>
             </div>
-            <div className="w-full bg-blue-200 dark:bg-blue-700 rounded-full h-2 mt-3">
+            <div className="w-full bg-gray-700 rounded-full h-2 mt-3">
               <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                className="gradient-blue h-2 rounded-full transition-all duration-500"
                 style={{ width: `${stats.totalTasks > 0 ? (stats.completedTasks / stats.totalTasks) * 100 : 0}%` }}
               ></div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-2xl p-6 border border-green-200 dark:border-green-700">
+          <div className="glass rounded-2xl p-6 border border-gray-700">
             <div className="flex items-center gap-3 mb-3">
-              <Zap className="h-5 w-5 text-green-600 dark:text-green-400" />
-              <h3 className="font-semibold text-green-800 dark:text-green-200">Productivity</h3>
+              <Zap className="h-5 w-5 text-green-400" />
+              <h3 className="font-semibold text-white">Productivity</h3>
             </div>
             <div className="flex items-end gap-2">
-              <span className="text-3xl font-bold text-green-800 dark:text-green-200">
+              <span className="text-3xl font-bold text-white">
                 {stats.productivityScore}%
               </span>
             </div>
@@ -297,24 +296,24 @@ export default function HomePage() {
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className={`h-4 w-4 ${i < Math.floor(stats.productivityScore / 20) ? 'text-yellow-500 fill-current' : 'text-gray-300 dark:text-gray-600'}`}
+                  className={`h-4 w-4 ${i < Math.floor(stats.productivityScore / 20) ? 'text-yellow-400 fill-current' : 'text-gray-600'}`}
                 />
               ))}
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-2xl p-6 border border-purple-200 dark:border-purple-700">
+          <div className="glass rounded-2xl p-6 border border-gray-700">
             <div className="flex items-center gap-3 mb-3">
-              <Calendar className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-              <h3 className="font-semibold text-purple-800 dark:text-purple-200">Avg. Completion</h3>
+              <Calendar className="h-5 w-5 text-purple-400" />
+              <h3 className="font-semibold text-white">Avg. Completion</h3>
             </div>
             <div className="flex items-end gap-2">
-              <span className="text-3xl font-bold text-purple-800 dark:text-purple-200">
+              <span className="text-3xl font-bold text-white">
                 {stats.averageCompletionTime}
               </span>
-              <span className="text-purple-600 dark:text-purple-400 mb-1">days</span>
+              <span className="text-purple-400 mb-1">days</span>
             </div>
-            <p className="text-sm text-purple-600 dark:text-purple-400 mt-1">Per project</p>
+            <p className="text-sm text-purple-400 mt-1">Per project</p>
           </div>
         </div>
 
@@ -322,15 +321,15 @@ export default function HomePage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Recent Projects */}
           <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-stone-800 rounded-2xl shadow-lg border border-stone-100 dark:border-stone-700">
-              <div className="p-6 border-b border-stone-200 dark:border-stone-700">
+            <div className="glass rounded-2xl shadow-lg border border-gray-700">
+              <div className="p-6 border-b border-gray-700">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-semibold text-stone-800 dark:text-stone-200">
+                  <h2 className="text-xl font-semibold text-white">
                     Recent Projects
                   </h2>
                   <Link
                     to="/projects"
-                    className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium flex items-center gap-1 transition-colors"
+                    className="text-blue-400 hover:text-blue-300 text-sm font-medium flex items-center gap-1 transition-colors"
                   >
                     View All
                     <ArrowRight className="h-4 w-4" />
@@ -340,11 +339,13 @@ export default function HomePage() {
               <div className="p-6">
                 {recentProjects.length === 0 ? (
                   <div className="text-center py-8">
-                    <FolderOpen className="h-12 w-12 text-stone-400 mx-auto mb-4" />
-                    <p className="text-stone-600 dark:text-stone-400 mb-4">No projects yet</p>
+                    <div className="w-16 h-16 gradient-card rounded-full flex items-center justify-center mx-auto mb-4">
+                      <FolderOpen className="h-8 w-8 text-gray-300" />
+                    </div>
+                    <p className="text-gray-400 mb-4">No projects yet</p>
                     <Link
                       to="/add-project"
-                      className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                      className="inline-flex items-center gap-2 gradient-blue hover:shadow-lg text-white px-4 py-2 rounded-xl transition-all duration-300 hover-lift"
                     >
                       <Plus className="h-4 w-4" />
                       Create First Project
@@ -353,20 +354,20 @@ export default function HomePage() {
                 ) : (
                   <div className="space-y-4">
                     {recentProjects.map((project) => (
-                      <div key={project._id} className="group hover:bg-stone-50 dark:hover:bg-stone-700 rounded-xl p-4 transition-all duration-200">
+                      <div key={project._id} className="group hover:bg-gray-700/50 rounded-xl p-4 transition-all duration-200">
                         <div className="flex items-center justify-between mb-3">
-                          <h3 className="font-semibold text-stone-800 dark:text-stone-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                          <h3 className="font-semibold text-white group-hover:text-blue-300 transition-colors">
                             {project.title}
                           </h3>
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(getProjectStatus(project))}`}>
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(getProjectStatus(project))}`}>
                             {getProjectStatus(project)}
                           </span>
                         </div>
-                        <p className="text-sm text-stone-600 dark:text-stone-400 mb-3 line-clamp-2">
+                        <p className="text-sm text-gray-400 mb-3 line-clamp-2">
                           {project.description || "No description available"}
                         </p>
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4 text-xs text-stone-500 dark:text-stone-400">
+                          <div className="flex items-center gap-4 text-xs text-gray-500">
                             <span className="flex items-center gap-1">
                               <Users className="h-3 w-3" />
                               {project.team.length} members
@@ -377,13 +378,13 @@ export default function HomePage() {
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <div className="w-16 bg-stone-200 dark:bg-stone-600 rounded-full h-2">
+                            <div className="w-16 bg-gray-700 rounded-full h-2">
                               <div
-                                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                                className="gradient-blue h-2 rounded-full transition-all duration-300"
                                 style={{ width: `${getProgressPercentage(project)}%` }}
                               ></div>
                             </div>
-                            <span className="text-xs font-medium text-stone-600 dark:text-stone-400">
+                            <span className="text-xs font-medium text-gray-400">
                               {getProgressPercentage(project)}%
                             </span>
                           </div>
@@ -399,64 +400,64 @@ export default function HomePage() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Quick Actions */}
-            <div className="bg-white dark:bg-stone-800 rounded-2xl shadow-lg border border-stone-100 dark:border-stone-700 p-6">
-              <h3 className="text-lg font-semibold text-stone-800 dark:text-stone-200 mb-4">
+            <div className="glass rounded-2xl shadow-lg border border-gray-700 p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">
                 Quick Actions
               </h3>
               <div className="space-y-3">
                 <Link
                   to="/add-project"
-                  className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-xl transition-colors group"
+                  className="flex items-center gap-3 p-3 bg-blue-500/10 hover:bg-blue-500/20 rounded-xl transition-colors group"
                 >
-                  <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center group-hover:bg-blue-700 transition-colors">
+                  <div className="w-10 h-10 gradient-blue rounded-lg flex items-center justify-center group-hover:shadow-lg transition-all duration-300">
                     <Plus className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <p className="font-medium text-stone-800 dark:text-stone-200">New Project</p>
-                    <p className="text-xs text-stone-600 dark:text-stone-400">Create a new project</p>
+                    <p className="font-medium text-white">New Project</p>
+                    <p className="text-xs text-gray-400">Create a new project</p>
                   </div>
                 </Link>
 
                 <Link
                   to="/teams"
-                  className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/40 rounded-xl transition-colors group"
+                  className="flex items-center gap-3 p-3 bg-green-500/10 hover:bg-green-500/20 rounded-xl transition-colors group"
                 >
-                  <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center group-hover:bg-green-700 transition-colors">
+                  <div className="w-10 h-10 gradient-green rounded-lg flex items-center justify-center group-hover:shadow-lg transition-all duration-300">
                     <Users className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <p className="font-medium text-stone-800 dark:text-stone-200">Manage Team</p>
-                    <p className="text-xs text-stone-600 dark:text-stone-400">View team members</p>
+                    <p className="font-medium text-white">Manage Team</p>
+                    <p className="text-xs text-gray-400">View team members</p>
                   </div>
                 </Link>
               </div>
             </div>
 
             {/* Upcoming Deadlines */}
-            <div className="bg-white dark:bg-stone-800 rounded-2xl shadow-lg border border-stone-100 dark:border-stone-700 p-6">
-              <h3 className="text-lg font-semibold text-stone-800 dark:text-stone-200 mb-4">
+            <div className="glass rounded-2xl shadow-lg border border-gray-700 p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">
                 Upcoming Deadlines
               </h3>
               {upcomingDeadlines.length === 0 ? (
-                <p className="text-sm text-stone-600 dark:text-stone-400">No upcoming deadlines</p>
+                <p className="text-sm text-gray-400">No upcoming deadlines</p>
               ) : (
                 <div className="space-y-3">
                   {upcomingDeadlines.map((project) => {
                     const daysLeft = getDaysUntilDeadline(project.endDate);
                     return (
-                      <div key={project._id} className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/20 rounded-xl">
+                      <div key={project._id} className="flex items-center justify-between p-3 bg-red-500/10 rounded-xl">
                         <div>
-                          <p className="font-medium text-stone-800 dark:text-stone-200 text-sm">
+                          <p className="font-medium text-white text-sm">
                             {project.title}
                           </p>
-                          <p className="text-xs text-stone-600 dark:text-stone-400">
+                          <p className="text-xs text-gray-400">
                             Due {new Date(project.endDate).toLocaleDateString()}
                           </p>
                         </div>
                         <div className="text-right">
-                          <span className={`text-sm font-bold ${daysLeft === 0 ? 'text-red-600 dark:text-red-400' :
-                              daysLeft <= 2 ? 'text-orange-600 dark:text-orange-400' :
-                                'text-yellow-600 dark:text-yellow-400'
+                          <span className={`text-sm font-bold ${daysLeft === 0 ? 'text-red-400' :
+                              daysLeft <= 2 ? 'text-orange-400' :
+                                'text-yellow-400'
                             }`}>
                             {daysLeft === 0 ? 'Today' : `${daysLeft}d left`}
                           </span>
@@ -469,26 +470,26 @@ export default function HomePage() {
             </div>
 
             {/* Project Status Overview */}
-            <div className="bg-white dark:bg-stone-800 rounded-2xl shadow-lg border border-stone-100 dark:border-stone-700 p-6">
-              <h3 className="text-lg font-semibold text-stone-800 dark:text-stone-200 mb-4">
+            <div className="glass rounded-2xl shadow-lg border border-gray-700 p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">
                 Project Status
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-stone-600 dark:text-stone-400">Completed</span>
-                  <span className="font-semibold text-green-600 dark:text-green-400">{stats.completedProjects}</span>
+                  <span className="text-sm text-gray-400">Completed</span>
+                  <span className="font-semibold text-green-400">{stats.completedProjects}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-stone-600 dark:text-stone-400">In Progress</span>
-                  <span className="font-semibold text-blue-600 dark:text-blue-400">{stats.inProgressProjects}</span>
+                  <span className="text-sm text-gray-400">In Progress</span>
+                  <span className="font-semibold text-blue-400">{stats.inProgressProjects}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-stone-600 dark:text-stone-400">Not Started</span>
-                  <span className="font-semibold text-stone-600 dark:text-stone-400">{stats.notStartedProjects}</span>
+                  <span className="text-sm text-gray-400">Not Started</span>
+                  <span className="font-semibold text-gray-400">{stats.notStartedProjects}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-stone-600 dark:text-stone-400">Overdue</span>
-                  <span className="font-semibold text-red-600 dark:text-red-400">{stats.overdueProjects}</span>
+                  <span className="text-sm text-gray-400">Overdue</span>
+                  <span className="font-semibold text-red-400">{stats.overdueProjects}</span>
                 </div>
               </div>
             </div>

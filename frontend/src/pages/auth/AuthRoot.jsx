@@ -7,7 +7,6 @@ export default function AuthRoot() {
     <>
       <MiniNavbar />
       <Outlet />
-      <Footer />
     </>
   );
 }

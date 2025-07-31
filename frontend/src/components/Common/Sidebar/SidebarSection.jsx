@@ -18,16 +18,16 @@ export default function SidebarSection({ items, className = "" }) {
           <>
             <Link
               to={item.path}
-              className={`_${uniqueClass} group flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 ${
+              className={`_${uniqueClass} group flex items-center transition-all duration-300 hover-lift ${
                 isActive
-                  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                  : "text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-900 dark:hover:text-stone-200"
-              } ${isDesktopSideBarCollapsed ? "justify-center" : "justify-start"}`}
+                  ? "gradient-blue text-white shadow-lg"
+                  : "text-gray-300 hover:bg-gray-700 hover:text-white"
+              } ${isDesktopSideBarCollapsed ? "justify-center w-10 h-10 rounded-xl mx-auto" : "px-3 py-3 rounded-xl justify-start"}`}
               key={item.path}
             >
               <item.icon
                 onDoubleClick={toggleSidebar}
-                className={`h-5 w-5 min-w-[20px] min-h-[20px] ${isDesktopSideBarCollapsed ? "" : "mr-3"}`}
+                className={`transition-transform duration-200 group-hover:scale-110 ${isDesktopSideBarCollapsed ? "h-5 w-5" : "h-5 w-5 mr-3"}`}
               />
               {!isDesktopSideBarCollapsed && (
                 <span className="font-medium text-sm">{item.name}</span>

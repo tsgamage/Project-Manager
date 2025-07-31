@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import ProjectContext from "../store/project.context.jsx";
 import { 
   Trash2, 
@@ -12,7 +13,8 @@ import {
   X,
   Search,
   Filter,
-  Mail
+  Mail,
+  ArrowLeft
 } from "lucide-react";
 
 export default function TrashPage() {
@@ -105,15 +107,15 @@ export default function TrashPage() {
   function getStatusColor(status) {
     switch (status) {
       case "expired":
-        return "text-red-600 bg-red-100 dark:bg-red-900 dark:text-red-400";
+        return "bg-red-500/20 text-red-300 border-red-500/30";
       case "critical":
-        return "text-orange-600 bg-orange-100 dark:bg-orange-900 dark:text-orange-400";
+        return "bg-orange-500/20 text-orange-300 border-orange-500/30";
       case "warning":
-        return "text-yellow-600 bg-yellow-100 dark:bg-yellow-900 dark:text-yellow-400";
+        return "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
       case "safe":
-        return "text-green-600 bg-green-100 dark:bg-green-900 dark:text-green-400";
+        return "bg-green-500/20 text-green-300 border-green-500/30";
       default:
-        return "text-stone-600 bg-stone-100 dark:bg-stone-700 dark:text-stone-400";
+        return "bg-gray-500/20 text-gray-300 border-gray-500/30";
     }
   }
 
@@ -203,32 +205,36 @@ export default function TrashPage() {
   const filteredMembers = filterItems(deletedMembers);
 
   return (
-    <div className="min-h-screen bg-theme-light dark:bg-theme-dark">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto p-4 sm:p-6">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 bg-red-100 dark:bg-red-900/20 rounded-lg flex items-center justify-center">
-              <Trash2 className="h-5 w-5 text-red-600 dark:text-red-400" />
+        <div className="mb-6 sm:mb-8 fade-in">
+          <div className="flex items-center gap-3 sm:gap-4 mb-4">
+            <Link
+              to="/"
+              className="p-2 rounded-xl hover:bg-gray-700 transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5 text-gray-400" />
+            </Link>
+            <div className="w-10 h-10 bg-red-500/20 rounded-xl flex items-center justify-center">
+              <Trash2 className="h-5 w-5 text-red-400" />
             </div>
-            <h1 className="text-3xl font-bold text-stone-800 dark:text-stone-200">
-              Trash
-            </h1>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">Trash</h1>
+              <p className="text-sm sm:text-base text-gray-400">Restore deleted projects and team members</p>
+            </div>
           </div>
-          <p className="text-stone-600 dark:text-stone-400">
-            Restore deleted projects and team members. Items are permanently deleted after 30 days.
-          </p>
         </div>
 
         {/* Warning Banner */}
-        <div className="mb-6 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-xl p-4">
-          <div className="flex items-center gap-3">
-            <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+        <div className="mb-6 glass rounded-2xl border border-yellow-500/30 p-4 sm:p-6">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 text-yellow-400 mt-0.5 flex-shrink-0" />
             <div>
-              <h3 className="font-medium text-yellow-800 dark:text-yellow-200">
+              <h3 className="font-medium text-yellow-300 mb-1">
                 Important Notice
               </h3>
-              <p className="text-sm text-yellow-700 dark:text-yellow-300">
+              <p className="text-sm text-yellow-300/80">
                 Deleted items are automatically permanently removed after 30 days. Make sure to restore any important items before they expire.
               </p>
             </div>
@@ -237,23 +243,23 @@ export default function TrashPage() {
 
         {/* Tabs */}
         <div className="mb-6">
-          <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-1 bg-stone-100 dark:bg-stone-700 rounded-xl p-1">
+          <div className="flex flex-col sm:flex-row gap-2 bg-gray-700 rounded-xl p-1">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                     activeTab === tab.id
-                      ? "bg-white dark:bg-stone-800 text-stone-800 dark:text-stone-200 shadow-sm"
-                      : "text-stone-600 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200"
+                      ? "gradient-blue text-white shadow-lg"
+                      : "text-gray-300 hover:bg-gray-600 hover:text-white"
                   }`}
                 >
                   <Icon className="h-4 w-4" />
                   <span className="hidden sm:inline">{tab.label}</span>
                   <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
-                  <span className="bg-stone-200 dark:bg-stone-600 text-stone-700 dark:text-stone-300 px-2 py-0.5 rounded-full text-xs">
+                  <span className="bg-gray-800/50 text-gray-300 px-2 py-0.5 rounded-full text-xs">
                     {tab.count}
                   </span>
                 </button>
@@ -265,19 +271,19 @@ export default function TrashPage() {
         {/* Search and Filter */}
         <div className="mb-6 flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-stone-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
               placeholder="Search deleted items..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-700 text-stone-800 dark:text-stone-200"
+              className="w-full pl-10 pr-4 py-3 sm:py-4 text-sm sm:text-base border border-gray-600 rounded-xl bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
             />
           </div>
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="px-4 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-700 text-stone-800 dark:text-stone-200"
+            className="px-4 py-3 sm:py-4 text-sm sm:text-base border border-gray-600 rounded-xl bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
           >
             <option value="all">All Items</option>
             <option value="safe">Safe (7+ days left)</option>
@@ -288,18 +294,19 @@ export default function TrashPage() {
         </div>
 
         {/* Content */}
-        <div className="bg-white dark:bg-stone-800 rounded-2xl shadow-lg border border-stone-100 dark:border-stone-700">
+        <div className="glass rounded-2xl shadow-lg border border-gray-700">
           {/* Projects Tab */}
           {activeTab === "projects" && (
-            <div className="p-6">
-              <h2 className="text-xl font-semibold text-stone-800 dark:text-stone-200 mb-6">
+            <div className="p-4 sm:p-6">
+              <h2 className="text-xl sm:text-2xl font-semibold text-white mb-6 flex items-center gap-2">
+                <FolderOpen className="h-5 w-5 text-blue-400" />
                 Deleted Projects
               </h2>
               
               {filteredProjects.length === 0 ? (
                 <div className="text-center py-12">
-                  <FolderOpen className="h-12 w-12 text-stone-400 mx-auto mb-4" />
-                  <p className="text-stone-600 dark:text-stone-400">
+                  <FolderOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-400">
                     {searchQuery || filterType !== "all" 
                       ? "No projects match your search criteria" 
                       : "No deleted projects found"
@@ -313,30 +320,30 @@ export default function TrashPage() {
                     const daysLeft = getDaysUntilPermanentDeletion(project.deletedAt);
                     
                     return (
-                      <div key={project._id} className="border border-stone-200 dark:border-stone-700 rounded-xl p-4 sm:p-6 hover:bg-stone-50 dark:hover:bg-stone-700 transition-colors">
-                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
+                      <div key={project._id} className="bg-gray-700/50 rounded-xl p-4 sm:p-6 hover:bg-gray-700 transition-all duration-300 border border-gray-600">
+                        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
                           <div className="flex-1">
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
-                              <h3 className="text-lg font-semibold text-stone-800 dark:text-stone-200">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
+                              <h3 className="text-lg sm:text-xl font-semibold text-white">
                                 {project.title}
                               </h3>
-                              <span className={`px-2 py-1 rounded-full text-xs font-medium w-fit ${getStatusColor(status)}`}>
+                              <span className={`px-3 py-1 rounded-full text-xs font-medium border w-fit ${getStatusColor(status)}`}>
                                 {getStatusText(status)}
                               </span>
                             </div>
-                            <p className="text-stone-600 dark:text-stone-400 mb-3">
+                            <p className="text-gray-300 mb-4">
                               {project.description}
                             </p>
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 text-sm text-stone-500 dark:text-stone-400">
-                              <span className="flex items-center gap-1">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 text-sm text-gray-400">
+                              <span className="flex items-center gap-2">
                                 <Users className="h-4 w-4" />
                                 {project.team.length} members
                               </span>
-                              <span className="flex items-center gap-1">
+                              <span className="flex items-center gap-2">
                                 <CheckCircle className="h-4 w-4" />
                                 {project.tasks.filter(t => t.completed).length}/{project.tasks.length} tasks completed
                               </span>
-                              <span className="flex items-center gap-1">
+                              <span className="flex items-center gap-2">
                                 <Calendar className="h-4 w-4" />
                                 Deleted {formatDate(project.deletedAt)}
                               </span>
@@ -346,16 +353,15 @@ export default function TrashPage() {
                             {status !== "expired" && (
                               <button
                                 onClick={() => handleRestore(project)}
-                                className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm transition-colors"
+                                className="flex items-center justify-center gap-2 gradient-blue hover:shadow-lg text-white px-4 py-3 rounded-xl text-sm transition-all duration-300 hover-lift"
                               >
                                 <RotateCcw className="h-4 w-4" />
-                                <span className="hidden sm:inline">Restore</span>
-                                <span className="sm:hidden">Restore</span>
+                                <span>Restore</span>
                               </button>
                             )}
                             <button
                               onClick={() => handlePermanentDelete(project)}
-                              className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm transition-colors"
+                              className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-xl text-sm transition-all duration-300 hover-lift"
                             >
                               <Trash2 className="h-4 w-4" />
                               <span className="hidden sm:inline">Delete Permanently</span>
@@ -365,7 +371,7 @@ export default function TrashPage() {
                         </div>
                         
                         {daysLeft > 0 && (
-                          <div className="flex items-center gap-2 text-sm text-stone-600 dark:text-stone-400">
+                          <div className="flex items-center gap-2 text-sm text-gray-400 pt-3 border-t border-gray-600">
                             <Clock className="h-4 w-4" />
                             <span>
                               {daysLeft === 1 
@@ -385,15 +391,16 @@ export default function TrashPage() {
 
           {/* Members Tab */}
           {activeTab === "members" && (
-            <div className="p-6">
-              <h2 className="text-xl font-semibold text-stone-800 dark:text-stone-200 mb-6">
+            <div className="p-4 sm:p-6">
+              <h2 className="text-xl sm:text-2xl font-semibold text-white mb-6 flex items-center gap-2">
+                <Users className="h-5 w-5 text-green-400" />
                 Deleted Team Members
               </h2>
               
               {filteredMembers.length === 0 ? (
                 <div className="text-center py-12">
-                  <Users className="h-12 w-12 text-stone-400 mx-auto mb-4" />
-                  <p className="text-stone-600 dark:text-stone-400">
+                  <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-400">
                     {searchQuery || filterType !== "all" 
                       ? "No members match your search criteria" 
                       : "No deleted members found"
@@ -407,39 +414,39 @@ export default function TrashPage() {
                     const daysLeft = getDaysUntilPermanentDeletion(member.deletedAt);
                     
                     return (
-                      <div key={member._id} className="border border-stone-200 dark:border-stone-700 rounded-xl p-4 sm:p-6 hover:bg-stone-50 dark:hover:bg-stone-700 transition-colors">
-                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
+                      <div key={member._id} className="bg-gray-700/50 rounded-xl p-4 sm:p-6 hover:bg-gray-700 transition-all duration-300 border border-gray-600">
+                        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
                           <div className="flex-1">
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
                               <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
-                                  <span className="text-blue-600 dark:text-blue-400 font-semibold">
+                                <div className="w-12 h-12 gradient-blue rounded-full flex items-center justify-center">
+                                  <span className="text-white font-semibold">
                                     {member.name.charAt(0)}
                                   </span>
                                 </div>
                                 <div>
-                                  <h3 className="text-lg font-semibold text-stone-800 dark:text-stone-200">
+                                  <h3 className="text-lg sm:text-xl font-semibold text-white">
                                     {member.name}
                                   </h3>
-                                  <p className="text-stone-600 dark:text-stone-400">
+                                  <p className="text-gray-300">
                                     {member.role}
                                   </p>
                                 </div>
                               </div>
-                              <span className={`px-2 py-1 rounded-full text-xs font-medium w-fit ${getStatusColor(status)}`}>
+                              <span className={`px-3 py-1 rounded-full text-xs font-medium border w-fit ${getStatusColor(status)}`}>
                                 {getStatusText(status)}
                               </span>
                             </div>
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 text-sm text-stone-500 dark:text-stone-400">
-                              <span className="flex items-center gap-1">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 text-sm text-gray-400">
+                              <span className="flex items-center gap-2">
                                 <Mail className="h-4 w-4" />
                                 {member.email}
                               </span>
-                              <span className="flex items-center gap-1">
+                              <span className="flex items-center gap-2">
                                 <FolderOpen className="h-4 w-4" />
                                 {member.assignedProjects.length} projects
                               </span>
-                              <span className="flex items-center gap-1">
+                              <span className="flex items-center gap-2">
                                 <Calendar className="h-4 w-4" />
                                 Deleted {formatDate(member.deletedAt)}
                               </span>
@@ -449,16 +456,15 @@ export default function TrashPage() {
                             {status !== "expired" && (
                               <button
                                 onClick={() => handleRestore(member)}
-                                className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm transition-colors"
+                                className="flex items-center justify-center gap-2 gradient-blue hover:shadow-lg text-white px-4 py-3 rounded-xl text-sm transition-all duration-300 hover-lift"
                               >
                                 <RotateCcw className="h-4 w-4" />
-                                <span className="hidden sm:inline">Restore</span>
-                                <span className="sm:hidden">Restore</span>
+                                <span>Restore</span>
                               </button>
                             )}
                             <button
                               onClick={() => handlePermanentDelete(member)}
-                              className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm transition-colors"
+                              className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-xl text-sm transition-all duration-300 hover-lift"
                             >
                               <Trash2 className="h-4 w-4" />
                               <span className="hidden sm:inline">Delete Permanently</span>
@@ -468,7 +474,7 @@ export default function TrashPage() {
                         </div>
                         
                         {daysLeft > 0 && (
-                          <div className="flex items-center gap-2 text-sm text-stone-600 dark:text-stone-400">
+                          <div className="flex items-center gap-2 text-sm text-gray-400 pt-3 border-t border-gray-600">
                             <Clock className="h-4 w-4" />
                             <span>
                               {daysLeft === 1 
@@ -489,24 +495,24 @@ export default function TrashPage() {
 
         {/* Confirmation Modals */}
         {showConfirmRestore && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-stone-800 rounded-2xl p-4 sm:p-6 max-w-md w-full">
-              <h3 className="text-lg font-semibold text-stone-800 dark:text-stone-200 mb-4">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="glass rounded-2xl p-4 sm:p-6 max-w-md w-full border border-gray-700">
+              <h3 className="text-lg font-semibold text-white mb-4">
                 Restore {activeTab === "projects" ? "Project" : "Member"}?
               </h3>
-              <p className="text-stone-600 dark:text-stone-400 mb-6">
+              <p className="text-gray-300 mb-6">
                 Are you sure you want to restore "{itemToRestore?.title || itemToRestore?.name}"? This will make it available again in your workspace.
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={confirmRestore}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors"
+                  className="flex-1 gradient-blue hover:shadow-lg text-white py-3 rounded-xl transition-all duration-300 hover-lift"
                 >
                   Restore
                 </button>
                 <button
                   onClick={() => setShowConfirmRestore(false)}
-                  className="flex-1 border border-stone-300 dark:border-stone-600 text-stone-700 dark:text-stone-300 py-2 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-700 transition-colors"
+                  className="flex-1 border border-gray-600 text-gray-300 py-3 rounded-xl hover:bg-gray-700 transition-all duration-300"
                 >
                   Cancel
                 </button>
@@ -516,24 +522,24 @@ export default function TrashPage() {
         )}
 
         {showConfirmDelete && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-stone-800 rounded-2xl p-4 sm:p-6 max-w-md w-full">
-              <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-4">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="glass rounded-2xl p-4 sm:p-6 max-w-md w-full border border-gray-700">
+              <h3 className="text-lg font-semibold text-red-400 mb-4">
                 Permanently Delete?
               </h3>
-              <p className="text-stone-600 dark:text-stone-400 mb-6">
+              <p className="text-gray-300 mb-6">
                 Are you sure you want to permanently delete "{itemToDelete?.title || itemToDelete?.name}"? This action cannot be undone.
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={confirmPermanentDelete}
-                  className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg transition-colors"
+                  className="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl transition-all duration-300 hover-lift"
                 >
                   Delete Permanently
                 </button>
                 <button
                   onClick={() => setShowConfirmDelete(false)}
-                  className="flex-1 border border-stone-300 dark:border-stone-600 text-stone-700 dark:text-stone-300 py-2 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-700 transition-colors"
+                  className="flex-1 border border-gray-600 text-gray-300 py-3 rounded-xl hover:bg-gray-700 transition-all duration-300"
                 >
                   Cancel
                 </button>

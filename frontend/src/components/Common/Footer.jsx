@@ -2,16 +2,16 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="bg-white dark:bg-stone-800 border-t border-stone-200 dark:border-stone-700 py-6">
+    <footer className="glass border-t border-gray-700 py-6">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           {/* Company Info */}
           <div className="flex items-center space-x-2 mb-4 md:mb-0">
-            <div className="bg-blue-600 w-8 h-8 rounded-lg flex items-center justify-center">
+            <div className="gradient-blue w-8 h-8 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">PM</span>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-stone-800 dark:text-stone-200">
+              <h3 className="text-lg font-bold text-white">
                 Project Manager
               </h3>
             </div>
@@ -23,7 +23,7 @@ export default function Footer() {
               href="#"
               // target="_blank"
               rel="noopener noreferrer"
-              className="text-stone-500 hover:text-blue-600 dark:text-stone-400 dark:hover:text-blue-400 transition-colors"
+              className="text-gray-400 hover:text-blue-400 transition-colors p-2 hover:bg-gray-700 rounded-lg"
               aria-label="Facebook"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -35,7 +35,7 @@ export default function Footer() {
               href="https://github.com/tsgamage/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-stone-500 hover:text-stone-800 dark:text-stone-400 dark:hover:text-stone-200 transition-colors"
+              className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-700 rounded-lg"
               aria-label="GitHub"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -51,7 +51,7 @@ export default function Footer() {
               href="#"
               // target="_blank"
               rel="noopener noreferrer"
-              className="text-stone-500 hover:text-green-500 dark:text-stone-400 dark:hover:text-green-400 transition-colors"
+              className="text-gray-400 hover:text-green-400 transition-colors p-2 hover:bg-gray-700 rounded-lg"
               aria-label="Linktree"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -63,20 +63,20 @@ export default function Footer() {
 
         {/* Copyright and Links */}
         <div className="mt-6 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-xs text-stone-500 dark:text-stone-400 mb-2 md:mb-0">
+          <p className="text-xs text-gray-400 mb-2 md:mb-0">
             © {new Date().getFullYear()} Princess Software Solutions. All rights reserved.
           </p>
 
           <div className="flex space-x-4">
             <Link
               to="/privacy"
-              className="text-xs text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 transition-colors"
+              className="text-xs text-gray-400 hover:text-white transition-colors"
             >
               Privacy
             </Link>
             <Link
               to="/terms"
-              className="text-xs text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 transition-colors"
+              className="text-xs text-gray-400 hover:text-white transition-colors"
             >
               Terms
             </Link>

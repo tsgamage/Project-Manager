@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import useProgress from "../../hooks/useProgress";
 import useStatusClasses from "../../hooks/useStatusClasses";
+import { Calendar, Clock, CheckCircle } from "lucide-react";
 
 export default function ProjectCard({ project }) {
   const { _id, title, description, startDate, endDate, team } = project;
@@ -23,82 +24,110 @@ export default function ProjectCard({ project }) {
 
   let bottomPartClasses;
   if (progress === 100) {
-    bottomPartClasses = "bg-green-500/10 text-green-800 dark:bg-green-900/30 dark:text-green-300";
+    bottomPartClasses = "bg-green-500/20 text-green-300 border-green-500/30";
   } else if (daysRemaining < 7) {
-    bottomPartClasses = "bg-red-500/10 text-red-800 dark:bg-red-900/30 dark:text-red-300";
+    bottomPartClasses = "bg-red-500/20 text-red-300 border-red-500/30";
   } else if (daysRemaining < 14) {
-    bottomPartClasses =
-      "bg-yellow-500/10 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300";
+    bottomPartClasses = "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
   } else {
-    bottomPartClasses = "bg-blue-500/10 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300";
+    bottomPartClasses = "bg-gray-500/20 text-gray-300 border-gray-500/30";
   }
 
   return (
     <Link
       to={`/project/view/${_id}`}
-      className="bg-white dark:bg-stone-800 rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-1 transition-transform duration-300 ease-in-out h-full flex flex-col"
+      className="gradient-card rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-1 transition-all duration-200 ease-out h-full flex flex-col hover-lift border border-gray-700 group"
     >
-      <div className="p-6 flex-1">
+      <div className="p-5 flex-1">
+        {/* Header with Status */}
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-xl font-bold text-stone-800 dark:text-stone-100 truncate">{title}</h3>
+          <h3 className="text-lg font-bold text-white truncate group-hover:text-blue-300 transition-colors duration-200">
+            {title}
+          </h3>
           <span
-            className={`text-xs font-semibold px-2.5 py-0.5 rounded-full whitespace-nowrap ${statusClasses}`}
+            className={`text-xs font-semibold px-2 py-1 rounded-full whitespace-nowrap border backdrop-blur-sm ${statusClasses}`}
           >
             {status}
           </span>
         </div>
 
-        <p className="text-stone-600 dark:text-stone-300 mb-6 min-h-[60px]">
+        {/* Description */}
+        <p className="text-gray-300 mb-5 min-h-[50px] leading-relaxed text-sm">
           {description?.length > 60 ? description.slice(0, 60) + "..." : description}
         </p>
 
-        {/* Progress Bar */}
-        <div className="mb-6">
-          <div className="flex justify-between text-sm text-stone-600 dark:text-stone-400 mb-1">
-            <span>Progress: {progress || 0}%</span>
-            <span>{daysRemaining > 0 ? `${daysRemaining} days left` : "Overdue"}</span>
+        {/* Progress Section */}
+        <div className="mb-5">
+          <div className="flex justify-between text-xs text-gray-400 mb-2">
+            <span className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              Progress: {progress || 0}%
+            </span>
+            <span className="flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              {daysRemaining > 0 ? `${daysRemaining} days left` : "Overdue"}
+            </span>
           </div>
-          <div className="w-full bg-stone-200 dark:bg-stone-700 rounded-full h-2">
+          <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
             <div
-              className={`h-2 rounded-full ${
-                progress < 30 ? "bg-red-500" : progress < 70 ? "bg-yellow-500" : "bg-green-500"
+              className={`h-2 rounded-full transition-all duration-300 ease-out ${
+                progress < 30 ? "bg-gradient-to-r from-red-400 to-red-500" : 
+                progress < 70 ? "bg-gradient-to-r from-yellow-400 to-yellow-500" : 
+                "bg-gradient-to-r from-green-400 to-green-500"
               }`}
               style={{ width: `${progress}%` }}
             ></div>
           </div>
         </div>
 
-        {/* Team Members */}
-        <div className="flex justify-between items-center mt-6">
-          <div className="flex -space-x-2">
+        {/* Team Members and Date Range */}
+        <div className="flex justify-between items-center mt-5">
+          <div className="flex -space-x-1">
             {team.length > 0 &&
               team.map((member, index) => (
                 <div
                   key={index}
-                  className={`${member.color} w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-semibold border-2 border-white dark:border-stone-800`}
+                  className={`${member.color} w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-semibold border border-gray-800 shadow-md transition-transform duration-200 hover:scale-105`}
                 >
                   {member.name.charAt(0)}
                 </div>
               ))}
             {team.length === 0 && (
-              <span className="text-sm text-stone-600 dark:text-stone-400 mb-1">
+              <span className="text-xs text-gray-400">
                 No team members
               </span>
             )}
           </div>
 
-          <div className="text-sm text-stone-600 dark:text-stone-400">
+          <div className="text-xs text-gray-400 flex items-center gap-1">
+            <Calendar className="h-3 w-3" />
             {formatDate(startDate)} - {formatDate(endDate)}
           </div>
         </div>
       </div>
 
-      <div className={`px-4 py-2 text-center ${bottomPartClasses}`}>
-        {progress !== 100 &&
-          daysRemaining > 0 &&
-          `${daysRemaining} day${daysRemaining !== 1 ? "s" : ""} remaining`}
-        {progress !== 100 && daysRemaining === 0 && "Deadline passed!"}
-        {progress === 100 && "Project completed!"}
+      {/* Bottom Status Bar */}
+      <div className={`px-5 py-3 text-center border-t border-gray-700 ${bottomPartClasses}`}>
+        <div className="flex items-center justify-center gap-2">
+          {progress === 100 ? (
+            <>
+              <CheckCircle className="h-3 w-3" />
+              <span className="font-medium text-xs">Project completed!</span>
+            </>
+          ) : daysRemaining > 0 ? (
+            <>
+              <Clock className="h-3 w-3" />
+              <span className="font-medium text-xs">
+                {daysRemaining} day{daysRemaining !== 1 ? "s" : ""} remaining
+              </span>
+            </>
+          ) : (
+            <>
+              <Clock className="h-3 w-3" />
+              <span className="font-medium text-xs">Deadline passed!</span>
+            </>
+          )}
+        </div>
       </div>
     </Link>
   );

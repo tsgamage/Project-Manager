@@ -5,7 +5,7 @@ import Footer from "../components/Common/Footer";
 
 export default function RootLayout() {
   return (
-    <div className="h-screen bg-theme-light dark:bg-theme-dark overflow-hidden flex flex-col">
+    <div className="h-screen gradient-bg overflow-hidden flex flex-col">
       <Navbar />
       {/* Main Layout */}
       <div className="flex flex-1 min-h-0">

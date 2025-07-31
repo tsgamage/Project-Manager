@@ -67,37 +67,60 @@ export default function AddProjectPage() {
         message={modalData.message}
       />
 
-      <div className="min-h-screen bg-theme-light dark:bg-theme-dark">
-        <main className="container mx-auto px-4 py-6 sm:py-8">
-          <Header />
+      <div className="min-h-screen">
+        <main className="container mx-auto px-4 py-6 sm:py-8 lg:py-12">
+          <div className="max-w-4xl mx-auto">
+            <Header />
 
-          <div className="bg-white dark:bg-stone-800 rounded-xl shadow-md p-4 sm:p-6">
-            <form action={formActionState} className="space-y-4 sm:space-y-6">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
-                <ProjectTitle defaultValue={formState?.title} />
-                <StartDate defaultValue={formState?.startDate} />
-                <EndDate defaultValue={formState?.endDate} />
-                <Description defaultValue={formState?.description} />
-              </div>
-              <TeamMembers members={teamMembers} onAddMember={setTeamMembers} />
-              <ProjectTasks tasks={tasks} onAddTask={setTasks} />
+            <div className="glass rounded-2xl shadow-lg border border-gray-700 p-6 sm:p-8 lg:p-10">
+              <form action={formActionState} className="space-y-8 sm:space-y-10">
+                {/* Basic Information Section */}
+                <div className="space-y-6">
+                  <div className="border-b border-gray-700 pb-4">
+                    <h3 className="text-xl font-semibold text-white mb-2">Basic Information</h3>
+                    <p className="text-gray-400 text-sm">Set up your project details</p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <ProjectTitle defaultValue={formState?.title} />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <StartDate defaultValue={formState?.startDate} />
+                      <EndDate defaultValue={formState?.endDate} />
+                    </div>
+                    <Description defaultValue={formState?.description} />
+                  </div>
+                </div>
 
-              <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-stone-200 dark:border-stone-700">
-                {/* <button
-                type="button"
-                className="px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base border border-stone-300 dark:border-stone-700 rounded-lg font-medium flex items-center justify-center transition-colors text-stone-800 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-700"
-              >
-                Cancel
-              </button> */}
-                <button
-                  type="submit"
-                  disabled={pending}
-                  className="px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium flex items-center justify-center transition-colors"
-                >
-                  {pending ? "Creating..." : "Create Project"}
-                </button>
-              </div>
-            </form>
+                {/* Team Members Section */}
+                <div className="space-y-6">
+                  <div className="border-b border-gray-700 pb-4">
+                    <h3 className="text-xl font-semibold text-white mb-2">Team & Collaboration</h3>
+                    <p className="text-gray-400 text-sm">Add team members to your project</p>
+                  </div>
+                  <TeamMembers members={teamMembers} onAddMember={setTeamMembers} />
+                </div>
+
+                {/* Tasks Section */}
+                <div className="space-y-6">
+                  <div className="border-b border-gray-700 pb-4">
+                    <h3 className="text-xl font-semibold text-white mb-2">Project Tasks</h3>
+                    <p className="text-gray-400 text-sm">Define the tasks for your project</p>
+                  </div>
+                  <ProjectTasks tasks={tasks} onAddTask={setTasks} />
+                </div>
+
+                {/* Submit Section */}
+                <div className="flex flex-col sm:flex-row justify-end gap-4 pt-8 border-t border-gray-700">
+                  <button
+                    type="submit"
+                    disabled={pending}
+                    className="w-full sm:w-auto px-8 py-4 text-base font-semibold gradient-blue hover:shadow-lg text-white rounded-xl flex items-center justify-center transition-all duration-300 hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {pending ? "Creating Project..." : "Create Project"}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </main>
       </div>

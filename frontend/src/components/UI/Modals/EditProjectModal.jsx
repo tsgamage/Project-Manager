@@ -1,158 +1,253 @@
-import { forwardRef, useActionState, useImperativeHandle, useRef } from "react";
+import { forwardRef, useImperativeHandle, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { X, Edit3, Calendar, FileText, Save } from "lucide-react";
 
 const formatDate = (dateString) => {
   try {
     const date = new Date(dateString);
     return date.toISOString().split("T")[0];
   } catch {
-    return;
+    return "";
   }
 };
 
 export default forwardRef(function EditProjectModal({ project, onClose, onSave }, ref) {
-  const dialog = useRef();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    title: project.title || "",
+    startDate: formatDate(project.startDate) || "",
+    endDate: formatDate(project.endDate) || "",
+    description: project.description || "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.title.trim() || !formData.startDate || !formData.endDate || !formData.description.trim()) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await onSave(formData);
+      handleClose();
+    } catch (error) {
+      console.error("Error updating project:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setFormData({
+      title: project.title || "",
+      startDate: formatDate(project.startDate) || "",
+      endDate: formatDate(project.endDate) || "",
+      description: project.description || "",
+    });
+    onClose();
+  };
+
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      handleClose();
+    }
+  };
 
   useImperativeHandle(ref, () => ({
-    open: () => dialog.current.showModal(),
-    close: () => dialog.current.close(),
+    open: () => {
+      setIsOpen(true);
+      setFormData({
+        title: project.title || "",
+        startDate: formatDate(project.startDate) || "",
+        endDate: formatDate(project.endDate) || "",
+        description: project.description || "",
+      });
+    },
+    close: () => {
+      handleClose();
+    },
   }));
 
-  async function editAction(preData, formData) {
-    const dataObj = Object.fromEntries(formData);
-    try {
-      await onSave(dataObj);
-      onClose();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return { title: "", startDate: "", endDate: "", description: "" };
-    } catch {
-      return dataObj;
-    }
-  }
+  // Close modal on escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        handleClose();
+      }
+    };
 
-  const [formState, formStateAction, pending] = useActionState(editAction);
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
 
   return createPortal(
-    <dialog
-      ref={dialog}
-      onClose={onClose}
-      className="fixed inset-0 z-50 w-full max-w-md mx-auto mt-32 rounded-xl shadow-xl backdrop:bg-black/90 animate-fade-in"
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
+      onClick={handleBackdropClick}
     >
-      <div className="bg-white dark:bg-stone-800 rounded-xl p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-semibold text-header-light dark:text-header-dark">
-            Edit Project
-          </h3>
-          <button
-            onClick={onClose}
-            className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-300"
-            aria-label="Close"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+      <div className="w-full max-w-xs sm:max-w-md mx-auto max-h-[90vh] overflow-y-auto">
+        <div className="glass rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
+          {/* Header */}
+          <div className="flex items-center justify-between p-3 sm:p-6 border-b border-gray-700">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-7 h-7 sm:w-10 sm:h-10 gradient-blue rounded-lg sm:rounded-xl flex items-center justify-center">
+                <Edit3 className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-white" />
+              </div>
+              <div>
+                <h3 className="text-base sm:text-xl font-semibold text-white">
+                  Edit Project
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-400">
+                  Update project details
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handleClose}
+              className="p-1.5 sm:p-2 text-gray-400 hover:text-gray-300 hover:bg-gray-700 rounded-lg sm:rounded-xl transition-all duration-300"
+              aria-label="Close"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-        <form action={formStateAction} className="space-y-4">
-          <div>
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
-            >
-              Project Title*
-            </label>
-            <input
-              id="title"
-              name="title"
-              type="text"
-              className="w-full px-3 py-2 border border-stone-300 dark:border-stone-700 rounded-lg bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Enter project title"
-              defaultValue={formState?.title || project.title}
-              required
-            />
+              <X className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
           </div>
 
-          <div>
-            <label
-              htmlFor="startDate"
-              className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
-            >
-              Start Date*
-            </label>
-            <input
-              id="startDate"
-              name="startDate"
-              type="date"
-              className="w-full px-3 py-2 border border-stone-300 dark:border-stone-700 rounded-lg bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              defaultValue={formState?.startDate || formatDate(project.startDate)}
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="endDate"
-              className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
-            >
-              End Date*
-            </label>
-            <input
-              id="endDate"
-              name="endDate"
-              type="date"
-              className="w-full px-3 py-2 border border-stone-300 dark:border-stone-700 rounded-lg bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              defaultValue={formState?.endDate || formatDate(project.endDate)}
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
-            >
-              Description*
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              rows="3"
-              className="w-full px-3 py-2 border border-stone-300 dark:border-stone-700 rounded-lg bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Describe the project..."
-              defaultValue={formState?.description || project.description}
-              required
-            />
-          </div>
-          <div className="flex justify-end gap-3 pt-4">
-            {!pending && (
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="p-3 sm:p-6 space-y-3 sm:space-y-6">
+            {/* Project Title */}
+            <div>
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-white mb-2"
+              >
+                Project Title*
+              </label>
+              <input
+                id="title"
+                name="title"
+                type="text"
+                value={formData.title}
+                onChange={handleChange}
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 rounded-lg sm:rounded-xl bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
+                placeholder="Enter project title"
+                required
+              />
+            </div>
+
+            {/* Date Range */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div>
+                <label
+                  htmlFor="startDate"
+                  className="block text-sm font-medium text-white mb-2"
+                >
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4" />
+                    Start Date*
+                  </div>
+                </label>
+                <input
+                  id="startDate"
+                  name="startDate"
+                  type="date"
+                  value={formData.startDate}
+                  onChange={handleChange}
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 rounded-lg sm:rounded-xl bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="endDate"
+                  className="block text-sm font-medium text-white mb-2"
+                >
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4" />
+                    End Date*
+                  </div>
+                </label>
+                <input
+                  id="endDate"
+                  name="endDate"
+                  type="date"
+                  value={formData.endDate}
+                  onChange={handleChange}
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 rounded-lg sm:rounded-xl bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Description */}
+            <div>
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-white mb-2"
+              >
+                <div className="flex items-center gap-2">
+                  <FileText className="h-4 w-4" />
+                  Description*
+                </div>
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                rows="3"
+                value={formData.description}
+                onChange={handleChange}
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 rounded-lg sm:rounded-xl bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base resize-none"
+                placeholder="Describe the project..."
+                required
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2 sm:pt-4">
               <button
                 type="button"
-                onClick={onClose}
-                className="px-4 py-2 border border-stone-300 dark:border-stone-700 rounded-lg text-stone-800 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-700"
+                onClick={handleClose}
+                disabled={isLoading}
+                className="flex-1 px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 text-gray-300 rounded-lg sm:rounded-xl hover:bg-gray-700 transition-all duration-300 font-medium text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>
-            )}
-            <button
-              disabled={pending}
-              type="submit"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:bg-stone-600 disabled:cursor-auto cursor-pointer"
-            >
-              {pending ? "Updating..." : "Update"}
-            </button>
-          </div>
-        </form>
+              <button
+                type="submit"
+                disabled={isLoading || !formData.title.trim() || !formData.startDate || !formData.endDate || !formData.description.trim()}
+                className="flex-1 px-3 sm:px-4 py-2 sm:py-3 gradient-blue hover:shadow-lg text-white rounded-lg sm:rounded-xl font-medium transition-all duration-300 hover-lift disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base flex items-center justify-center gap-2"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Updating...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4" />
+                    Update Project
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </dialog>,
+    </div>,
     document.getElementById("modal-root")
   );
 });

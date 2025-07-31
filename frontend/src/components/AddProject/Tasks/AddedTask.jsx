@@ -1,25 +1,25 @@
 export default function AddedTask({ task, onDeleteTask }) {
   return (
-    <div className="flex cursor-pointer items-center p-3 rounded-lg group hover:bg-stone-50 dark:hover:bg-stone-700/50">
+    <div className="flex cursor-pointer items-center p-4 rounded-xl group hover:bg-gray-700/50 transition-all duration-300 border border-gray-600">
       <input
         type="checkbox"
         checked={false}
         onChange={() => {}}
         value={false}
-        className="h-4 w-4 rounded border-stone-300 dark:border-stone-600 text-blue-500 focus:ring-blue-400"
+        className="h-5 w-5 rounded border-gray-600 text-blue-500 focus:ring-blue-400 bg-gray-700"
       />
       <label
-        className={`ml-3 flex-1 select-none  ${
+        className={`ml-4 flex-1 select-none text-sm sm:text-base ${
           task.completed
-            ? "line-through text-stone-500 dark:text-stone-500"
-            : "text-stone-800 dark:text-stone-200"
+            ? "line-through text-gray-500"
+            : "text-white"
         }`}
       >
         {task.taskName}
       </label>
       <button
         onClick={() => onDeleteTask(task.id)}
-        className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 dark:hover:text-red-400 p-1 ml-2 transition-opacity"
+        className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 p-2 ml-2 transition-all duration-200 rounded-lg hover:bg-red-500/10"
         title="Delete task"
       >
         <svg

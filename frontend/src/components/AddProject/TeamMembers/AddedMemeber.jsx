@@ -1,21 +1,21 @@
 export default function AddedMemeber({ member, onDelete, id }) {
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center bg-stone-100 dark:bg-stone-700 rounded-lg p-2 sm:p-3 w-full sm:w-auto">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center bg-gray-700/50 rounded-xl p-3 sm:p-4 w-full sm:w-auto border border-gray-600 hover:bg-gray-700 transition-all duration-300">
       <div className="flex flex-row sm:flex-row items-center w-full sm:w-auto">
         <div
           className={
             member.color +
-            " w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white font-semibold text-base sm:text-lg"
+            " w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white font-semibold text-base sm:text-lg shadow-lg"
           }
         >
           {member.name.charAt(0)}
         </div>
 
-        <div className="ml-2 sm:ml-3 flex-1 min-w-0">
-          <h3 className="text-sm sm:text-base font-medium text-stone-800 dark:text-stone-200 truncate">
+        <div className="ml-3 sm:ml-4 flex-1 min-w-0">
+          <h3 className="text-sm sm:text-base font-medium text-white truncate">
             {member.name}
           </h3>
-          <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 truncate">
+          <p className="text-xs sm:text-sm text-gray-400 truncate">
             {member.role}
           </p>
         </div>
@@ -23,7 +23,7 @@ export default function AddedMemeber({ member, onDelete, id }) {
 
       <button
         onClick={() => onDelete(id)}
-        className="mt-2 sm:mt-0 ml-auto sm:ml-2 text-red-500 hover:text-red-700 dark:hover:text-red-400"
+        className="mt-2 sm:mt-0 ml-auto sm:ml-3 text-red-400 hover:text-red-300 transition-colors duration-200"
         title="Remove member"
         type="button"
       >

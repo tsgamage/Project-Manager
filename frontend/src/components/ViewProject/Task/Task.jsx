@@ -1,6 +1,7 @@
 import { useContext, useRef } from "react";
 import ProjectContext from "../../../store/project.context";
 import DeleteWarningModal from "../../UI/Modals/DeleteWarningModal";
+import { CheckCircle, Circle, Trash2, Edit3, Clock, Star } from "lucide-react";
 
 export default function Task({ task }) {
   const { toggleSelectTask, removeTask } = useContext(ProjectContext);
@@ -16,47 +17,70 @@ export default function Task({ task }) {
         onCancel={() => deleteModal.current.close()}
       />
 
-      <li>
-        <div className="flex cursor-pointer items-center p-3 rounded-lg group hover:bg-stone-50 dark:hover:bg-stone-700/50">
-          <input
-            type="checkbox"
-            checked={task.completed}
-            id={task._id}
-            onChange={() => toggleSelectTask(task._id)}
-            className="h-4 w-4 rounded border-stone-300 dark:border-stone-600 text-blue-500 focus:ring-blue-400"
-          />
-          <label
-            htmlFor={task._id}
-            className={`ml-3 flex-1 select-none  ${
-              task.completed
-                ? "line-through text-stone-500 dark:text-stone-500"
-                : "text-stone-800 dark:text-stone-200"
-            }`}
-          >
-            {task.taskName}
-          </label>
+      <div className="group">
+        <div className="flex items-center gap-4 p-4 bg-gray-700/50 rounded-xl hover:bg-gray-700 transition-all duration-300 border border-gray-600 hover:border-gray-500">
           <button
-            onClick={() => deleteModal.current.open()}
-            className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 dark:hover:text-red-400 p-1 ml-2 transition-opacity"
-            title="Delete task"
+            onClick={() => toggleSelectTask(task._id)}
+            className="flex-shrink-0"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-              />
-            </svg>
+            {task.completed ? (
+              <CheckCircle className="h-6 w-6 text-green-400 hover:text-green-300 transition-colors" />
+            ) : (
+              <Circle className="h-6 w-6 text-gray-400 hover:text-blue-400 transition-colors" />
+            )}
           </button>
+          
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-3">
+              <p className={`font-medium text-sm sm:text-base transition-all duration-300 ${
+                task.completed
+                  ? "line-through text-gray-500"
+                  : "text-white"
+              }`}>
+                {task.taskName}
+              </p>
+              {task.priority === 'high' && (
+                <Star className="h-4 w-4 text-red-400 fill-current" />
+              )}
+            </div>
+            
+            {task.description && (
+              <p className={`text-sm mt-1 transition-all duration-300 ${
+                task.completed
+                  ? "line-through text-gray-600"
+                  : "text-gray-400"
+              }`}>
+                {task.description}
+              </p>
+            )}
+            
+            {task.dueDate && (
+              <div className="flex items-center gap-1 mt-2">
+                <Clock className="h-3 w-3 text-gray-500" />
+                <span className="text-xs text-gray-500">
+                  Due {new Date(task.dueDate).toLocaleDateString()}
+                </span>
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button
+              className="p-2 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all duration-300"
+              title="Edit task"
+            >
+              <Edit3 className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => deleteModal.current.open()}
+              className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all duration-300"
+              title="Delete task"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
         </div>
-      </li>
+      </div>
     </>
   );
 }

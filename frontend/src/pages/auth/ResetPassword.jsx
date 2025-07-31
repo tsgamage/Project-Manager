@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Lock, Loader, ArrowLeft, Sparkles, Check, Eye, EyeOff } from "lucide-react";
 
 export default function ResetPasswordPage() {
   const [formData, setFormData] = useState({
@@ -76,26 +77,52 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-stone-100 dark:bg-stone-900">
+    <div className="h-screen bg-black overflow-hidden relative">
+      {/* Animated Background */}
+      <div className="absolute inset-0">
+        {/* Gradient Orbs */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-full -translate-y-48 translate-x-48 animate-pulse"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-br from-green-600/20 to-blue-600/20 rounded-full translate-y-32 -translate-x-32 animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-gradient-to-br from-purple-600/10 to-pink-600/10 rounded-full -translate-x-1/2 -translate-y-1/2 animate-pulse delay-500"></div>
+        
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+      </div>
+
       {/* Main Content */}
-      <div className="flex items-center justify-center px-4 py-12">
-        <div className="max-w-md w-full space-y-8">
+      <div className="relative z-10 flex items-center justify-center h-full px-4">
+        <div className="w-full max-w-xs sm:max-w-sm space-y-4 sm:space-y-6">
           {/* Header */}
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-stone-900 dark:text-stone-100">
+            <div className="flex justify-center mb-3 sm:mb-4">
+              <div className="relative">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/25">
+                  <Lock className="h-6 w-6 sm:h-7 sm:w-7 text-white" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
+                  <Sparkles className="h-2 w-2 text-white" />
+                </div>
+              </div>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               Reset your password
             </h2>
-            <p className="mt-2 text-stone-600 dark:text-stone-400">Enter your new password below</p>
+            <p className="text-xs sm:text-sm text-gray-400">
+              Enter your new password below
+            </p>
           </div>
 
           {/* Reset Password Form */}
-          <div className="bg-white dark:bg-stone-800 rounded-2xl shadow-xl border border-stone-200 dark:border-stone-700 p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="backdrop-blur-xl bg-black/40 rounded-xl sm:rounded-2xl shadow-2xl border border-gray-800/50 p-4 sm:p-6 relative overflow-hidden">
+            {/* Form Glow Effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 rounded-xl sm:rounded-2xl"></div>
+            
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 relative z-10">
               {/* Password Field */}
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2"
+                  className="block text-sm font-medium text-white mb-2"
                 >
                   New Password
                 </label>
@@ -108,55 +135,25 @@ export default function ResetPasswordPage() {
                     required
                     value={formData.password}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 placeholder-stone-500 dark:placeholder-stone-400 transition-colors ${
-                      errors.password ? "border-red-500" : "border-stone-300 dark:border-stone-600"
+                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-12 border rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700 text-white placeholder-gray-400 transition-all duration-300 ${
+                      errors.password ? "border-red-500" : "border-gray-600"
                     }`}
                     placeholder="Enter your new password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-300 transition-colors"
                   >
                     {showPassword ? (
-                      <svg
-                        className="h-5 w-5 text-stone-400 hover:text-stone-600 dark:hover:text-stone-300"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
-                        />
-                      </svg>
+                      <EyeOff className="h-4 w-4" />
                     ) : (
-                      <svg
-                        className="h-5 w-5 text-stone-400 hover:text-stone-600 dark:hover:text-stone-300"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                        />
-                      </svg>
+                      <Eye className="h-4 w-4" />
                     )}
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.password}</p>
+                  <p className="mt-1 text-xs sm:text-sm text-red-400">{errors.password}</p>
                 )}
               </div>
 
@@ -164,7 +161,7 @@ export default function ResetPasswordPage() {
               <div>
                 <label
                   htmlFor="confirmPassword"
-                  className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2"
+                  className="block text-sm font-medium text-white mb-2"
                 >
                   Confirm New Password
                 </label>
@@ -177,158 +174,82 @@ export default function ResetPasswordPage() {
                     required
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 placeholder-stone-500 dark:placeholder-stone-400 transition-colors ${
-                      errors.confirmPassword
-                        ? "border-red-500"
-                        : "border-stone-300 dark:border-stone-600"
+                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-12 border rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700 text-white placeholder-gray-400 transition-all duration-300 ${
+                      errors.confirmPassword ? "border-red-500" : "border-gray-600"
                     }`}
                     placeholder="Confirm your new password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-300 transition-colors"
                   >
                     {showConfirmPassword ? (
-                      <svg
-                        className="h-5 w-5 text-stone-400 hover:text-stone-600 dark:hover:text-stone-300"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
-                        />
-                      </svg>
+                      <EyeOff className="h-4 w-4" />
                     ) : (
-                      <svg
-                        className="h-5 w-5 text-stone-400 hover:text-stone-600 dark:hover:text-stone-300"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                        />
-                      </svg>
+                      <Eye className="h-4 w-4" />
                     )}
                   </button>
                 </div>
                 {errors.confirmPassword && (
-                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                  <p className="mt-1 text-xs sm:text-sm text-red-400">
                     {errors.confirmPassword}
                   </p>
                 )}
               </div>
 
               {/* Password Requirements */}
-              <div className="bg-stone-50 dark:bg-stone-700/50 rounded-lg p-4">
-                <h4 className="text-sm font-medium text-stone-700 dark:text-stone-300 mb-2">
+              <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 border border-gray-700/50">
+                <h4 className="text-xs sm:text-sm font-medium text-white mb-2">
                   Password requirements:
                 </h4>
-                <ul className="text-xs text-stone-600 dark:text-stone-400 space-y-1">
+                <ul className="text-xs text-gray-400 space-y-1">
                   <li
                     className={`flex items-center ${
-                      formData.password.length >= 8 ? "text-green-600 dark:text-green-400" : ""
+                      formData.password.length >= 8 ? "text-green-400" : ""
                     }`}
                   >
-                    <svg
+                    <Check
                       className={`w-3 h-3 mr-2 ${
-                        formData.password.length >= 8
-                          ? "text-green-600 dark:text-green-400"
-                          : "text-stone-400"
+                        formData.password.length >= 8 ? "text-green-400" : "text-gray-500"
                       }`}
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+                    />
                     At least 8 characters long
                   </li>
                   <li
                     className={`flex items-center ${
-                      /(?=.*[a-z])/.test(formData.password)
-                        ? "text-green-600 dark:text-green-400"
-                        : ""
+                      /(?=.*[a-z])/.test(formData.password) ? "text-green-400" : ""
                     }`}
                   >
-                    <svg
+                    <Check
                       className={`w-3 h-3 mr-2 ${
-                        /(?=.*[a-z])/.test(formData.password)
-                          ? "text-green-600 dark:text-green-400"
-                          : "text-stone-400"
+                        /(?=.*[a-z])/.test(formData.password) ? "text-green-400" : "text-gray-500"
                       }`}
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+                    />
                     Contains lowercase letter
                   </li>
                   <li
                     className={`flex items-center ${
-                      /(?=.*[A-Z])/.test(formData.password)
-                        ? "text-green-600 dark:text-green-400"
-                        : ""
+                      /(?=.*[A-Z])/.test(formData.password) ? "text-green-400" : ""
                     }`}
                   >
-                    <svg
+                    <Check
                       className={`w-3 h-3 mr-2 ${
-                        /(?=.*[A-Z])/.test(formData.password)
-                          ? "text-green-600 dark:text-green-400"
-                          : "text-stone-400"
+                        /(?=.*[A-Z])/.test(formData.password) ? "text-green-400" : "text-gray-500"
                       }`}
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+                    />
                     Contains uppercase letter
                   </li>
                   <li
                     className={`flex items-center ${
-                      /(?=.*\d)/.test(formData.password) ? "text-green-600 dark:text-green-400" : ""
+                      /(?=.*\d)/.test(formData.password) ? "text-green-400" : ""
                     }`}
                   >
-                    <svg
+                    <Check
                       className={`w-3 h-3 mr-2 ${
-                        /(?=.*\d)/.test(formData.password)
-                          ? "text-green-600 dark:text-green-400"
-                          : "text-stone-400"
+                        /(?=.*\d)/.test(formData.password) ? "text-green-400" : "text-gray-500"
                       }`}
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+                    />
                     Contains number
                   </li>
                 </ul>
@@ -338,45 +259,33 @@ export default function ResetPasswordPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                className="w-full flex justify-center py-2.5 sm:py-3 px-4 border border-transparent rounded-lg sm:rounded-xl shadow-lg text-sm font-medium text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover-lift relative overflow-hidden group"
               >
+                {/* Button Glow Effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                
                 {isLoading ? (
-                  <div className="flex items-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Resetting password...
+                  <div className="flex items-center gap-2 relative z-10">
+                    <Loader className="animate-spin h-4 w-4 text-white" />
+                    <span>Resetting password...</span>
                   </div>
                 ) : (
-                  "Reset password"
+                  <div className="flex items-center gap-2 relative z-10">
+                    <Lock className="h-4 w-4" />
+                    <span>Reset password</span>
+                  </div>
                 )}
               </button>
             </form>
 
             {/* Back to Login */}
-            <div className="mt-6 text-center">
+            <div className="mt-4 sm:mt-6 text-center relative z-10">
               <Link
                 to="/login"
-                className="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                className="inline-flex items-center gap-2 text-xs sm:text-sm text-blue-400 hover:text-blue-300 transition-colors"
               >
-                ← Back to sign in
+                <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+                Back to sign in
               </Link>
             </div>
           </div>

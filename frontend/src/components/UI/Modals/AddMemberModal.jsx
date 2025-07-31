@@ -1,11 +1,12 @@
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { X, UserPlus, Palette, Check } from "lucide-react";
 
 export default forwardRef(function AddMemberModal(
   { onClose, onAddMember },
   ref
 ) {
-  const dialog = useRef();
+  const [isOpen, setIsOpen] = useState(false);
   const [member, setMember] = useState({
     name: "",
     role: "",
@@ -38,151 +39,196 @@ export default forwardRef(function AddMemberModal(
 
     // Reset form and close
     setMember({ name: "", role: "", color: "bg-blue-500" });
+    handleClose();
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setMember({ name: "", role: "", color: "bg-blue-500" });
     onClose();
+  };
+
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      handleClose();
+    }
   };
 
   useImperativeHandle(ref, () => {
     return {
       open: () => {
-        dialog.current.showModal();
+        setIsOpen(true);
       },
       close: () => {
-        dialog.current.close();
+        handleClose();
       },
     };
   });
 
+  // Close modal on escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        handleClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
   return createPortal(
-    <dialog
-      ref={dialog}
-      onClose={onClose}
-      className="fixed inset-0 z-50 w-full max-w-md mx-auto mt-32 rounded-xl shadow-xl backdrop:bg-black/90 animate-fade-in"
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
+      onClick={handleBackdropClick}
     >
-      <div className="bg-white dark:bg-stone-800 rounded-xl p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-semibold text-header-light dark:text-header-dark">
-            Add New Team Member
-          </h3>
-          <button
-            onClick={onClose}
-            className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-300"
-            aria-label="Close"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label
-              htmlFor="member-name"
-              className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
-            >
-              Name*
-            </label>
-            <input
-              id="member-name"
-              type="text"
-              name="name"
-              value={member.name}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-stone-300 dark:border-stone-700 rounded-lg bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Enter member name"
-              required
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="member-role"
-              className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
-            >
-              Role*
-            </label>
-            <input
-              id="member-role"
-              type="text"
-              name="role"
-              value={member.role}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-stone-300 dark:border-stone-700 rounded-lg bg-stone-50 dark:bg-stone-900 text-stone-900 dark:text-stone-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Enter member role"
-              required
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="member-color"
-              className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
-            >
-              Avatar Color
-            </label>
-            <div className="grid grid-cols-5 gap-2">
-              {MEMBER_COLORS.map((color) => (
-                <button
-                  key={color}
-                  type="button"
-                  onClick={() => setMember((prev) => ({ ...prev, color }))}
-                  className={`h-8 w-8 rounded-full ${color} flex items-center justify-center ${
-                    member.color === color
-                      ? "ring-2 ring-offset-2 ring-blue-500"
-                      : ""
-                  }`}
-                  aria-label={`Select ${color
-                    .replace("bg-", "")
-                    .replace("-500", "")} color`}
-                >
-                  {member.color === color && (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-white"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  )}
-                </button>
-              ))}
+      <div className="w-full max-w-sm sm:max-w-md mx-auto max-h-[90vh] overflow-y-auto">
+        <div className="glass rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-700">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 gradient-blue rounded-lg sm:rounded-xl flex items-center justify-center">
+                <UserPlus className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg sm:text-xl font-semibold text-white">
+                  Add New Team Member
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-400">
+                  Invite a new member to your project
+                </p>
+              </div>
             </div>
+            <button
+              onClick={handleClose}
+              className="p-1.5 sm:p-2 text-gray-400 hover:text-gray-300 hover:bg-gray-700 rounded-lg sm:rounded-xl transition-all duration-300"
+              aria-label="Close"
+            >
+              <X className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 border border-stone-300 dark:border-stone-700 rounded-lg text-stone-800 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-700"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
-            >
-              Add Member
-            </button>
-          </div>
-        </form>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+            {/* Name Input */}
+            <div>
+              <label
+                htmlFor="member-name"
+                className="block text-sm font-medium text-white mb-2"
+              >
+                Member Name*
+              </label>
+              <input
+                id="member-name"
+                type="text"
+                name="name"
+                value={member.name}
+                onChange={handleChange}
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-600 rounded-lg sm:rounded-xl bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
+                placeholder="Enter member name"
+                required
+              />
+            </div>
+
+            {/* Role Input */}
+            <div>
+              <label
+                htmlFor="member-role"
+                className="block text-sm font-medium text-white mb-2"
+              >
+                Role*
+              </label>
+              <input
+                id="member-role"
+                type="text"
+                name="role"
+                value={member.role}
+                onChange={handleChange}
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-600 rounded-lg sm:rounded-xl bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
+                placeholder="e.g., Developer, Designer, Manager"
+                required
+              />
+            </div>
+
+            {/* Color Selection */}
+            <div>
+              <label className="block text-sm font-medium text-white mb-3">
+                <div className="flex items-center gap-2">
+                  <Palette className="h-4 w-4" />
+                  Avatar Color
+                </div>
+              </label>
+              <div className="grid grid-cols-5 gap-2 sm:gap-3">
+                {MEMBER_COLORS.map((color) => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => setMember((prev) => ({ ...prev, color }))}
+                    className={`h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl ${color} flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+                      member.color === color
+                        ? "ring-2 ring-blue-400 ring-offset-1 sm:ring-offset-2 ring-offset-gray-800"
+                        : "hover:ring-2 hover:ring-gray-500"
+                    }`}
+                    aria-label={`Select ${color
+                      .replace("bg-", "")
+                      .replace("-500", "")} color`}
+                  >
+                    {member.color === color && (
+                      <Check className="h-3 w-3 sm:h-5 sm:w-5 text-white" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Preview */}
+            {member.name && (
+              <div className="bg-gray-700/50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-gray-600">
+                <p className="text-xs sm:text-sm text-gray-400 mb-2 sm:mb-3">Preview:</p>
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full ${member.color} flex items-center justify-center`}>
+                    <span className="text-white font-semibold text-xs sm:text-sm">
+                      {member.name.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-white font-medium text-sm sm:text-base">{member.name}</p>
+                    <p className="text-xs sm:text-sm text-gray-400">{member.role}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2 sm:pt-4">
+              <button
+                type="button"
+                onClick={handleClose}
+                className="flex-1 px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-600 text-gray-300 rounded-lg sm:rounded-xl hover:bg-gray-700 transition-all duration-300 font-medium text-sm sm:text-base"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={!member.name.trim() || !member.role.trim()}
+                className="flex-1 px-3 sm:px-4 py-2.5 sm:py-3 gradient-blue hover:shadow-lg text-white rounded-lg sm:rounded-xl font-medium transition-all duration-300 hover-lift disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+              >
+                Add Member
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </dialog>,
+    </div>,
     document.getElementById("modal-root")
   );
 });

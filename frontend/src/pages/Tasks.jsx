@@ -30,10 +30,10 @@ export default function TasksPage() {
 
   // Task categories
   const taskCategories = [
-    { id: "high-priority", label: "High Priority", icon: AlertCircle, color: "text-red-600 bg-red-100 dark:bg-red-900 dark:text-red-400" },
-    { id: "in-progress", label: "In Progress", icon: Clock, color: "text-blue-600 bg-blue-100 dark:bg-blue-900 dark:text-blue-400" },
-    { id: "pending", label: "Pending", icon: Circle, color: "text-yellow-600 bg-yellow-100 dark:bg-yellow-900 dark:text-yellow-400" },
-    { id: "completed", label: "Completed", icon: CheckCircle, color: "text-green-600 bg-green-100 dark:bg-green-900 dark:text-green-400" },
+    { id: "high-priority", label: "High Priority", icon: AlertCircle, color: "bg-red-500/20 text-red-300 border-red-500/30" },
+    { id: "in-progress", label: "In Progress", icon: Clock, color: "bg-blue-500/20 text-blue-300 border-blue-500/30" },
+    { id: "pending", label: "Pending", icon: Circle, color: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30" },
+    { id: "completed", label: "Completed", icon: CheckCircle, color: "bg-green-500/20 text-green-300 border-green-500/30" },
   ];
 
   // Extract all tasks from projects and categorize them
@@ -71,26 +71,26 @@ export default function TasksPage() {
   function getStatusColor(status) {
     switch (status) {
       case "Completed":
-        return "text-green-600 bg-green-100 dark:bg-green-900 dark:text-green-400";
+        return "bg-green-500/20 text-green-300 border-green-500/30";
       case "In Progress":
-        return "text-blue-600 bg-blue-100 dark:bg-blue-900 dark:text-blue-400";
+        return "bg-blue-500/20 text-blue-300 border-blue-500/30";
       case "Not Started":
-        return "text-stone-600 bg-stone-100 dark:bg-stone-700 dark:text-stone-400";
+        return "bg-gray-500/20 text-gray-300 border-gray-500/30";
       default:
-        return "text-stone-600 bg-stone-100 dark:bg-stone-700 dark:text-stone-400";
+        return "bg-gray-500/20 text-gray-300 border-gray-500/30";
     }
   }
 
   function getPriorityColor(priority) {
     switch (priority) {
       case "high":
-        return "text-red-600 bg-red-100 dark:bg-red-900 dark:text-red-400";
+        return "bg-red-500/20 text-red-300 border-red-500/30";
       case "medium":
-        return "text-yellow-600 bg-yellow-100 dark:bg-yellow-900 dark:text-yellow-400";
+        return "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
       case "low":
-        return "text-green-600 bg-green-100 dark:bg-green-900 dark:text-green-400";
+        return "bg-green-500/20 text-green-300 border-green-500/30";
       default:
-        return "text-stone-600 bg-stone-100 dark:bg-stone-700 dark:text-stone-400";
+        return "bg-gray-500/20 text-gray-300 border-gray-500/30";
     }
   }
 
@@ -200,15 +200,15 @@ export default function TasksPage() {
   function getDueDateColor(status) {
     switch (status) {
       case "overdue":
-        return "text-red-600 dark:text-red-400";
+        return "text-red-400";
       case "urgent":
-        return "text-orange-600 dark:text-orange-400";
+        return "text-orange-400";
       case "soon":
-        return "text-yellow-600 dark:text-yellow-400";
+        return "text-yellow-400";
       case "normal":
-        return "text-green-600 dark:text-green-400";
+        return "text-green-400";
       default:
-        return "text-stone-500 dark:text-stone-400";
+        return "text-gray-400";
     }
   }
 
@@ -230,79 +230,82 @@ export default function TasksPage() {
   };
 
   return (
-    <div className="min-h-screen bg-theme-light dark:bg-theme-dark">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto p-4 sm:p-6">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8 fade-in">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
-              <Target className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            <div className="w-12 h-12 gradient-card rounded-xl flex items-center justify-center">
+              <Target className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-stone-800 dark:text-stone-200">
-              All Tasks
-            </h1>
+            <div>
+              <h1 className="text-3xl font-bold text-white">
+                All Tasks
+              </h1>
+              <div className="w-16 h-1 gradient-blue rounded-full mt-2"></div>
+            </div>
           </div>
-          <p className="text-stone-600 dark:text-stone-400">
+          <p className="text-gray-400">
             Manage and track all tasks across your projects
           </p>
         </div>
 
         {/* Statistics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white dark:bg-stone-800 rounded-xl p-4 shadow-sm border border-stone-100 dark:border-stone-700">
+          <div className="gradient-card rounded-xl p-4 shadow-lg hover-lift transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-stone-600 dark:text-stone-400">Total Tasks</p>
-                <p className="text-2xl font-bold text-stone-800 dark:text-stone-200">{stats.total}</p>
+                <p className="text-sm text-gray-400">Total Tasks</p>
+                <p className="text-2xl font-bold text-white">{stats.total}</p>
               </div>
-              <Target className="h-8 w-8 text-blue-500" />
+              <Target className="h-8 w-8 text-blue-400" />
             </div>
           </div>
           
-          <div className="bg-white dark:bg-stone-800 rounded-xl p-4 shadow-sm border border-stone-100 dark:border-stone-700">
+          <div className="gradient-card rounded-xl p-4 shadow-lg hover-lift transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-stone-600 dark:text-stone-400">Completed</p>
-                <p className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.completed}</p>
+                <p className="text-sm text-gray-400">Completed</p>
+                <p className="text-2xl font-bold text-green-400">{stats.completed}</p>
               </div>
-              <CheckCircle className="h-8 w-8 text-green-500" />
+              <CheckCircle className="h-8 w-8 text-green-400" />
             </div>
           </div>
           
-          <div className="bg-white dark:bg-stone-800 rounded-xl p-4 shadow-sm border border-stone-100 dark:border-stone-700">
+          <div className="gradient-card rounded-xl p-4 shadow-lg hover-lift transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-stone-600 dark:text-stone-400">Pending</p>
-                <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{stats.pending}</p>
+                <p className="text-sm text-gray-400">Pending</p>
+                <p className="text-2xl font-bold text-yellow-400">{stats.pending}</p>
               </div>
-              <Clock className="h-8 w-8 text-yellow-500" />
+              <Clock className="h-8 w-8 text-yellow-400" />
             </div>
           </div>
           
-          <div className="bg-white dark:bg-stone-800 rounded-xl p-4 shadow-sm border border-stone-100 dark:border-stone-700">
+          <div className="gradient-card rounded-xl p-4 shadow-lg hover-lift transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-stone-600 dark:text-stone-400">High Priority</p>
-                <p className="text-2xl font-bold text-red-600 dark:text-red-400">{stats.highPriority}</p>
+                <p className="text-sm text-gray-400">High Priority</p>
+                <p className="text-2xl font-bold text-red-400">{stats.highPriority}</p>
               </div>
-              <AlertCircle className="h-8 w-8 text-red-500" />
+              <AlertCircle className="h-8 w-8 text-red-400" />
             </div>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white dark:bg-stone-800 rounded-2xl shadow-lg border border-stone-100 dark:border-stone-700 p-4 mb-6">
+        <div className="glass rounded-2xl shadow-lg border border-gray-700 p-4 mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {/* Search */}
             <div className="lg:col-span-2">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-stone-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type="text"
                   placeholder="Search tasks or projects..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-700 text-stone-800 dark:text-stone-200"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -312,7 +315,7 @@ export default function TasksPage() {
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="w-full px-3 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-700 text-stone-800 dark:text-stone-200"
+                className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="all">All Status</option>
                 <option value="high-priority">High Priority</option>
@@ -327,7 +330,7 @@ export default function TasksPage() {
               <select
                 value={filterProject}
                 onChange={(e) => setFilterProject(e.target.value)}
-                className="w-full px-3 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-700 text-stone-800 dark:text-stone-200"
+                className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="all">All Projects</option>
                 {projects.map(project => (
@@ -343,7 +346,7 @@ export default function TasksPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full px-3 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-700 text-stone-800 dark:text-stone-200"
+                className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="priority">Sort by Priority</option>
                 <option value="dueDate">Sort by Due Date</option>
@@ -358,8 +361,8 @@ export default function TasksPage() {
               onClick={() => setShowCompleted(!showCompleted)}
               className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm transition-colors ${
                 showCompleted
-                  ? "bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-300"
-                  : "bg-stone-100 dark:bg-stone-700 text-stone-600 dark:text-stone-400"
+                  ? "bg-green-500/20 text-green-300 border border-green-500/30"
+                  : "bg-gray-700 text-gray-400 border border-gray-600"
               }`}
             >
               <CheckCircle className="h-4 w-4" />
@@ -378,37 +381,37 @@ export default function TasksPage() {
             if (tasks.length === 0) return null;
 
             return (
-              <div key={category.id} className="bg-white dark:bg-stone-800 rounded-2xl shadow-lg border border-stone-100 dark:border-stone-700 overflow-hidden">
+              <div key={category.id} className="glass rounded-2xl shadow-lg border border-gray-700 overflow-hidden">
                 {/* Category Header */}
                 <button
                   onClick={() => toggleCategory(category.id)}
-                  className="w-full flex items-center justify-between p-6 hover:bg-stone-50 dark:hover:bg-stone-700 transition-colors"
+                  className="w-full flex items-center justify-between p-6 hover:bg-gray-700/50 transition-colors"
                 >
                   <div className="flex items-center gap-4">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${category.color}`}>
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center border ${category.color}`}>
                       <Icon className="h-5 w-5" />
                     </div>
                     <div className="text-left">
-                      <h3 className="text-lg font-semibold text-stone-800 dark:text-stone-200">
+                      <h3 className="text-lg font-semibold text-white">
                         {category.label}
                       </h3>
-                      <p className="text-sm text-stone-600 dark:text-stone-400">
+                      <p className="text-sm text-gray-400">
                         {tasks.length} task{tasks.length !== 1 ? 's' : ''}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     {isExpanded ? (
-                      <ChevronDown className="h-5 w-5 text-stone-400" />
+                      <ChevronDown className="h-5 w-5 text-gray-400" />
                     ) : (
-                      <ChevronRight className="h-5 w-5 text-stone-400" />
+                      <ChevronRight className="h-5 w-5 text-gray-400" />
                     )}
                   </div>
                 </button>
 
                 {/* Tasks List */}
                 {isExpanded && (
-                  <div className="border-t border-stone-200 dark:border-stone-700">
+                  <div className="border-t border-gray-700">
                     <div className="p-4 space-y-3">
                       {tasks.map((task) => {
                         const dueDateStatus = getDueDateStatus(task.dueDate);
@@ -419,8 +422,8 @@ export default function TasksPage() {
                             key={`${task.projectId}-${task._id}`}
                             className={`p-4 rounded-xl border transition-all duration-200 ${
                               task.completed
-                                ? "bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-700"
-                                : "bg-stone-50 dark:bg-stone-700/50 border-stone-200 dark:border-stone-600 hover:bg-stone-100 dark:hover:bg-stone-700"
+                                ? "bg-green-500/10 border-green-500/30"
+                                : "bg-gray-700/50 border-gray-600 hover:bg-gray-700"
                             }`}
                           >
                             <div className="flex items-start gap-4">
@@ -428,7 +431,7 @@ export default function TasksPage() {
                               <button
                                 onClick={() => handleTaskToggle(task._id, task.projectId)}
                                 className={`mt-1 flex-shrink-0 ${
-                                  task.completed ? "text-green-600 dark:text-green-400" : "text-stone-400 hover:text-stone-600 dark:hover:text-stone-300"
+                                  task.completed ? "text-green-400" : "text-gray-400 hover:text-gray-300"
                                 }`}
                               >
                                 {task.completed ? (
@@ -442,7 +445,7 @@ export default function TasksPage() {
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-start justify-between gap-4">
                                   <div className="flex-1 min-w-0">
-                                    <h4 className={`font-medium text-stone-800 dark:text-stone-200 ${
+                                    <h4 className={`font-medium text-white ${
                                       task.completed ? "line-through opacity-60" : ""
                                     }`}>
                                       {task.title}
@@ -450,18 +453,18 @@ export default function TasksPage() {
                                     
                                     {/* Project Info */}
                                     <div className="flex items-center gap-4 mt-2 text-sm">
-                                      <div className="flex items-center gap-1 text-stone-600 dark:text-stone-400">
+                                      <div className="flex items-center gap-1 text-gray-400">
                                         <FolderOpen className="h-3 w-3" />
                                         <span className="truncate">{task.projectTitle}</span>
                                       </div>
                                       
-                                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(task.projectStatus)}`}>
+                                      <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(task.projectStatus)}`}>
                                         {task.projectStatus}
                                       </span>
                                     </div>
 
                                     {/* Task Details */}
-                                    <div className="flex items-center gap-4 mt-2 text-sm text-stone-500 dark:text-stone-400">
+                                    <div className="flex items-center gap-4 mt-2 text-sm text-gray-400">
                                       {/* Priority */}
                                       <div className="flex items-center gap-1">
                                         {getPriorityIcon(task.priority)}
@@ -489,7 +492,7 @@ export default function TasksPage() {
                                   {/* Action Buttons */}
                                   <div className="flex items-center gap-2 flex-shrink-0">
                                     {task.completed && (
-                                      <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+                                      <span className="text-xs text-green-400 font-medium">
                                         Completed
                                       </span>
                                     )}
@@ -511,11 +514,13 @@ export default function TasksPage() {
         {/* Empty State */}
         {filteredTasks.length === 0 && (
           <div className="text-center py-12">
-            <Target className="h-12 w-12 text-stone-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-stone-800 dark:text-stone-200 mb-2">
+            <div className="w-16 h-16 gradient-card rounded-full flex items-center justify-center mx-auto mb-4">
+              <Target className="h-8 w-8 text-gray-300" />
+            </div>
+            <h3 className="text-lg font-medium text-white mb-2">
               No tasks found
             </h3>
-            <p className="text-stone-600 dark:text-stone-400">
+            <p className="text-gray-400">
               {searchQuery || filterStatus !== "all" || filterProject !== "all"
                 ? "Try adjusting your search or filters"
                 : "Create some tasks in your projects to get started"

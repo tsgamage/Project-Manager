@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../../store/auth.context";
-import { ChevronUp, LogOut, Menu, Settings, SquareArrowOutUpRight, User } from "lucide-react";
+import { ChevronUp, LogOut, Menu, Settings, SquareArrowOutUpRight, User, Bell } from "lucide-react";
 import { toast } from "react-hot-toast";
 import ProjectContext from "../../store/project.context";
 import PageLayoutContext from "../../store/pageLayout.context";
@@ -34,55 +34,40 @@ export default function Navbar() {
   }
 
   return (
-    <header
-      className={`w-full bg-white dark:bg-stone-800 border-b border-stone-200 dark:border-stone-700 sticky top-0 z-50 transition-all duration-300 py-2 shadow-md`}
-    >
+    <header className="w-full backdrop-blur-xl bg-black/40 border-b border-gray-800/50 sticky top-0 z-50 transition-all duration-300 py-2 shadow-2xl">
       <div className="container mx-auto px-4">
         <nav className="flex items-center justify-between">
           <button
-            className="md:hidden p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-700 transition-colors mr-2"
+            className="md:hidden p-1.5 rounded-lg hover:bg-gray-800/50 transition-all duration-300 mr-2 focus-ring"
             onClick={toggleMobileSidebar}
             aria-label="Open sidebar"
           >
-            <Menu className="h-6 w-6 text-stone-700 dark:text-stone-200" />
+            <Menu className="h-5 w-5 text-white" />
           </button>
 
           {/* Logo */}
-          <Link to="/" className="hidden md:flex items-center space-x-2">
-            <span
-              className={`block font-bold text-stone-800 dark:text-stone-200 transition-all duration-300 text-lg`}
-            >
+          <Link to="/" className="hidden md:flex items-center space-x-2 group">
+            <div className="w-7 h-7 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/25">
+              <span className="text-white font-bold text-xs">PM</span>
+            </div>
+            <span className="font-bold text-white transition-all duration-300 text-base group-hover:text-blue-300 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               Project Manager
             </span>
           </Link>
 
           {/* Right Section */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             {/* Notification Icon */}
-            <button className="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 relative transition-colors">
-              <svg
-                className="h-5 w-5 text-stone-600 dark:text-stone-400"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                />
-              </svg>
-              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            <button className="p-1.5 rounded-lg hover:bg-gray-800/50 relative transition-all duration-300 focus-ring">
+              <Bell className="h-5 w-5 text-gray-300" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
             </button>
 
             {/* Auth Button - Show when not authenticated */}
-
             {!isAuthenticated && !user && (
               <Link
                 to="/auth/login"
-                className="text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition-colors font-medium"
+                className="text-gray-300 hover:text-white transition-all duration-300 font-medium hover:bg-gray-800/50 px-3 py-1.5 rounded-lg text-sm"
               >
                 Sign in
               </Link>
@@ -93,26 +78,24 @@ export default function Navbar() {
               <div className="relative profile-dropdown">
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center space-x-3 focus:outline-none group"
+                  className="flex items-center space-x-2 focus:outline-none group"
                 >
                   <div className="relative">
-                    <div
-                      className={`bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center rounded-full transition-all duration-300 shadow-lg w-8 h-8`}
-                    >
-                      <span className="text-white font-semibold text-sm">
+                    <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 flex items-center justify-center rounded-full transition-all duration-300 shadow-lg shadow-blue-500/25 w-7 h-7 hover-lift">
+                      <span className="text-white font-semibold text-xs">
                         {user ? user.name[0] : "P"}
                       </span>
                     </div>
-                    <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 rounded-full border-2 border-white dark:border-stone-900 shadow-sm"></div>
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-900 shadow-sm"></div>
                   </div>
                   <div className="hidden lg:flex lg:flex-col lg:items-start">
-                    <span className="text-sm font-medium text-stone-700 group-hover:text-stone-900 dark:text-stone-300 dark:group-hover:text-white transition-colors truncate">
+                    <span className="text-sm font-medium text-white group-hover:text-blue-300 transition-colors truncate">
                       {user ? user.name : "User Name"}
                     </span>
-                    <span className="text-xs text-stone-500 dark:text-stone-400">Online</span>
+                    <span className="text-xs text-gray-400">Online</span>
                   </div>
                   <ChevronUp
-                    className={`hidden lg:block w-4 h-4 text-stone-400 transition-transform duration-200 ${
+                    className={`hidden lg:block w-4 h-4 text-gray-400 transition-transform duration-200 ${
                       isDropdownOpen ? "rotate-180" : ""
                     }`}
                   />
@@ -123,28 +106,28 @@ export default function Navbar() {
                   <>
                     {/* Backdrop for mobile - positioned behind dropdown */}
                     <div
-                      className="fixed inset-0 z-40 lg:hidden bg-black/40"
+                      className="fixed inset-0 z-40 lg:hidden bg-black/40 backdrop-blur-sm"
                       onClick={() => setIsDropdownOpen(false)}
                     ></div>
 
                     {/* Dropdown content */}
-                    <div className="absolute right-0 mt-3 w-72 sm:w-80 bg-white dark:bg-stone-800 rounded-xl shadow-2xl border border-stone-200 dark:border-stone-700 overflow-hidden z-50 transform transition-all duration-200 ease-out">
+                    <div className="absolute right-0 mt-2 w-72 sm:w-80 backdrop-blur-xl bg-black/40 rounded-xl shadow-2xl border border-gray-800/50 overflow-hidden z-50 transform transition-all duration-200 ease-out slide-in">
                       {/* Header */}
-                      <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-b border-stone-200 dark:border-stone-700">
+                      <div className="px-4 py-3 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 border-b border-gray-800/50">
                         <div className="flex items-center space-x-3">
-                          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-                            <span className="text-white font-semibold">U</span>
+                          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/25">
+                            <span className="text-white font-semibold text-sm">U</span>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold text-stone-900 dark:text-stone-100 truncate">
+                            <p className="text-sm font-semibold text-white truncate">
                               {user ? user.name : "User Name"}
                             </p>
-                            <p className="text-sm text-stone-500 dark:text-stone-400 truncate">
+                            <p className="text-sm text-gray-400 truncate">
                               {user ? user.email : "user@example.com"}
                             </p>
                             <div className="flex items-center mt-1">
                               <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
-                              <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+                              <span className="text-xs text-green-400 font-medium">
                                 Online
                               </span>
                             </div>
@@ -153,45 +136,45 @@ export default function Navbar() {
                       </div>
 
                       {/* Menu Items */}
-                      <div className="py-2">
+                      <div className="py-1">
                         <Link
                           to="/user/profile"
-                          className="flex items-center px-6 py-3 text-sm text-stone-700 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-700/50 transition-colors group"
+                          className="flex items-center px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800/50 transition-all duration-300 group"
                           onClick={() => setIsDropdownOpen(false)}
                         >
-                          <User className="w-4 h-4 mr-3 text-stone-400 group-hover:text-stone-600 dark:group-hover:text-stone-300" />
+                          <User className="w-4 h-4 mr-3 text-gray-400 group-hover:text-blue-300" />
                           Your Profile
                         </Link>
 
                         <Link
                           to="/settings"
-                          className="flex items-center px-6 py-3 text-sm text-stone-700 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-700/50 transition-colors group"
+                          className="flex items-center px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800/50 transition-all duration-300 group"
                           onClick={() => setIsDropdownOpen(false)}
                         >
-                          <Settings className="w-4 h-4 mr-3 text-stone-400 group-hover:text-stone-600 dark:group-hover:text-stone-300" />
+                          <Settings className="w-4 h-4 mr-3 text-gray-400 group-hover:text-blue-300" />
                           Settings
                         </Link>
 
                         <Link
                           to="/projects"
-                          className="flex items-center px-6 py-3 text-sm text-stone-700 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-700/50 transition-colors group"
+                          className="flex items-center px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800/50 transition-all duration-300 group"
                           onClick={() => setIsDropdownOpen(false)}
                         >
-                          <SquareArrowOutUpRight className="w-4 h-4 mr-3 text-stone-400 group-hover:text-stone-600 dark:group-hover:text-stone-300" />
+                          <SquareArrowOutUpRight className="w-4 h-4 mr-3 text-gray-400 group-hover:text-blue-300" />
                           Your Projects ({projects && projects?.length})
                         </Link>
                       </div>
 
                       {/* Divider */}
-                      <div className="border-t border-stone-200 dark:border-stone-700"></div>
+                      <div className="border-t border-gray-800/50"></div>
 
                       {/* Sign Out */}
-                      <div className="py-2">
+                      <div className="py-1">
                         <button
-                          className="flex items-center w-full px-6 py-3 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors group"
+                          className="flex items-center w-full px-4 py-2.5 text-sm text-red-400 hover:bg-red-900/20 transition-all duration-300 group"
                           onClick={handleLogout}
                         >
-                          <LogOut className="w-4 h-4 mr-3 text-red-500 group-hover:text-red-600 dark:group-hover:text-red-400" />
+                          <LogOut className="w-4 h-4 mr-3 text-red-400 group-hover:text-red-300" />
                           Logout
                         </button>
                       </div>

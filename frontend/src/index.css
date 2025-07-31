@@ -1,14 +1,132 @@
 @import "tailwindcss";
 
-html, body {
-  @apply bg-theme-light dark:bg-theme-dark;
+/* Modern Dark Theme Color Variables */
+:root {
+  /* Backgrounds */
+  --color-bg-dark: #0a0a0a;       /* Primary dark background */
+  --color-bg-darker: #050505;     /* Slightly darker (optional) */
+  --color-bg-light: #1f1f1f;      /* Cards/borders */
+  --color-bg-lighter: #2a2a2a;    /* Slightly lighter cards */
+  --color-bg-hover: #2f2f2f;      /* Hover states */
+  
+  /* Text */
+  --color-text-white: #ffffff;     /* Primary text */
+  --color-text-gray: #a1a1a1;      /* Secondary/subdued text */
+  --color-text-dark: #0a0a0a;      /* Text on light backgrounds */
+  --color-text-muted: #6b7280;     /* Muted text */
+  
+  /* Blues (Vercel-inspired) */
+  --color-b-primary: #0070f3;      /* Vercel blue */
+  --color-b-light: #3291ff;        /* Lighter blue */
+  --color-b-dark: #0366d6;         /* Darker blue */
+  
+  /* Accent Colors */
+  --color-accent-green: #00ff88;   /* Bright green accent */
+  --color-accent-purple: #8b5cf6;  /* Purple accent */
+  --color-accent-orange: #f59e0b;  /* Orange accent */
+  
+  /* Borders & Dividers */
+  --color-border: #2f2f2f;         /* Subtle borders */
+  --color-border-light: #404040;   /* Lighter borders */
+  
+  /* Shadows & Effects */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
+/* Global Styles */
+html, body {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-white);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-bg-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-bg-lighter);
+}
+
+/* Modern Gradients */
+.gradient-bg {
+  background: linear-gradient(135deg, var(--color-bg-dark) 0%, var(--color-bg-darker) 100%);
+}
+
+.gradient-card {
+  background: linear-gradient(135deg, var(--color-bg-light) 0%, var(--color-bg-lighter) 100%);
+  border: 1px solid var(--color-border);
+}
+
+.gradient-blue {
+  background: linear-gradient(135deg, var(--color-b-primary) 0%, var(--color-b-light) 100%);
+}
+
+.gradient-green {
+  background: linear-gradient(135deg, var(--color-accent-green) 0%, #00cc6a 100%);
+}
+
+/* Glass Effect */
+.glass {
+  background: rgba(31, 31, 31, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border);
+}
+
+/* Hover Effects */
+.hover-lift {
+  transition: all 0.2s ease-in-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Focus States */
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.3);
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Tailwind Theme Override */
 @theme {
-    --color-theme-dark: var(--color-stone-900);
-    --color-theme-light: var(--color-stone-100);
-    --color-header-dark: var(--color-stone-200);
-    --color-header-light: var(--color-stone-700);
-    --color-para-dark: var(--color-stone-400);
-    --color-para-light: var(--color-stone-600);
+    --color-theme-dark: var(--color-bg-dark);
+    --color-theme-light: var(--color-bg-light);
+    --color-header-dark: var(--color-text-white);
+    --color-header-light: var(--color-text-white);
+    --color-para-dark: var(--color-text-gray);
+    --color-para-light: var(--color-text-gray);
 }

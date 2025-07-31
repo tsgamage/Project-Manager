@@ -23,7 +23,7 @@ export default function Sidebar() {
         {/* Backdrop */}
         <div className="fixed inset-0 bg-black/50 z-50 md:hidden" onClick={toggleMobileSidebar} />
         {/* Mobile Sidebar */}
-        <div className="fixed left-0 top-0 h-full w-64 bg-white dark:bg-stone-900 border-r border-stone-200 dark:border-stone-700 z-50 md:hidden transform transition-transform duration-300 ease-in-out">
+        <div className="fixed left-0 top-0 h-full w-64 glass border-r border-gray-700 z-50 md:hidden transform transition-transform duration-300 ease-in-out slide-in">
           <SidebarContent />
         </div>
       </>
@@ -33,7 +33,7 @@ export default function Sidebar() {
   // Desktop Sidebar
   return (
     <div
-      className={`z-50 hidden md:flex flex-col h-full bg-white dark:bg-stone-900 border-r border-stone-200 dark:border-stone-700 transition-all duration-300 ease-in-out ${isDesktopSideBarCollapsed ? "w-16" : "w-56"
+      className={`z-50 hidden md:flex flex-col h-full glass border-r border-gray-700 transition-all duration-300 ease-in-out ${isDesktopSideBarCollapsed ? "w-16" : "w-56"
         }`}
     >
       <SidebarContent />

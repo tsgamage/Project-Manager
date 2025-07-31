@@ -2,13 +2,13 @@ import { Link } from "react-router-dom";
 
 export default function MiniNavbar() {
   return (
-    <nav className="bg-white dark:bg-stone-800 border-b border-stone-200 dark:border-stone-700 px-22 py-4">
+    <nav className="backdrop-blur-xl bg-black/40 border-b border-gray-800/50 px-4 py-2 shadow-2xl">
       <div className="max-w-7xl mx-auto">
-        <Link to="/" className="inline-flex items-center space-x-3">
-          <div className="bg-blue-600 flex items-center justify-center rounded-lg w-10 h-10">
-            <span className="text-white font-bold text-xl">PM</span>
+        <Link to="/" className="inline-flex items-center space-x-2 group">
+          <div className="w-6 h-6 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/25">
+            <span className="text-white font-bold text-xs">PM</span>
           </div>
-          <span className="text-xl font-bold text-stone-800 dark:text-stone-200">
+          <span className="text-sm font-bold text-white transition-all duration-300 group-hover:text-blue-300 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Project Manager
           </span>
         </Link>
