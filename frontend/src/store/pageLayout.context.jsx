@@ -5,11 +5,14 @@ const PageLayoutContext = createContext({
   toggleMobileSidebar: () => {},
   isDesktopSideBarCollapsed: false,
   toggleSidebar: () => {},
+  isProjectSidebarOpen: false,
+  toggleProjectSidebar: () => {},
 });
 
 export function PageLayoutContextProvider({ children }) {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isProjectSidebarOpen, setIsProjectSidebarOpen] = useState(false);
 
   // Close mobile sidebar when window resizes to desktop
   useEffect(() => {
@@ -25,20 +28,25 @@ export function PageLayoutContextProvider({ children }) {
   }, []);
 
   const toggleSidebar = () => {
-    console.log("Toggling sidebar");
     setIsCollapsed((preValue) => !preValue);
   };
 
   const toggleMobileSidebar = () => {
-    console.log("Toggling mobile sidebar");
     setIsMobileSidebarOpen((prev) => !prev);
   };
+
+  function toggleProjectSidebar() {
+    setIsMobileSidebarOpen(false)
+    setIsProjectSidebarOpen((prev) => !prev);
+  }
 
   const pageLayoutContextValue = {
     toggleSidebar,
     isDesktopSideBarCollapsed: isCollapsed,
     toggleMobileSidebar,
     isMobileSidebarOpen: isMobileSidebarOpen,
+    isProjectSidebarOpen,
+    toggleProjectSidebar,
   };
 
   return (
