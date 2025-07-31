@@ -11,7 +11,7 @@ export default function RedirectUserIfAuthenticated({ children }) {
       navigate("/auth/login", { replace: true });
     }
     if (isAuthenticated && user && user.isVerified) {
-      navigate("/", { replace: true });
+      navigate("/home", { replace: true });
     } else if (isAuthenticated && user && user.isVerified === false) {
       navigate("/auth/verify-mail", { replace: true });
     }

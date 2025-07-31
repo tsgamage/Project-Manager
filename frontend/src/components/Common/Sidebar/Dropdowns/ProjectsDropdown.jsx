@@ -7,10 +7,10 @@ import { Tooltip } from "react-tooltip";
 
 export default function ProjectsDropdown() {
   const location = useLocation();
-  const isActive = location.pathname === "/projects" || location.pathname.startsWith("/project/");
+  const isActive = location.pathname === "/project/all" || location.pathname.startsWith("/project/view/");
   const { projects } = useContext(ProjectContext);
   const [isProjectsDropdownOpen, setIsProjectsDropdownOpen] = useState(false);
-  const { isDesktopSideBarCollapsed, toggleSidebar } = useContext(PageLayoutContext);
+  const { isDesktopSideBarCollapsed, toggleSidebar, setIsProjectSidebarOpen } = useContext(PageLayoutContext);
 
   const ProjectsDropdownItem = ({ project }) => {
     const isActive = location.pathname === `/project/view/${project._id}`;
@@ -25,8 +25,21 @@ export default function ProjectsDropdown() {
     );
   };
 
+  let hoverTimer
+  function handleHoverProjects() {
+    if (isDesktopSideBarCollapsed) {
+      hoverTimer = setTimeout(() => {
+        setIsProjectSidebarOpen(true);
+      }, 200);
+    }
+  }
+  function handleLeaveProjects() {
+    clearTimeout(hoverTimer)
+    setIsProjectSidebarOpen(false);
+  }
+
   return (
-    <div className="space-y-1 projects-dev">
+    <div className="space-y-1 projects-dev" onMouseEnter={handleHoverProjects} onMouseLeave={handleLeaveProjects}>
       {isDesktopSideBarCollapsed && (
         <Tooltip anchorSelect=".projects-dev" place="right" delayShow={70}>
           All Projects
@@ -36,11 +49,10 @@ export default function ProjectsDropdown() {
       <div className="relative">
         <Link
           to="/project/all"
-          className={`group flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 ${
-            isActive
-              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-              : "text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-900 dark:hover:text-stone-200"
-          } ${isDesktopSideBarCollapsed ? "justify-center" : "justify-start"}`}
+          className={`group flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 ${isActive
+            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+            : "text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-900 dark:hover:text-stone-200"
+            } ${isDesktopSideBarCollapsed ? "justify-center" : "justify-start"}`}
         >
           <FolderOpen
             onDoubleClick={toggleSidebar}
@@ -62,9 +74,8 @@ export default function ProjectsDropdown() {
                   className="p-1 hover:bg-stone-200 dark:hover:bg-stone-700 rounded transition-colors"
                 >
                   <ChevronDown
-                    className={`h-4 w-4 transition-transform duration-200 ${
-                      isProjectsDropdownOpen ? "rotate-180" : ""
-                    }`}
+                    className={`h-4 w-4 transition-transform duration-200 ${isProjectsDropdownOpen ? "rotate-180" : ""
+                      }`}
                   />
                 </button>
               </div>

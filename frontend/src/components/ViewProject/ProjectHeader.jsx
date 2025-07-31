@@ -28,10 +28,10 @@ export default function ProjectHeader({ project }) {
 
             <div className="flex gap-3 sm:gap-4">
               <Link
-                to="/"
+                to="/project/all"
                 className="px-4 py-2 sm:px-6 sm:py-3 border border-stone-300 dark:border-stone-700 rounded-lg font-medium flex items-center transition-colors text-sm sm:text-base text-stone-800 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-700"
               >
-                Cancel
+                Back
               </Link>
             </div>
           </div>
@@ -41,15 +41,14 @@ export default function ProjectHeader({ project }) {
               {status}
             </span>
             <span
-              className={`text-sm font-medium px-3 py-1 rounded-full ${
-                daysRemaining > 0
-                  ? daysRemaining < 7
-                    ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
-                    : daysRemaining < 14
+              className={`text-sm font-medium px-3 py-1 rounded-full ${daysRemaining > 0
+                ? daysRemaining < 7
+                  ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
+                  : daysRemaining < 14
                     ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
                     : "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
-                  : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
-              }`}
+                : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+                }`}
             >
               {daysRemaining > 0 ? `${daysRemaining} days left` : "Deadline passed"}
             </span>
@@ -67,9 +66,8 @@ export default function ProjectHeader({ project }) {
           </p>
           <div className="w-full bg-stone-200 dark:bg-stone-700 rounded-full h-2.5">
             <div
-              className={`h-2.5 rounded-full ${
-                progress < 30 ? "bg-red-500" : progress < 70 ? "bg-yellow-500" : "bg-green-500"
-              }`}
+              className={`h-2.5 rounded-full ${progress < 30 ? "bg-red-500" : progress < 70 ? "bg-yellow-500" : "bg-green-500"
+                }`}
               style={{ width: `${progress}%` }}
             ></div>
           </div>

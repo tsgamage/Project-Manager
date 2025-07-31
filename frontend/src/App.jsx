@@ -3,7 +3,6 @@ import { ProjectContextProvider } from "./store/project.context";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import ViewProjectPage from "./pages/ViewProject";
 import RootLayout from "./pages/Root";
-import HomePage from "./pages/Home";
 import AddProjectPage from "./pages/AddProject";
 import ProfilePage from "./pages/Profile";
 import AuthRoot from "./pages/auth/AuthRoot";
@@ -17,6 +16,13 @@ import ProtectedRoute from "./components/Auth/ProtectedRoute.jsx";
 import RedirectUserIfAuthenticated from "./components/Auth/RedirectUserIfAuthenticated.jsx";
 import { UserContextProvider } from "./store/user.context.jsx";
 import { PageLayoutContextProvider } from "./store/pageLayout.context.jsx";
+import AllProjects from "./pages/AllProjects.jsx";
+import LanndingPage from "./pages/Landing.jsx";
+import HomePage from "./pages/Home.jsx";
+import TeamsPage from "./pages/TeamsPage.jsx";
+import TasksPage from "./pages/Tasks.jsx";
+import SettingsPage from "./pages/Settings.jsx";
+import TrashPage from "./pages/Trash.jsx";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -24,22 +30,19 @@ export default function App() {
       id: "root",
       path: "/",
       element: (
-        <ProtectedRoute viewing="root">
+        <RedirectUserIfAuthenticated>
+          <LanndingPage />
+        </RedirectUserIfAuthenticated>
+      ),
+    },
+    {
+      path: "/home",
+      element: (
+        <ProtectedRoute viewing="home">
           <RootLayout />
         </ProtectedRoute>
       ),
-      children: [
-        { index: true, element: <HomePage /> },
-        {
-          path: "project",
-          id: "project",
-          children: [
-            { path: "new", element: <AddProjectPage /> },
-            { path: "view/:projectID", element: <ViewProjectPage /> },
-            { path: "edit/:projectID" },
-          ],
-        },
-      ],
+      children: [{ index: true, element: <HomePage /> }],
     },
     {
       path: "/auth",
@@ -57,13 +60,41 @@ export default function App() {
       ],
     },
     {
+      path: "/project",
+      id: "project",
+      element: (
+        <ProtectedRoute viewing="project">
+          <RootLayout />
+        </ProtectedRoute>
+      ),
+      children: [
+        { path: "all", element: <AllProjects /> },
+        { path: "new", element: <AddProjectPage /> },
+        { path: "view/:projectID", element: <ViewProjectPage /> },
+        { path: "tasks", element: <TasksPage /> },
+      ],
+    },
+    {
       path: "/user",
       element: (
         <ProtectedRoute viewing="user">
           <RootLayout />
         </ProtectedRoute>
       ),
-      children: [{ path: "profile", element: <ProfilePage /> }],
+      children: [
+        { path: "profile", element: <ProfilePage /> },
+        { path: "settings", element: <SettingsPage /> },
+        { path: "trash", element: <TrashPage /> }
+      ],
+    },
+    {
+      path: "/team",
+      element: (
+        <ProtectedRoute viewing="team">
+          <RootLayout />
+        </ProtectedRoute>
+      ),
+      children: [{ path: "members", element: <TeamsPage /> }],
     },
     {
       path: "*",

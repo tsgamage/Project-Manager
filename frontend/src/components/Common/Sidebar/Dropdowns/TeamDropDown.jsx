@@ -42,7 +42,7 @@ export default function TeamDropdown() {
       {/* Main Teams Button */}
       <div className="relative">
         <Link
-          to="/user/team"
+          to="/team/members"
           className={`group flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 ${
             isActive
               ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"

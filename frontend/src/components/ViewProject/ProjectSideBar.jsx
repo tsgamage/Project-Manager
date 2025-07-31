@@ -4,9 +4,9 @@ import ProjectContext from "../../store/project.context";
 import { X } from "lucide-react";
 import PageLayoutContext from "../../store/pageLayout.context";
 
-export default function Sidebar() {
+export default function ProjectSideBar() {
   const { projects } = useContext(ProjectContext);
-  const { isProjectSidebarOpen, toggleProjectSidebar } = useContext(PageLayoutContext);
+  const { isProjectSidebarOpen, toggleProjectSidebar, setIsProjectSidebarOpen } = useContext(PageLayoutContext);
 
   return (
     <>
@@ -16,9 +16,10 @@ export default function Sidebar() {
       )}
 
       <aside
-        className={`${
-          isProjectSidebarOpen ? "translate-x-0 shadow-xl" : "-translate-x-full"
-        } lg:translate-x-0 fixed lg:sticky top-0 left-0 z-50 w-72 h-screen bg-white dark:bg-stone-800 border-r border-stone-200 dark:border-stone-700 transition-transform duration-300 ease-in-out overflow-y-auto`}
+        onMouseLeave={() => setIsProjectSidebarOpen(false)}
+        onMouseEnter={() => setIsProjectSidebarOpen(true)}
+        className={`${isProjectSidebarOpen ? "translate-x-0 shadow-xl" : "-translate-x-full"
+          } fixed lg:fixed top-0 left-0 lg:left-16 z-50 lg:z-0 lg:top-12 w-72 h-screen bg-white dark:bg-stone-800 border-r border-stone-200 dark:border-stone-700 transition-transform duration-300 ease-in-out overflow-y-auto`}
       >
         {/* Sticky header */}
         <div className="flex justify-between items-center sticky top-0 z-10 bg-white dark:bg-stone-800 p-6 pb-4 border-b border-stone-200 dark:border-stone-700">

@@ -2,11 +2,16 @@ import { createContext, useEffect, useState } from "react";
 
 const PageLayoutContext = createContext({
   isMobileSidebarOpen: false,
-  toggleMobileSidebar: () => {},
+  setIsMobileSidebarOpen: () => { },
+  toggleMobileSidebar: () => { },
+
   isDesktopSideBarCollapsed: false,
-  toggleSidebar: () => {},
+  setIsCollapsed: () => { },
+  toggleSidebar: () => { },
+
   isProjectSidebarOpen: false,
-  toggleProjectSidebar: () => {},
+  setIsProjectSidebarOpen: () => { },
+  toggleProjectSidebar: () => { },
 });
 
 export function PageLayoutContextProvider({ children }) {
@@ -32,6 +37,7 @@ export function PageLayoutContextProvider({ children }) {
   };
 
   const toggleMobileSidebar = () => {
+    setIsCollapsed(false)
     setIsMobileSidebarOpen((prev) => !prev);
   };
 
@@ -47,6 +53,9 @@ export function PageLayoutContextProvider({ children }) {
     isMobileSidebarOpen: isMobileSidebarOpen,
     isProjectSidebarOpen,
     toggleProjectSidebar,
+    setIsProjectSidebarOpen,
+    setIsMobileSidebarOpen,
+    setIsCollapsed,
   };
 
   return (

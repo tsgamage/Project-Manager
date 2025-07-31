@@ -1,4 +1,4 @@
-import { Home } from "lucide-react";
+import { CircleCheckBig, Home } from "lucide-react";
 import ProjectsDropdown from "./Dropdowns/ProjectsDropdown";
 import TeamDropdown from "./Dropdowns/TeamDropDown";
 import SidebarSection from "./SidebarSection";
@@ -8,8 +8,11 @@ export default function ScrollableSection() {
     {
       name: "Home",
       icon: Home,
-      path: "/",
-      top: true,
+      path: "/home",
+    }, {
+      name: "Tasks",
+      icon: CircleCheckBig,
+      path: "/project/tasks"
     },
   ];
   return (

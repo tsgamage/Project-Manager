@@ -1,13 +1,18 @@
-import { Plus } from "lucide-react";
+import { FolderOpen, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Header() {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 sm:gap-6">
       <div>
-        <h2 className="text-2xl sm:text-3xl font-bold text-header-light dark:text-header-dark">
-          Your Projects
-        </h2>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded-lg flex items-center justify-center">
+            <FolderOpen className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-header-light dark:text-header-dark">
+            Your Projects
+          </h2>
+        </div>
         <p className="text-stone-600 dark:text-stone-400 mt-2 text-sm sm:text-base">
           Manage and track all your active projects
         </p>

@@ -33,9 +33,8 @@ export default function Sidebar() {
   // Desktop Sidebar
   return (
     <div
-      className={`hidden md:flex flex-col h-full bg-white dark:bg-stone-900 border-r border-stone-200 dark:border-stone-700 transition-all duration-300 ease-in-out ${
-        isDesktopSideBarCollapsed ? "w-16" : "w-64"
-      }`}
+      className={`z-50 hidden md:flex flex-col h-full bg-white dark:bg-stone-900 border-r border-stone-200 dark:border-stone-700 transition-all duration-300 ease-in-out ${isDesktopSideBarCollapsed ? "w-16" : "w-56"
+        }`}
     >
       <SidebarContent />
     </div>

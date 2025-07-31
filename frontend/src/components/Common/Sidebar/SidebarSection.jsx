@@ -8,7 +8,7 @@ export default function SidebarSection({ items, className = "" }) {
   const location = useLocation();
 
   return (
-    <div className={`space-y-1 ${className}`}>
+    <div className={`space-y-2 ${className}`}>
       {items.map((item) => {
         const isActive = location.pathname === item.path;
 
