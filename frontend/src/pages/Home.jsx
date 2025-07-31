@@ -99,8 +99,8 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-theme-light dark:bg-theme-dark ">
-      <main className="container lg:w-10/12 mx-auto px-4 py-8">
+    <div className="bg-theme-light dark:bg-theme-dark">
+      <main className="container mx-auto px-4 py-8">
         <Stats />
         <Header />
         <Sortings
