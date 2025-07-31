@@ -17,11 +17,6 @@ export default function Sidebar() {
   const { isDesktopSideBarCollapsed, toggleSidebar, isMobileSidebarOpen, toggleMobileSidebar } =
     useContext(PageLayoutContext);
 
-  // Prevent scroll events from bubbling up
-  const handleSidebarScroll = (e) => {
-    e.stopPropagation();
-  };
-
   const sidebarItems = [
     {
       name: "Home",
@@ -94,7 +89,9 @@ export default function Sidebar() {
           <div className="flex flex-col h-full">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-stone-200 dark:border-stone-700">
-              <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100">Project Manager</h2>
+              <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100">
+                Project Manager
+              </h2>
               <button
                 onClick={toggleMobileSidebar}
                 className="p-1 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
@@ -131,19 +128,12 @@ export default function Sidebar() {
       className={`hidden md:flex flex-col h-full bg-white dark:bg-stone-900 border-r border-stone-200 dark:border-stone-700 transition-all duration-300 ease-in-out ${
         isDesktopSideBarCollapsed ? "w-16" : "w-64"
       }`}
-      onWheel={handleSidebarScroll}
-      onTouchMove={handleSidebarScroll}
     >
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-stone-200 dark:border-stone-700 flex-shrink-0">
-        {!isDesktopSideBarCollapsed && (
-          <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100">Menu</h2>
-        )}
         <button
           onClick={toggleSidebar}
-          className={`p-1.5 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors ${
-            isDesktopSideBarCollapsed ? "mx-auto" : ""
-          }`}
+          className={`p-1.5 rounded-lg mx-auto hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors w-full flex items-center justify-center`}
         >
           {isDesktopSideBarCollapsed ? (
             <ChevronRight className="h-4 w-4 text-stone-600 dark:text-stone-400" />
@@ -174,7 +164,7 @@ export default function Sidebar() {
           </div>
         )}
 
-        <div className="border-t border-stone-200 dark:border-stone-700 pt-6">
+        <div className="items-end justify-end border-t border-stone-200 dark:border-stone-700 pt-6">
           <SidebarSection items={bottomItems} />
         </div>
       </div>
