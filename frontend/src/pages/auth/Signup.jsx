@@ -120,7 +120,7 @@ export default function SignupPage() {
                 </div>
               </div>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               Create your account
             </h2>
             <p className="text-xs sm:text-sm text-gray-400">

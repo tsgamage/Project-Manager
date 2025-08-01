@@ -74,13 +74,13 @@ export default function ForgotPasswordPage() {
                   </div>
                 </div>
 
-                <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                <h2 className="text-xl sm:text-2xl font-bold mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                   Check your email
                 </h2>
                 <p className="text-xs sm:text-sm text-gray-400 mb-4">
                   We've sent a password reset link to
                 </p>
-                <p className="text-sm sm:text-base font-medium text-white mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                <p className="text-sm sm:text-base font-medium  mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                   {email}
                 </p>
 
@@ -148,7 +148,7 @@ export default function ForgotPasswordPage() {
                 </div>
               </div>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               Forgot password?
             </h2>
             <p className="text-xs sm:text-sm text-gray-400">
