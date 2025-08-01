@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { RotateCcw } from "lucide-react";
+import { RotateCw } from "lucide-react";
 
 export default forwardRef(function Filter({ onSetFilter, onReset, ...props }, ref) {
   return (
@@ -11,7 +11,7 @@ export default forwardRef(function Filter({ onSetFilter, onReset, ...props }, re
       >
         Filter by
         {props.value && props.value !== "All" && (
-          <RotateCcw className="h-4 w-4 inline ml-2 transition-transform duration-300 ease-in-out group-hover:rotate-180" />
+          <RotateCw className="h-4 w-4 inline ml-2 transition-transform duration-300 ease-in-out group-hover:rotate-180" />
         )}
       </label>
 

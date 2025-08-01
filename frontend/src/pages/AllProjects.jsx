@@ -7,6 +7,7 @@ import ProjectContext from "../store/project.context.jsx";
 import { sortListAccordingToDealine } from "../util/Sorting.js";
 import { FolderPlus, FolderSearch, FolderOpen } from "lucide-react";
 import { Link } from "react-router-dom";
+import LinkButton from "../components/UI/Elements/LinkButton.jsx";
 
 let FILTER = "All";
 let SORTOPTION = "newest";
@@ -100,11 +101,11 @@ export default function AllProjectsPage() {
 
   return (
     <div className="min-h-screen">
-      <main className="container mx-auto px-4 py-6 sm:py-8 lg:py-12">
+      <main className="max-w-7xl mx-auto p-4 sm:p-6">
         <Header />
-        
+
         <div className="max-w-7xl mx-auto">
-          <Sortings
+          {projects.length > 1 && <Sortings
             filter={filter}
             setFilter={setFilter}
             sortOption={sortOption}
@@ -112,18 +113,18 @@ export default function AllProjectsPage() {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             onReset={resetFilters}
-          />
+          />}
 
           {/* All Projects Title */}
-          <div className="flex items-center gap-3 mb-8 mt-8">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
-              {filter} Projects
+          <div className="flex items-center justify-between gap-3 mb-8 mt-8">
+            <h2 className="text-2xl md:text-3xl lg:text-2xl font-bold text-para-light">
+              Showing: {filter} Projects
             </h2>
-            <div className="w-16 h-1 gradient-blue rounded-full"></div>
+            
           </div>
 
           {/* Projects Grid */}
-          <div className="grid gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-6 md:gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
             {searchedProjects.map((project) => (
               <ProjectCard key={project._id} project={project} />
             ))}
@@ -142,15 +143,12 @@ export default function AllProjectsPage() {
               <p className="text-gray-400 mt-3 max-w-md mx-auto">
                 Create a new project to get started.
               </p>
-              <Link
-                to="/project/new"
-                className="inline-block mt-6 px-8 py-4 cursor-pointer gradient-blue hover:shadow-lg text-white rounded-xl font-semibold transition-all duration-300 hover-lift"
-              >
+              <LinkButton paddingClasses="px-8 py-4 inline-block mt-4" link="/project/new">
                 Create New Project
-              </Link>
+              </LinkButton>
             </div>
           )}
-          
+
           {/* Empty State  */}
           {projects.length > 0 && searchedProjects.length === 0 && (
             <div className="text-center py-20">

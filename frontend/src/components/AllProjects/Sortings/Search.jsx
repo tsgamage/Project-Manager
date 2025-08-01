@@ -29,7 +29,7 @@ export default forwardRef(function Search({ onSearch, onReset, ...props }, ref) 
             <button
               type="button"
               aria-label="Clear search"
-              className="absolute inset-y-0 right-0 pr-4 flex items-center hover:text-gray-300 transition-colors"
+              className="absolute cursor-pointer inset-y-0 right-0 pr-4 flex items-center hover:text-gray-300 transition-colors"
               onClick={() => onReset("search")}
               tabIndex={0}
             >

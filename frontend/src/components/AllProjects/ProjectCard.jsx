@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import useProgress from "../../hooks/useProgress";
 import useStatusClasses from "../../hooks/useStatusClasses";
 import { Calendar, Clock, CheckCircle } from "lucide-react";
+import { Tooltip } from "react-tooltip";
 
 export default function ProjectCard({ project }) {
   const { _id, title, description, startDate, endDate, team } = project;
@@ -30,7 +31,7 @@ export default function ProjectCard({ project }) {
   } else if (daysRemaining < 14) {
     bottomPartClasses = "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
   } else {
-    bottomPartClasses = "bg-gray-500/20 text-gray-300 border-gray-500/30";
+    bottomPartClasses = "bg-blue-500/20 text-gray-300 border-gray-500/30";
   }
 
   return (
@@ -41,7 +42,7 @@ export default function ProjectCard({ project }) {
       <div className="p-5 flex-1">
         {/* Header with Status */}
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-lg font-bold text-white truncate group-hover:text-blue-300 transition-colors duration-200">
+          <h3 title={title} className="text-lg font-bold text-white truncate group-hover:text-blue-300 transition-colors duration-200">
             {title}
           </h3>
           <span
@@ -52,7 +53,7 @@ export default function ProjectCard({ project }) {
         </div>
 
         {/* Description */}
-        <p className="text-gray-300 mb-5 min-h-[50px] leading-relaxed text-sm">
+        <p title={description} className="text-gray-300 mb-5 min-h-[50px] leading-relaxed text-sm">
           {description?.length > 60 ? description.slice(0, 60) + "..." : description}
         </p>
 
@@ -70,11 +71,10 @@ export default function ProjectCard({ project }) {
           </div>
           <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
             <div
-              className={`h-2 rounded-full transition-all duration-300 ease-out ${
-                progress < 30 ? "bg-gradient-to-r from-red-400 to-red-500" : 
-                progress < 70 ? "bg-gradient-to-r from-yellow-400 to-yellow-500" : 
-                "bg-gradient-to-r from-green-400 to-green-500"
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 ease-out ${progress < 30 ? "bg-gradient-to-r from-red-400 to-red-500" :
+                progress < 70 ? "bg-gradient-to-r from-yellow-400 to-yellow-500" :
+                  "bg-gradient-to-r from-green-400 to-green-500"
+                }`}
               style={{ width: `${progress}%` }}
             ></div>
           </div>
@@ -85,12 +85,19 @@ export default function ProjectCard({ project }) {
           <div className="flex -space-x-1">
             {team.length > 0 &&
               team.map((member, index) => (
-                <div
-                  key={index}
-                  className={`${member.color} w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-semibold border border-gray-800 shadow-md transition-transform duration-200 hover:scale-105`}
-                >
-                  {member.name.charAt(0)}
-                </div>
+                <>
+                  <div
+                    title={member.name}
+                    key={index}
+                    className={`_${member._id} ${member.color} w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-semibold border border-gray-800 shadow-md transition-transform duration-200 hover:scale-105`}
+                  >
+                    {member.name.charAt(0)}
+                  </div>
+                  <Tooltip anchorSelect={`._${member._id}`} place="bottom-end">
+                    {member.name}
+                  </Tooltip>
+                </>
+
               ))}
             {team.length === 0 && (
               <span className="text-xs text-gray-400">

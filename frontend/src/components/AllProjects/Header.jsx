@@ -1,5 +1,6 @@
 import { FolderOpen, Plus } from "lucide-react";
-import { Link } from "react-router-dom";
+import PulsingLineUnderTitles from "../UI/Elements/PulsingLineUnderTitles";
+import LinkButton from "../UI/Elements/LinkButton";
 
 export default function Header() {
   return (
@@ -13,7 +14,7 @@ export default function Header() {
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-2">
               Your Projects
             </h2>
-            <div className="w-16 h-1 gradient-blue rounded-full"></div>
+            <PulsingLineUnderTitles />
           </div>
         </div>
         <p className="text-gray-400 mt-2 text-sm sm:text-base max-w-2xl">
@@ -22,13 +23,10 @@ export default function Header() {
       </div>
 
       <div className="flex flex-wrap gap-4 w-full sm:w-auto">
-        <Link
-          to="/project/new"
-          className="group w-full sm:w-auto flex justify-center items-center py-4 px-6 rounded-xl shadow-lg text-sm font-semibold text-white gradient-blue hover:shadow-xl transition-all duration-300 hover-lift focus-ring"
-        >
-          <Plus className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" />
+        <LinkButton link="/project/new" paddingClasses="py-4 px-6 ">
+          <Plus className="w-5 h-5 mr-2  transition-transform duration-300" />
           New Project
-        </Link>
+        </LinkButton>
       </div>
     </div>
   );
