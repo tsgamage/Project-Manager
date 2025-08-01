@@ -4,14 +4,15 @@ import useStatusClasses from "../../hooks/useStatusClasses";
 import { Calendar, Clock, CheckCircle } from "lucide-react";
 import { Tooltip } from "react-tooltip";
 import calculateDaysRemaining from "../../util/calculateDaysRemaining";
+import useDatesRemainingClasses from "../../hooks/useDatesRemainingClasses";
 
 export default function ProjectCard({ project }) {
   const { _id, title, description, startDate, endDate, team } = project;
 
   const progress = useProgress(project);
   const { status, statusClasses } = useStatusClasses(progress);
-
   const daysRemaining = calculateDaysRemaining(project.endDate);
+  const { daysRemainingClasses: bottomPartClasses } = useDatesRemainingClasses(daysRemaining, progress)
 
   // Format date range
   const formatDate = (dateString) => {
@@ -21,16 +22,7 @@ export default function ProjectCard({ project }) {
     });
   };
 
-  let bottomPartClasses;
-  if (progress === 100) {
-    bottomPartClasses = "bg-green-500/20 text-green-300 border-green-500/30";
-  } else if (daysRemaining < 7) {
-    bottomPartClasses = "bg-red-500/20 text-red-300 border-red-500/30";
-  } else if (daysRemaining < 14) {
-    bottomPartClasses = "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
-  } else {
-    bottomPartClasses = "bg-blue-500/20 text-gray-300 border-gray-500/30";
-  }
+
 
   return (
     <Link

@@ -16,7 +16,7 @@ export default function Memeber({ member }) {
         onConfirm={() => removeMember(member._id)}
         onCancel={() => deleteModal.current.close()}
       />
-      
+
       <div className="group relative">
         <div className="bg-gray-700/50 rounded-xl p-3 sm:p-4 hover:bg-gray-700 transition-all duration-300 border border-gray-600 hover:border-gray-500">
           <div className="flex items-start justify-between mb-3">
@@ -36,7 +36,7 @@ export default function Memeber({ member }) {
                 <p className="text-xs sm:text-sm text-gray-400">{member.role}</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <button className="p-1 text-gray-400 hover:text-gray-300 transition-colors">
                 <MoreVertical className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -58,24 +58,23 @@ export default function Memeber({ member }) {
                 <span className="truncate">{member.email}</span>
               </div>
             )}
-            
+
             {member.joinedDate && (
               <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-400">
                 <Calendar className="h-3 w-3" />
                 <span>Joined {new Date(member.joinedDate).toLocaleDateString()}</span>
               </div>
             )}
-            
+
             {member.status && (
               <div className="flex items-center gap-2 text-xs sm:text-sm">
                 <Activity className="h-3 w-3" />
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  member.status === 'active' 
-                    ? 'bg-green-500/20 text-green-300 border border-green-500/30'
-                    : member.status === 'busy'
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${member.status === 'active'
+                  ? 'bg-green-500/20 text-green-300 border border-green-500/30'
+                  : member.status === 'busy'
                     ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30'
                     : 'bg-gray-500/20 text-gray-300 border border-gray-500/30'
-                }`}>
+                  }`}>
                   {member.status}
                 </span>
               </div>

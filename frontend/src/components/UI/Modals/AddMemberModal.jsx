@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useState, useEffect } from "react";
+import { forwardRef, useImperativeHandle, useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { X, UserPlus, Palette, Check } from "lucide-react";
 
@@ -42,11 +42,11 @@ export default forwardRef(function AddMemberModal(
     handleClose();
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsOpen(false);
     setMember({ name: "", role: "", color: "bg-blue-500" });
     onClose();
-  };
+  }, [onClose, setMember])
 
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -82,12 +82,12 @@ export default forwardRef(function AddMemberModal(
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen]);
+  }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
 
   return createPortal(
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
@@ -173,11 +173,10 @@ export default forwardRef(function AddMemberModal(
                     key={color}
                     type="button"
                     onClick={() => setMember((prev) => ({ ...prev, color }))}
-                    className={`h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl ${color} flex items-center justify-center transition-all duration-300 hover:scale-110 ${
-                      member.color === color
-                        ? "ring-2 ring-blue-400 ring-offset-1 sm:ring-offset-2 ring-offset-gray-800"
-                        : "hover:ring-2 hover:ring-gray-500"
-                    }`}
+                    className={`h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl ${color} flex items-center justify-center transition-all duration-300 hover:scale-110 ${member.color === color
+                      ? "ring-2 ring-blue-400 ring-offset-1 sm:ring-offset-2 ring-offset-gray-800"
+                      : "hover:ring-2 hover:ring-gray-500"
+                      }`}
                     aria-label={`Select ${color
                       .replace("bg-", "")
                       .replace("-500", "")} color`}
