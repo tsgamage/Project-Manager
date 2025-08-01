@@ -41,7 +41,7 @@ export function UserContextProvider({ children }) {
   const userCtxValue = {
     updateName,
   };
-  return <UserContext value={userCtxValue}>{children}</UserContext>;
+  return <UserContext.Provider value={userCtxValue}>{children}</UserContext.Provider>;
 }
 
 export default UserContext;

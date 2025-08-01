@@ -23,6 +23,9 @@ import TeamsPage from "./pages/TeamsPage.jsx";
 import TasksPage from "./pages/Tasks.jsx";
 import SettingsPage from "./pages/Settings.jsx";
 import TrashPage from "./pages/Trash.jsx";
+import { MemberContextProvider } from "./store/member.context.jsx";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./services/member.api.js";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -103,15 +106,19 @@ export default function App() {
   ]);
 
   return (
-    <AuthContextProvider>
-      <PageLayoutContextProvider>
-        <UserContextProvider>
-          <ProjectContextProvider>
-            <Toaster />
-            <RouterProvider router={router}></RouterProvider>
-          </ProjectContextProvider>
-        </UserContextProvider>
-      </PageLayoutContextProvider>
-    </AuthContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthContextProvider>
+        <PageLayoutContextProvider>
+          <UserContextProvider>
+            <ProjectContextProvider>
+              <MemberContextProvider>
+                <Toaster />
+                <RouterProvider router={router}></RouterProvider>
+              </MemberContextProvider>
+            </ProjectContextProvider>
+          </UserContextProvider>
+        </PageLayoutContextProvider>
+      </AuthContextProvider>
+    </QueryClientProvider>
   );
 }
