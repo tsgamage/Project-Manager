@@ -6,6 +6,7 @@ import projectRoutes from "./routes/project.route.js";
 import authRoutes from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/user.route.js";
+import memberRoutes from "./routes/member.route.js";
 import path from "path";
 
 dotenv.config();
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use("/api/project", projectRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/member", memberRoutes)
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "frontend", "dist")));
