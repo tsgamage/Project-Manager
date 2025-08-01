@@ -84,11 +84,10 @@ export default function ProjectCard({ project }) {
         <div className="flex justify-between items-center mt-5">
           <div className="flex -space-x-1">
             {team.length > 0 &&
-              team.map((member, index) => (
-                <>
+              team.map((member) => (
+                <div key={member._id}>
                   <div
                     title={member.name}
-                    key={index}
                     className={`_${member._id} ${member.color} w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-semibold border border-gray-800 shadow-md transition-transform duration-200 hover:scale-105`}
                   >
                     {member.name.charAt(0)}
@@ -96,7 +95,7 @@ export default function ProjectCard({ project }) {
                   <Tooltip anchorSelect={`._${member._id}`} place="bottom-end">
                     {member.name}
                   </Tooltip>
-                </>
+                </div>
 
               ))}
             {team.length === 0 && (
