@@ -1,13 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useContext, useEffect, useState, useRef } from "react";
 import ProjectContext from "../store/project.context.jsx";
-import { 
-  ArrowLeft, 
-  Calendar, 
-  Clock, 
-  Users, 
-  CheckCircle, 
-  Target, 
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  Users,
+  CheckCircle,
+  Target,
   TrendingUp,
   Edit3,
   MoreVertical,
@@ -27,6 +27,8 @@ import useStatusClasses from "../hooks/useStatusClasses.jsx";
 import ProjectTasks from "../components/ViewProject/Task/ProjectTasks.jsx";
 import TeamMembers from "../components/ViewProject/Member/TeamMembers.jsx";
 import EditProjectModal from "../components/UI/Modals/EditProjectModal.jsx";
+import LoadingSpinner from "../components/UI/Elements/LoadingSpinner.jsx";
+import calculateDaysRemaining from "../util/calculateDaysRemaining.js";
 
 export default function ViewProjectPage() {
   const params = useParams();
@@ -42,20 +44,11 @@ export default function ViewProjectPage() {
   const { status, statusClasses } = useStatusClasses(progress);
 
   if (!selectedProject || selectedProject._id !== params.projectID) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-400">Loading project...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />
   }
-  
-  // Calculate days remaining
-  const endDate = new Date(selectedProject.endDate);
-  const today = new Date();
-  const daysRemaining = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
+
+
+  const daysRemaining = calculateDaysRemaining(selectedProject.endDate);
 
   // Calculate statistics
   const totalTasks = selectedProject.tasks.length;
@@ -90,7 +83,7 @@ export default function ViewProjectPage() {
         onClose={() => editModalRef.current?.close()}
         onSave={handleEditProject}
       />
-      
+
       <div className="max-w-7xl mx-auto">
         {/* Hero Section */}
         <div className="relative overflow-hidden">
@@ -118,15 +111,14 @@ export default function ViewProjectPage() {
                     <span className={`px-3 py-1 rounded-full text-sm font-medium border ${statusClasses}`}>
                       {status}
                     </span>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium border ${
-                      daysRemaining > 0 
-                        ? daysRemaining < 7 
-                          ? "bg-red-500/20 text-red-300 border-red-500/30"
-                          : daysRemaining < 14 
-                            ? "bg-yellow-500/20 text-yellow-300 border-yellow-500/30"
-                            : "bg-blue-500/20 text-blue-300 border-blue-500/30"
-                        : "bg-gray-500/20 text-gray-300 border-gray-500/30"
-                    }`}>
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium border ${daysRemaining > 0
+                      ? daysRemaining < 7
+                        ? "bg-red-500/20 text-red-300 border-red-500/30"
+                        : daysRemaining < 14
+                          ? "bg-yellow-500/20 text-yellow-300 border-yellow-500/30"
+                          : "bg-blue-500/20 text-blue-300 border-blue-500/30"
+                      : "bg-gray-500/20 text-gray-300 border-gray-500/30"
+                      }`}>
                       {daysRemaining > 0 ? `${daysRemaining} days left` : "Deadline passed"}
                     </span>
                   </div>
@@ -143,7 +135,7 @@ export default function ViewProjectPage() {
                 <button className="p-2 bg-gray-700 hover:bg-gray-600 rounded-xl transition-colors">
                   <MoreVertical className="h-5 w-5 text-gray-300" />
                 </button>
-                <button 
+                <button
                   onClick={() => editModalRef.current?.open()}
                   className="flex items-center gap-2 gradient-blue hover:shadow-lg text-white px-4 py-2 rounded-xl transition-all duration-300 hover-lift"
                 >
@@ -184,14 +176,13 @@ export default function ViewProjectPage() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
                 <div
-                  className={`h-3 rounded-full transition-all duration-500 ${
-                    progress < 30 ? "bg-gradient-to-r from-red-400 to-red-500" : 
-                    progress < 70 ? "bg-gradient-to-r from-yellow-400 to-yellow-500" : 
-                    "bg-gradient-to-r from-green-400 to-green-500"
-                  }`}
+                  className={`h-3 rounded-full transition-all duration-500 ${progress < 30 ? "bg-gradient-to-r from-red-400 to-red-500" :
+                    progress < 70 ? "bg-gradient-to-r from-yellow-400 to-yellow-500" :
+                      "bg-gradient-to-r from-green-400 to-green-500"
+                    }`}
                   style={{ width: `${progress}%` }}
                 ></div>
               </div>
@@ -271,11 +262,10 @@ export default function ViewProjectPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center justify-center gap-2 px-3 sm:px-4 py-3 rounded-xl font-medium transition-all duration-300 text-sm sm:text-base ${
-                  activeTab === tab.id
-                    ? "gradient-blue text-white shadow-lg"
-                    : "bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white"
-                }`}
+                className={`flex items-center justify-center gap-2 px-3 sm:px-4 py-3 rounded-xl font-medium transition-all duration-300 text-sm sm:text-base ${activeTab === tab.id
+                  ? "gradient-blue text-white shadow-lg"
+                  : "bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white"
+                  }`}
               >
                 <tab.icon className="h-4 w-4" />
                 <span className="hidden sm:inline">{tab.label}</span>
@@ -387,8 +377,8 @@ export default function ViewProjectPage() {
                   </div>
                 </div>
               </div>
-        </div>
-      )}
+            </div>
+          )}
         </div>
       </div>
     </div>

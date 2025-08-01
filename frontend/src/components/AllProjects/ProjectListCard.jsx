@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import useProgress from "../../hooks/useProgress";
 import useStatusClasses from "../../hooks/useStatusClasses";
 import { Calendar, Clock, Users, ChevronRight } from "lucide-react";
+import calculateDaysRemaining from "../../util/calculateDaysRemaining";
 
 export default function ProjectListCard({ project }) {
   const { _id, title, description, startDate, endDate, team } = project;
@@ -9,10 +10,7 @@ export default function ProjectListCard({ project }) {
   const progress = useProgress(project);
   const { status, statusClasses } = useStatusClasses(progress);
 
-  // Calculate days remaining
-  const end = new Date(project.endDate);
-  const today = new Date();
-  const daysRemaining = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
+  const daysRemaining = calculateDaysRemaining(project.endDate);
 
   // Format date range
   const formatDate = (dateString) => {

@@ -2,12 +2,10 @@ import { Link } from "react-router-dom";
 import useProgress from "../../hooks/useProgress.jsx";
 import useStatusClasses from "../../hooks/useStatusClasses.jsx";
 import { useState } from "react";
+import calculateDaysRemaining from "../../util/calculateDaysRemaining.js";
 
 export default function ProjectHeader({ project }) {
-  const endDate = new Date(project.endDate);
-  const today = new Date();
-  const daysRemaining = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
-
+  const daysRemaining = calculateDaysRemaining(project.endDate);
   const progress = useProgress(project);
   const { status, statusClasses } = useStatusClasses(progress);
   const [expandText, setExpandText] = useState(false);

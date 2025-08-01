@@ -3,6 +3,7 @@ import useProgress from "../../hooks/useProgress";
 import useStatusClasses from "../../hooks/useStatusClasses";
 import { Calendar, Clock, CheckCircle } from "lucide-react";
 import { Tooltip } from "react-tooltip";
+import calculateDaysRemaining from "../../util/calculateDaysRemaining";
 
 export default function ProjectCard({ project }) {
   const { _id, title, description, startDate, endDate, team } = project;
@@ -10,10 +11,7 @@ export default function ProjectCard({ project }) {
   const progress = useProgress(project);
   const { status, statusClasses } = useStatusClasses(progress);
 
-  // Calculate days remaining
-  const end = new Date(project.endDate);
-  const today = new Date();
-  const daysRemaining = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
+  const daysRemaining = calculateDaysRemaining(project.endDate);
 
   // Format date range
   const formatDate = (dateString) => {
