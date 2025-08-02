@@ -19,13 +19,11 @@ import { PageLayoutContextProvider } from "./store/pageLayout.context.jsx";
 import AllProjects from "./pages/AllProjects.jsx";
 import LanndingPage from "./pages/Landing.jsx";
 import HomePage from "./pages/Home.jsx";
-import TeamsPage from "./pages/TeamsPage.jsx";
+import TeamsPage from "./pages/Team.jsx";
 import TasksPage from "./pages/Tasks.jsx";
 import SettingsPage from "./pages/Settings.jsx";
 import TrashPage from "./pages/Trash.jsx";
 import { MemberContextProvider } from "./store/member.context.jsx";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "./services/member.api.js";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -106,7 +104,6 @@ export default function App() {
   ]);
 
   return (
-    <QueryClientProvider client={queryClient}>
       <AuthContextProvider>
         <PageLayoutContextProvider>
           <UserContextProvider>
@@ -119,6 +116,5 @@ export default function App() {
           </UserContextProvider>
         </PageLayoutContextProvider>
       </AuthContextProvider>
-    </QueryClientProvider>
   );
 }
