@@ -1,8 +1,6 @@
-import { QueryClient } from "@tanstack/react-query"
-import API_ENDPOINTS from "../config/api"
+import API_ENDPOINTS from "../config/api.js"
 
 const { MEMBER } = API_ENDPOINTS
-export const queryClient = new QueryClient()
 
 export async function getAllMembers() {
     try {

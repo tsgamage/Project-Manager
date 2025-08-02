@@ -7,6 +7,7 @@ const assignedProjectsSchema = mongoose.Schema({
 })
 
 const teamMemberSchema = mongoose.Schema({
+  userID: { type: mongoose.Schema.Types.ObjectId, required: true },
   name: { type: String, required: true },
   role: { type: String, required: true },
   email: { type: String, required: true },
