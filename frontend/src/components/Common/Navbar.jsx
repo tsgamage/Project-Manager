@@ -5,6 +5,7 @@ import { ChevronUp, LogOut, Menu, Settings, SquareArrowOutUpRight, User, Bell } 
 import { toast } from "react-hot-toast";
 import ProjectContext from "../../store/project.context";
 import PageLayoutContext from "../../store/pageLayout.context";
+import MemberContext from "../../store/member.context";
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -13,6 +14,7 @@ export default function Navbar() {
   const { isAuthenticated, user, logout } = useContext(AuthContext);
   const { projects, setProjects } = useContext(ProjectContext);
   const { toggleMobileSidebar } = useContext(PageLayoutContext);
+  const { setMembers, setMemberCategories } = useContext(MemberContext);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -31,6 +33,10 @@ export default function Navbar() {
     setIsDropdownOpen(false);
     toast.success("Logged out successfully");
     setProjects([]);
+    setMembers([]);
+    setMemberCategories([]);
+    sessionStorage.clear();
+    window.location.reload();
   }
 
   return (
@@ -50,7 +56,7 @@ export default function Navbar() {
             <div className="w-7 h-7 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/25">
               <span className="text-white font-bold text-xs">PM</span>
             </div>
-            <span className="font-bold text-white transition-all duration-300 text-base group-hover:text-blue-300 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <span className="font-bold transition-all duration-300 text-base group-hover:text-blue-300 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               Project Manager
             </span>
           </Link>
@@ -127,9 +133,7 @@ export default function Navbar() {
                             </p>
                             <div className="flex items-center mt-1">
                               <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
-                              <span className="text-xs text-green-400 font-medium">
-                                Online
-                              </span>
+                              <span className="text-xs text-green-400 font-medium">Online</span>
                             </div>
                           </div>
                         </div>

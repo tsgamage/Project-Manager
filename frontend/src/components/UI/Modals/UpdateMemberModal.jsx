@@ -13,13 +13,14 @@ import ModalInput from "./components/ModalInput";
 import { toast } from "react-hot-toast";
 import MemberContext from "../../../store/member.context";
 
-export default forwardRef(function AddMemberModal({ onAddMember, onOpenAddCategoryModal }, ref) {
+export default forwardRef(function UpdateMemberModal({ member, onOpenAddCategoryModal }, ref) {
   const { memberCategories } = useContext(MemberContext);
   const [isOpen, setIsOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState();
 
-  const [formState, formAction, pending] = useActionState(AddMemberAction);
+  const { updateMember } = useContext(MemberContext);
+  const [formState, formAction, pending] = useActionState(AddMemberAction, member);
 
   const MEMBER_COLORS = [
     "bg-blue-500",
@@ -107,7 +108,7 @@ export default forwardRef(function AddMemberModal({ onAddMember, onOpenAddCatego
   async function AddMemberAction(preState, formData) {
     const memberObj = Object.fromEntries(formData);
 
-    const response = await onAddMember(memberObj);
+    const response = await updateMember(member._id, memberObj);
     console.log(memberObj);
 
     if (response.success) {
@@ -134,7 +135,7 @@ export default forwardRef(function AddMemberModal({ onAddMember, onOpenAddCatego
               </div>
               <div>
                 <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-white">
-                  Add New Team Member
+                  Update Member
                 </h3>
               </div>
             </div>
@@ -193,21 +194,6 @@ export default forwardRef(function AddMemberModal({ onAddMember, onOpenAddCatego
                         : "Select a category"}
                     </span>
                     <ChevronDown
-                      className={`h-4 w-4 sm:h-5 sm:w-5 text-gray-400 transition-transform duration-300 ${isCategoryOpen ? "rotate-180" : ""}`}
-                    />
-                  </button>
-                )}
-
-                {memberCategories.length === 0 && (
-                  <button
-                    type="button"
-                    onClick={onOpenAddCategoryModal}
-                    className="w-full cursor-pointer px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-800/50 border border-gray-600 rounded-lg sm:rounded-xl text-left text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-500 flex items-center justify-between"
-                  >
-                    <span className={selectedCategory ? "text-white" : "text-gray-400"}>
-                      Please add a category first
-                    </span>
-                    <Plus
                       className={`h-4 w-4 sm:h-5 sm:w-5 text-gray-400 transition-transform duration-300 ${isCategoryOpen ? "rotate-180" : ""}`}
                     />
                   </button>
@@ -305,7 +291,7 @@ export default forwardRef(function AddMemberModal({ onAddMember, onOpenAddCatego
                 className="cursor-pointer disabled:cursor-not-allowed flex-1 px-3 sm:px-4 py-2 sm:py-2.5 lg:py-3 gradient-blue hover:shadow-lg text-white rounded-lg sm:rounded-xl font-medium transition-all duration-300 hover-lift disabled:opacity-50 text-sm sm:text-base flex items-center justify-center gap-2"
               >
                 {pending && <Loader className="animate-spin h-4 w-4 sm:h-5 sm:w-5 text-white" />}
-                {pending ? "Adding..." : "Add Member"}
+                {pending ? "Updating..." : "Update"}
               </button>
             </div>
           </form>
