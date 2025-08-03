@@ -13,7 +13,7 @@ import {
     updateMemberCategory,
     updateProjectCategory,
     updateTaskCategory,
-} from "../controller/category.contoller.js";
+} from "../controller/category.controller.js";
 
 const router = Router()
 

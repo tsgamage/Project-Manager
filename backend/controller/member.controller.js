@@ -45,8 +45,8 @@ export async function getMemberById(req, res) {
 
 export async function newMember(req, res) {
     const userID = getUserID(req, res)
-    const {name, role, email, color} = req.body;
-    if (!name || !role || !email || !color) {
+    const {name, role, email, color, categoryID} = req.body;
+    if (!name || !role || !email || !color || !categoryID) {
         return res.status(400).json({success: false, message: "All fields are required"})
     }
     try {
@@ -55,7 +55,8 @@ export async function newMember(req, res) {
             name,
             role,
             email,
-            color
+            color,
+            categoryID,
         })
         await newMember.save();
         res.status(201).json({success: true, message: "Member created successfully", data: newMember})
