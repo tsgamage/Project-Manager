@@ -1,38 +1,41 @@
-import {Router} from "express";
+import { Router } from "express";
 import verifyToken from "../middleware/verifyToken.js";
 import {
-    addMemberCategory,
-    addProjectCategory,
-    addTaskCategory,
-    deleteMemberCategory,
-    deleteProjectCategory,
-    deleteTaskCategory,
-    getMemberCategories,
-    getProjectCategories,
-    getTasksCategories,
-    updateMemberCategory,
-    updateProjectCategory,
-    updateTaskCategory,
+  addProjectCategory,
+  addTaskCategory,
+  deleteProjectCategory,
+  deleteTaskCategory,
+  getProjectCategories,
+  getTasksCategories,
+  updateProjectCategory,
+  updateTaskCategory,
 } from "../controller/category.controller.js";
 
-const router = Router()
+import {
+  addMemberCategory,
+  deleteMemberCategory,
+  getMemberCategories,
+  updateMemberCategory,
+} from "../controller/memberCategory.controller.js";
 
-router.use(verifyToken)
+const router = Router();
 
-router.get("/member", getMemberCategories)
-router.get("/project", getProjectCategories)
-router.get("/tasks/:projectID", getTasksCategories)
+router.use(verifyToken);
 
-router.post("/member/new", addMemberCategory)
-router.post("/project/new", addProjectCategory)
-router.post("/tasks/new", addTaskCategory)
+router.get("/member", getMemberCategories);
+router.get("/project", getProjectCategories);
+router.get("/tasks/:projectID", getTasksCategories);
 
-router.put("/member/:categoryID", updateMemberCategory)
-router.put("/project/:categoryID", updateProjectCategory)
-router.put("/tasks/:categoryID", updateTaskCategory)
+router.post("/member/new", addMemberCategory);
+router.post("/project/new", addProjectCategory);
+router.post("/tasks/new", addTaskCategory);
 
-router.delete("/member/:categoryID", deleteMemberCategory)
-router.delete("/project/:categoryID", deleteProjectCategory)
-router.delete("/tasks/:categoryID", deleteTaskCategory)
+router.put("/member/:categoryID", updateMemberCategory);
+router.put("/project/:categoryID", updateProjectCategory);
+router.put("/tasks/:categoryID", updateTaskCategory);
+
+router.delete("/member/:categoryID", deleteMemberCategory);
+router.delete("/project/:categoryID", deleteProjectCategory);
+router.delete("/tasks/:categoryID", deleteTaskCategory);
 
 export default router;
