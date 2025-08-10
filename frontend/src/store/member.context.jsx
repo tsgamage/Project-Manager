@@ -9,13 +9,14 @@ import {
 import AuthContext from "./auth.context.jsx";
 
 const MemberContext = createContext({
-  members: [],
-  setMembers: () => {},
+  fetchedMembers: [],
+  setFetchedMembers: () => {},
   addMember: () => {},
   updateMember: () => {},
   deleteMember: () => {},
 
-  setMemberCategories: () => {},
+  fetchedMemberCategories: [],
+  setFetchMemberCategories: () => {},
   addMemberCategory: () => {},
   updateMemberCategory: () => {},
   deleteCategory: () => {},
@@ -23,16 +24,15 @@ const MemberContext = createContext({
 
 export function MemberContextProvider({ children }) {
   const { user } = useContext(AuthContext);
-
-  const [members, setMembers] = useState([]);
-  const [memberCategories, setMemberCategories] = useState([]);
+  const [fetchedMembers, setFetchedMembers] = useState([]);
+  const [fetchedMemberCategories, setFetchMemberCategories] = useState([]);
 
   // ------------ Fetching Members & Categories  ------------
 
   async function handleFetchCategories() {
     const resData = await getMemberCategories();
     if (resData.success) {
-      setMemberCategories(resData.data);
+      setFetchMemberCategories(resData.data);
     }
   }
 
@@ -43,7 +43,7 @@ export function MemberContextProvider({ children }) {
       const updatedList = resData.data;
       updatedList.sort((a, b) => a.name.localeCompare(b.name));
       // Sort the list alphabetically
-      setMembers(updatedList);
+      setFetchedMembers(updatedList);
     }
   }
 
@@ -58,10 +58,10 @@ export function MemberContextProvider({ children }) {
   async function handleAddMember(memberObj) {
     const resData = await createMember(memberObj);
     if (resData.success) {
-      const updatedList = [...members, resData.data];
+      const updatedList = [...fetchedMembers, resData.data];
       // Sort the list alphabetically
       updatedList.sort((a, b) => a.name.localeCompare(b.name));
-      setMembers(updatedList);
+      setFetchedMembers(updatedList);
     }
     return resData;
   }
@@ -69,12 +69,12 @@ export function MemberContextProvider({ children }) {
   async function handleUpdateMember(memberID, memberData) {
     const resData = await updateMember(memberID, memberData);
     if (resData.success) {
-      const updatedList = members.filter((m) => m._id !== memberID);
+      const updatedList = fetchedMembers.filter((m) => m._id !== memberID);
       updatedList.push(resData.data);
 
       // Sort the list alphabetically
       updatedList.sort((a, b) => a.name.localeCompare(b.name));
-      setMembers(updatedList);
+      setFetchedMembers(updatedList);
     }
     return resData;
   }
@@ -82,10 +82,10 @@ export function MemberContextProvider({ children }) {
   async function handleDeleteMember(memberID) {
     const resData = await deleteMember(memberID);
     if (resData.success) {
-      const updatedList = members.filter((m) => m._id !== memberID);
+      const updatedList = fetchedMembers.filter((m) => m._id !== memberID);
       // Sort the list alphabetically
       updatedList.sort((a, b) => a.name.localeCompare(b.name));
-      setMembers(updatedList);
+      setFetchedMembers(updatedList);
     }
   }
 
@@ -94,8 +94,8 @@ export function MemberContextProvider({ children }) {
   async function handleAddMemberCategory(categoryObj) {
     const resData = await addMemberCategory(categoryObj);
     if (resData.success) {
-      const updatedList = [...memberCategories, resData.data];
-      setMemberCategories(updatedList);
+      const updatedList = [...fetchedMemberCategories, resData.data];
+      setFetchMemberCategories(updatedList);
     }
     return resData;
   }
@@ -103,9 +103,9 @@ export function MemberContextProvider({ children }) {
   async function handleUpdateMemberCategory(categoryID, categoryName) {
     const resData = await updateMemberCategory(categoryID, categoryName);
     if (resData.success) {
-      const updatedList = memberCategories.filter((m) => m._id !== categoryID);
+      const updatedList = fetchedMemberCategories.filter((m) => m._id !== categoryID);
       updatedList.push(resData.data);
-      setMemberCategories(updatedList);
+      setFetchMemberCategories(updatedList);
     }
     return resData;
   }
@@ -113,21 +113,21 @@ export function MemberContextProvider({ children }) {
   async function handleDeleteCategory(categoryID) {
     const resData = await deleteMemberCategory(categoryID);
     if (resData.success) {
-      const updatedList = memberCategories.filter((m) => m._id !== categoryID);
-      setMemberCategories(updatedList);
+      const updatedList = fetchedMemberCategories.filter((m) => m._id !== categoryID);
+      setFetchMemberCategories(updatedList);
     }
     return resData;
   }
 
   const memberCtxValue = {
-    members,
-    setMembers,
+    fetchedMembers,
+    setFetchedMembers,
     addMember: handleAddMember,
     updateMember: handleUpdateMember,
     deleteMember: handleDeleteMember,
 
-    memberCategories,
-    setMemberCategories,
+    fetchedMemberCategories,
+    setFetchMemberCategories,
     addMemberCategory: handleAddMemberCategory,
     deleteCategory: handleDeleteCategory,
     updateMemberCategory: handleUpdateMemberCategory,

@@ -7,51 +7,34 @@ import {
   useActionState,
 } from "react";
 import { createPortal } from "react-dom";
-import { X, Palette, Check, Loader, Grid2x2Plus } from "lucide-react";
+import { X, Check, Loader, Grid2x2Plus } from "lucide-react";
 import ModalInput from "./components/ModalInput";
 import { toast } from "react-hot-toast";
+import colors from "../../../util/colors";
 
-export default forwardRef(function AddMemberCategoryModal({ onAddCategory }, ref) {
+export default forwardRef(function AddMemberCategoryModal({ onClick, categoryData }, ref) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [formState, formAction, pending] = useActionState(AddMemberAction);
+  const [error, setError] = useState("");
+  const [resetForm, setResetForm] = useState(false);
 
-  const MEMBER_COLORS = [
-    "bg-blue-500",
-    "bg-green-500",
-    "bg-red-500",
-    "bg-yellow-500",
-    "bg-purple-500",
-    "bg-pink-500",
-    "bg-indigo-500",
-    "bg-teal-500",
-    "bg-orange-500",
-    "bg-cyan-500",
-  ];
+  const MEMBER_COLORS = colors.memberColors;
 
   const handleClose = useCallback(() => {
-    if (!pending) setIsOpen(false);
-  }, [pending]);
+    if (!categoryData) {
+      setResetForm(true);
+    }
+    if (!pending) {
+      setIsOpen(false);
+      setError("");
+    }
+  }, [pending, categoryData]);
 
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
       handleClose();
     }
   };
-
-  // Close category dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isCategoryOpen && !event.target.closest(".category-dropdown")) {
-        setIsCategoryOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isCategoryOpen]);
 
   useImperativeHandle(ref, () => {
     return {
@@ -85,6 +68,19 @@ export default forwardRef(function AddMemberCategoryModal({ onAddCategory }, ref
 
   if (!isOpen) return null;
 
+  function verifyName(name) {
+    if (!name || name.trim() === "") {
+      return "Role is required";
+    }
+    if (name.length < 3) {
+      return "Role must be at least 3 characters long";
+    }
+    // eslint-disable-next-line no-useless-escape
+    if (!/^[a-zA-Z0-9 /,|()\[\]\\-]+$/.test(name.name)) {
+      return "Role can only contain letters, numbers, spaces, and these symbols: / , | - ( ) [ ] \\";
+    }
+  }
+
   async function AddMemberAction(preState, formData) {
     const categoryObj = Object.fromEntries(formData);
 
@@ -92,12 +88,28 @@ export default forwardRef(function AddMemberCategoryModal({ onAddCategory }, ref
     const { categoryName: name, ...rest } = categoryObj;
     const updatedObj = { name, ...rest };
 
-    const response = await onAddCategory(updatedObj);
-    if (response.success) {
-      toast.success(response.message);
+    // Name verification moved to separate function for clear view
+    const error = verifyName(updatedObj.name);
+
+    if (error) {
+      setError(error);
+      return categoryObj;
+    }
+
+    // checking whether this was a update or a new category and pass necessary data
+    let response;
+    if (categoryData) {
+      response = await onClick(categoryData._id, updatedObj);
+    } else {
+      response = await onClick(updatedObj);
+    }
+
+    // Common response for both update and new category requests
+    if (response && response.success) {
+      toast.success(response?.message);
       setIsOpen(false);
     } else {
-      toast.error(response.message);
+      toast.error(response?.message);
       return categoryObj;
     }
   }
@@ -117,7 +129,7 @@ export default forwardRef(function AddMemberCategoryModal({ onAddCategory }, ref
               </div>
               <div>
                 <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-white">
-                  Add New Member Category
+                  {categoryData ? "Edit Category" : "Add New Member Category"}
                 </h3>
               </div>
             </div>
@@ -139,19 +151,19 @@ export default forwardRef(function AddMemberCategoryModal({ onAddCategory }, ref
             <ModalInput
               id="categoryName"
               label="Category Name*"
-              placeholder="Developers"
-              defaultValue={formState?.name}
+              placeholder="E.g. Developers"
+              defaultValue={resetForm ? "" : categoryData ? categoryData.name : formState?.name}
+              isError={error}
+              onChange={() => setError(null)}
             />
+            {error && <p className="text-sm text-red-500 ">{error}</p>}
 
             {/* Color Selection */}
             <div>
               <label className="block text-sm font-medium text-white mb-2">
-                <div className="flex items-center gap-2">
-                  <Palette className="h-4 w-4" />
-                  Category Color
-                </div>
+                <div className="flex items-center gap-2">Category Color</div>
               </label>
-              <div className="grid grid-cols-5 gap-1.5 sm:gap-2 lg:gap-3 p-4">
+              <div className="grid grid-cols-5 gap-1.5 sm:gap-2 lg:gap-3 p-4  bg-gray-700/50 rounded-lg sm:rounded-xl py-5">
                 {MEMBER_COLORS.map((color) => (
                   <label
                     key={color}
@@ -163,7 +175,11 @@ export default forwardRef(function AddMemberCategoryModal({ onAddCategory }, ref
                       name="color"
                       value={color}
                       className="sr-only peer"
-                      defaultChecked={formState?.color === color || color === "bg-blue-500"}
+                      defaultChecked={
+                        categoryData?.color === color ||
+                        formState?.color === color ||
+                        color === "bg-green-500"
+                      }
                     />
                     <div className="absolute inset-0 rounded-lg sm:rounded-xl ring-2 ring-transparent peer-checked:ring-blue-400 peer-checked:ring-offset-1 sm:peer-checked:ring-offset-2 peer-checked:ring-offset-gray-800 transition-all duration-300" />
                     <Check className="h-2.5 w-2.5 sm:h-3 sm:w-3 lg:h-5 lg:w-5 text-white opacity-0 peer-checked:opacity-100 transition-opacity duration-300" />
@@ -192,7 +208,7 @@ export default forwardRef(function AddMemberCategoryModal({ onAddCategory }, ref
                 className="cursor-pointer disabled:cursor-not-allowed flex-1 px-3 sm:px-4 py-2 sm:py-2.5 lg:py-3 gradient-blue hover:shadow-lg text-white rounded-lg sm:rounded-xl font-medium transition-all duration-300 hover-lift disabled:opacity-50 text-sm sm:text-base flex items-center justify-center gap-2"
               >
                 {pending && <Loader className="animate-spin h-4 w-4 sm:h-5 sm:w-5 text-white" />}
-                {pending ? "Adding..." : "Add Category"}
+                {pending ? "Saving..." : "Save"}
               </button>
             </div>
           </form>

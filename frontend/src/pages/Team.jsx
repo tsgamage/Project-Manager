@@ -3,24 +3,26 @@ import ProjectContext from "../store/project.context.jsx";
 import MemberContext from "../store/member.context.jsx";
 import TeamHeader from "../components/Team/TeamHeader.jsx";
 import TeamStats from "../components/Team/TeamStats.jsx";
-import AddMemberModal from "../components/UI/Modals/AddMemberModal.jsx";
-import AddMemberCategoryModal from "../components/UI/Modals/AddMemberCategoryModal.jsx";
 import TopActionButtons from "../components/Team/TopActionButtons.jsx";
 import GridMemberCard from "../components/Team/gridMemberCard.jsx";
 import NoMember from "../components/Team/NoMember.jsx";
 import ListMemberCard from "../components/Team/ListMemberCard.jsx";
-import UpdateMemberCategoryModal from "../components/UI/Modals/UpdateMemberCategoryModal.jsx";
+import MemberModal from "../components/UI/Modals/MemberModal.jsx";
+import MemberCategoryModal from "../components/UI/Modals/MemberCategoryModal.jsx";
+
 export default function TeamsPage() {
   const { projects } = useContext(ProjectContext);
-  const { members, addMember, memberCategories, addMemberCategory } = useContext(MemberContext);
+  const { fetchedMembers, addMember, fetchedMemberCategories, addMemberCategory } =
+    useContext(MemberContext);
 
-  const addMemberModal = useRef();
+  const memberModal = useRef();
   const addMemberCategoryModal = useRef();
-  const updateMemberCategoryModal = useRef();
 
   const [viewMode, setViewMode] = useState("grid");
   const [expandAll, setExpandAll] = useState(false);
+
   const [groupedMembers, setGroupedMembers] = useState({});
+
   const [teamStats, setTeamStats] = useState({
     totalMembers: 0,
     activeMembers: 0,
@@ -30,39 +32,38 @@ export default function TeamsPage() {
 
   useEffect(() => {
     const stats = {
-      totalMembers: members.length,
-      activeMembers: members.filter((member) => member.assignedProjects.length > 0).length,
-      assignableMembers: members.filter((member) => member.assignedProjects.length === 0).length,
+      totalMembers: fetchedMembers.length,
+      activeMembers: fetchedMembers.filter((member) => member.assignedProjects.length > 0).length,
+      assignableMembers: fetchedMembers.filter((member) => member.assignedProjects.length === 0)
+        .length,
       totalProjects: projects.length,
     };
-
     setTeamStats(stats);
-  }, [projects, members]);
+  }, [projects, fetchedMembers]);
 
   function changeViewMode(mode) {
     setViewMode(mode);
   }
 
   function toggleExpandAll() {
-    const newExpandAll = !expandAll;
-    setExpandAll(newExpandAll);
+    setExpandAll((preValue) => !preValue);
   }
 
   const getMemberCategory = useCallback(
     (member) => {
       if (member.categoryID) {
-        const category = memberCategories.filter((cat) => cat._id === member.categoryID);
+        const category = fetchedMemberCategories.filter((cat) => cat._id === member.categoryID);
         return category[0]._id;
       }
     },
-    [memberCategories]
+    [fetchedMemberCategories]
   );
 
   const groupMembersByCategory = useCallback(() => {
     const grouped = {};
 
     // Group members by category
-    members.forEach((member) => {
+    fetchedMembers.forEach((member) => {
       const category = getMemberCategory(member);
       if (!grouped[category]) {
         grouped[category] = [];
@@ -71,51 +72,38 @@ export default function TeamsPage() {
     });
 
     // Merge with all categories to include empty ones
-    memberCategories.forEach((category) => {
+    fetchedMemberCategories.forEach((category) => {
       if (!grouped[category._id]) {
         grouped[category._id] = [];
       }
     });
 
-    // Sort categories by member count (descending) and then alphabetically
+    // Sort categories by member count (descending)
     const sortedGrouped = {};
     Object.keys(grouped)
-      .sort((a, b) => {
-        if (grouped[b].length !== grouped[a].length) {
-          return grouped[b].length - grouped[a].length;
-        }
-        return a.localeCompare(b);
-      })
+      .sort((a, b) => grouped[b].length - grouped[a].length)
       .forEach((category) => {
         sortedGrouped[category] = grouped[category];
       });
 
     return sortedGrouped;
-  }, [getMemberCategory, members, memberCategories]);
+  }, [getMemberCategory, fetchedMembers, fetchedMemberCategories]);
 
   useEffect(() => {
-    if (memberCategories.length > 0) {
+    if (fetchedMemberCategories.length > 0) {
       setGroupedMembers(groupMembersByCategory());
     }
-  }, [memberCategories, members, groupMembersByCategory]);
+  }, [fetchedMemberCategories, fetchedMembers, groupMembersByCategory]);
 
   return (
     <>
-      <AddMemberModal
-        ref={addMemberModal}
-        onClose={() => addMemberModal.current.close()}
-        onAddMember={addMember}
-        onOpenAddCategoryModal={() => addMemberCategoryModal.current.open()}
+      <MemberModal
+        ref={memberModal}
+        onClick={addMember}
+        onSelectionClick={() => addMemberCategoryModal.current.open()}
       />
-      <AddMemberCategoryModal
-        ref={addMemberCategoryModal}
-        onClose={() => addMemberCategoryModal.current.close()}
-        onAddCategory={addMemberCategory}
-      />
-      <UpdateMemberCategoryModal
-        ref={updateMemberCategoryModal}
-        onClose={() => updateMemberCategoryModal.current.close()}
-      />
+
+      <MemberCategoryModal ref={addMemberCategoryModal} onClick={addMemberCategory} />
 
       <div className="min-h-screen">
         <main className="max-w-7xl mx-auto p-4 sm:p-6">
@@ -129,7 +117,7 @@ export default function TeamsPage() {
                 <h2 className="text-xl font-semibold text-white">Team Members</h2>
 
                 <TopActionButtons
-                  onAddMember={() => addMemberModal.current.open()}
+                  onAddMember={() => memberModal.current.open()}
                   onAddCategory={() => addMemberCategoryModal.current.open()}
                   viewMode={viewMode}
                   onViewModChange={changeViewMode}
@@ -141,19 +129,23 @@ export default function TeamsPage() {
             </div>
 
             <div className="p-4 sm:p-6">
-              {members.length === 0 && <NoMember onClick={() => addMemberModal.current.open()} />}
+              {fetchedMembers.length === 0 && (
+                <NoMember onClick={() => memberModal.current.open()} />
+              )}
 
-              {!(members.length === 0) && (
+              {!(fetchedMembers.length === 0) && (
                 <>
                   {/* Grid View */}
                   {viewMode === "grid" && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                      {members.map((member) => (
+                      {fetchedMembers.map((member) => (
                         <GridMemberCard
                           key={member._id}
                           member={member}
                           category={
-                            memberCategories.filter((cat) => cat._id === member.categoryID)[0]?.name
+                            fetchedMemberCategories.filter(
+                              (cat) => cat._id === member.categoryID
+                            )[0]?.name
                           }
                         />
                       ))}
@@ -170,10 +162,9 @@ export default function TeamsPage() {
                       categoryID={categoryID}
                       categoryMembers={categoryMembers}
                       groupedMembers={groupedMembers}
-                      memberCategories={memberCategories}
-                      memberModal={addMemberModal}
+                      memberCategories={fetchedMemberCategories}
+                      memberModal={memberModal}
                       expandAll={expandAll}
-                      onEditCategory={updateMemberCategoryModal.current.open}
                     />
                   ))}
                 </div>

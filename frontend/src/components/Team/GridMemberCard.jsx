@@ -3,11 +3,11 @@ import { useContext, useEffect, useRef, useState } from "react";
 import DeleteWarningModal from "../UI/Modals/DeleteWarningModal";
 import MemberContext from "../../store/member.context";
 import toast from "react-hot-toast";
-import UpdateMemberModal from "../UI/Modals/UpdateMemberModal";
+import MemberModal from "../UI/Modals/MemberModal";
 
 export default function GridMemberCard({ member, category }) {
   const [openDropdown, setOpenDropdown] = useState(null);
-  const { deleteMember } = useContext(MemberContext);
+  const { deleteMember, updateMember } = useContext(MemberContext);
 
   const deleteModal = useRef();
   const memberModal = useRef();
@@ -41,11 +41,7 @@ export default function GridMemberCard({ member, category }) {
           toast.success("Member deleted successfully");
         }}
       />
-      <UpdateMemberModal
-        ref={memberModal}
-        member={member}
-        onOpenAddCategoryModal={() => memberModal.current.open()}
-      />
+      <MemberModal ref={memberModal} memberData={member} onClick={updateMember} />
       <div
         key={member._id}
         className="gradient-card rounded-xl p-4 sm:p-6 hover-lift transition-all duration-300 border border-gray-700"
@@ -121,7 +117,7 @@ export default function GridMemberCard({ member, category }) {
             {openDropdown === member._id && (
               <div className="absolute right-0 top-full mt-1 w-32 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-10">
                 <button
-                  onClick={()=>memberModal.current.open(member.categoryID)}
+                  onClick={() => memberModal.current.open()}
                   className="cursor-pointer w-full px-3 py-2 text-left text-sm text-gray-300 hover:bg-gray-700 flex items-center gap-2 transition-colors"
                 >
                   <Edit className="h-3 w-3" />

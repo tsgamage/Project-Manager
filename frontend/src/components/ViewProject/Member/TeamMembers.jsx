@@ -1,9 +1,9 @@
 import { useContext, useRef } from "react";
 import AddMember from "./AddMember";
 import Memeber from "./Member";
-import AddMemberModal from "../../UI/Modals/AddMemberModal";
 import ProjectContext from "../../../store/project.context";
 import { Users, UserPlus, Award, Activity, Mail, Calendar, TrendingUp } from "lucide-react";
+import MemberModal from "../../UI/Modals/MemberModal";
 
 export default function TeamMembers({ team }) {
   const { addMember } = useContext(ProjectContext);
@@ -16,7 +16,7 @@ export default function TeamMembers({ team }) {
   const activePercentage = totalMembers > 0 ? Math.round((activeMembers / totalMembers) * 100) : 0;
 
   return (<>
-    <AddMemberModal
+    <MemberModal
       ref={modal}
       onClose={() => modal.current.close()}
       onAddMember={(member) => addMember(member)}
