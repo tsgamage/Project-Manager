@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Member from "../models/member.modal.js";
 import MemberCategory from "../models/memberCategory.modal.js";
 import getUserID from "../utils/getUserID.js";
