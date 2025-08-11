@@ -24,6 +24,7 @@ import TasksPage from "./pages/Tasks.jsx";
 import SettingsPage from "./pages/Settings.jsx";
 import TrashPage from "./pages/Trash.jsx";
 import { MemberContextProvider } from "./store/member.context.jsx";
+import RedirectToLoginPage from "./components/Auth/RedirectToLoginPage.jsx";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -49,15 +50,22 @@ export default function App() {
       path: "/auth",
       element: (
         <RedirectUserIfAuthenticated>
-          <AuthRoot />
+            <AuthRoot />
         </RedirectUserIfAuthenticated>
       ),
       children: [
         { path: "login", element: <LoginPage /> },
         { path: "signup", element: <SignupPage /> },
         { path: "forgot-password", element: <ForgotPasswordPage /> },
-        { path: "verify-mail", element: <VerifyCodePage /> },
-        { path: "reset-password", element: <ResetPasswordPage /> },
+        {
+          path: "verify-mail",
+          element: (
+            <RedirectToLoginPage>
+              <VerifyCodePage />
+            </RedirectToLoginPage>
+          ),
+        },
+        { path: "reset-password/:token", element: <ResetPasswordPage /> },
       ],
     },
     {
@@ -85,7 +93,7 @@ export default function App() {
       children: [
         { path: "profile", element: <ProfilePage /> },
         { path: "settings", element: <SettingsPage /> },
-        { path: "trash", element: <TrashPage /> }
+        { path: "trash", element: <TrashPage /> },
       ],
     },
     {
@@ -104,17 +112,17 @@ export default function App() {
   ]);
 
   return (
-      <AuthContextProvider>
-        <PageLayoutContextProvider>
-          <UserContextProvider>
-            <ProjectContextProvider>
-              <MemberContextProvider>
-                <Toaster />
-                <RouterProvider router={router}></RouterProvider>
-              </MemberContextProvider>
-            </ProjectContextProvider>
-          </UserContextProvider>
-        </PageLayoutContextProvider>
-      </AuthContextProvider>
+    <AuthContextProvider>
+      <PageLayoutContextProvider>
+        <UserContextProvider>
+          <ProjectContextProvider>
+            <MemberContextProvider>
+              <Toaster />
+              <RouterProvider router={router}></RouterProvider>
+            </MemberContextProvider>
+          </ProjectContextProvider>
+        </UserContextProvider>
+      </PageLayoutContextProvider>
+    </AuthContextProvider>
   );
 }

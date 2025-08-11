@@ -201,18 +201,17 @@ export async function forgotPassword(req, res) {
 }
 
 export async function resetPassword(req, res) {
-  const { email, password } = req.body;
+  const { password } = req.body;
   const { token } = req.params;
   try {
     if (!token) {
       return res.status(400).json({ success: false, message: "Token is required" });
     }
-    if (!email || !password) {
+    if (!password) {
       return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
     const user = await User.findOne({
-      email,
       resetPasswordToken: token,
       resetPasswordExpiresAt: { $gt: new Date().toISOString() },
     });

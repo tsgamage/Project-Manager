@@ -7,9 +7,10 @@ export default function RedirectUserIfAuthenticated({ children }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
-      navigate("/auth/login", { replace: true });
-    }
+    // Commented out because user cannot visit any other auth pages this will redirect them to login 
+    // if (!user) {
+    //   navigate("/auth/login", { replace: true });
+    // }
     if (isAuthenticated && user && user.isVerified) {
       navigate("/home", { replace: true });
     } else if (isAuthenticated && user && user.isVerified === false) {

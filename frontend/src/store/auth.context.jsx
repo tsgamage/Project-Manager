@@ -18,6 +18,7 @@ const AuthContext = createContext({
   checkAuthStatus: () => {},
   resendVerificationCode: () => {},
   forgotPassword: () => {},
+  resetPassword: () => {},
   logout: () => {},
 });
 
@@ -202,6 +203,27 @@ export function AuthContextProvider({ children }) {
     }
   }
 
+  async function resetPassword(token, password) {
+    try {
+      const response = await fetch(`${API_URL}/reset-password/${token}`, {
+        method: "POST",
+        body: JSON.stringify({ password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok && response.status !== 400) {
+        return { success: false, message: "Password reset failed" };
+      }
+
+      return await response.json();
+    } catch (err) {
+      console.log("Error resetting password:", err);
+      return { success: false, message: err.message || "Password reset failed" };
+    }
+  }
+
   useEffect(() => {
     checkAuthStatus();
   }, []);
@@ -216,6 +238,7 @@ export function AuthContextProvider({ children }) {
     checkAuthStatus,
     resendVerificationCode,
     forgotPassword,
+    resetPassword,
     logout,
   };
   return <AuthContext.Provider value={authCtxValue}>{children}</AuthContext.Provider>;
