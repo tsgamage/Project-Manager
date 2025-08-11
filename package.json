@@ -22,7 +22,8 @@
     "jsonwebtoken": "^9.0.2",
     "mailtrap": "^4.2.0",
     "mongoose": "^8.16.5",
-    "node": "^20.19.4"
+    "node": "^20.19.4",
+    "nodemailer": "^6.10.1"
   },
   "devDependencies": {
     "prettier": "^3.6.2"

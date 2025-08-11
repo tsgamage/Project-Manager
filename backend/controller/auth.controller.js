@@ -2,6 +2,7 @@ import { User } from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import crypto from "crypto";
 import generateTokenAndSetCookie from "../utils/generateTokenAndSetCookie.js";
+import { sendPasswordResetEmail, sendVerificationEmail } from "../mail/mails.js";
 
 export async function signup(req, res) {
   const { name, email, password } = req.body;
@@ -32,11 +33,14 @@ export async function signup(req, res) {
       verificationTokenExpiresAt,
     });
 
+    const mailResponse = await sendVerificationEmail(user.email, verificationToken);
+
+    if (!mailResponse.success) {
+      return res.status(400).json({ success: false, message: mailResponse.message });
+    }
+
     await user.save();
-
     generateTokenAndSetCookie(res, user._id);
-
-    // await sendVerificationEmail(user.email, verificationToken);
 
     res.status(201).json({
       success: true,
@@ -146,7 +150,11 @@ export async function resendVerificationCode(req, res) {
     user.verificationTokenExpiresAt = newVerificationTokenExpiresAt;
     await user.save();
 
-    // await sendVerificationEmail(user.email, newVerificationToken);
+    const mailResponse = await sendVerificationEmail(user.email, newVerificationToken);
+
+    if (!mailResponse.success) {
+      return res.status(400).json({ success: false, message: mailResponse.message });
+    }
 
     res.status(200).json({ success: true, message: "Verification code resent successfully" });
   } catch (err) {
@@ -172,12 +180,18 @@ export async function forgotPassword(req, res) {
       Date.now() + parseInt(process.env.FORGOT_PASSWORD_CODE_EXPIRES_IN)
     ).toISOString();
 
+    const passwordResetLink = `${process.env.CLIENT_URL}/auth/reset-password/${passwordResetToken}`;
+
+    const emailResponse = await sendPasswordResetEmail(user.email, passwordResetLink);
+
+    if (!emailResponse.success) {
+      return res.status(400).json({ success: false, message: emailResponse.message });
+    }
+
     user.resetPasswordToken = passwordResetToken;
     user.resetPasswordExpiresAt = passwordResetTokenExpiresIn;
 
     await user.save();
-
-    // await sendPasswordResetEmail(user.email, passwordResetToken);
 
     res.status(200).json({ success: true, message: "Password reset email sent successfully" });
   } catch (err) {
