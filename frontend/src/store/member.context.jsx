@@ -1,5 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { createMember, deleteMember, getAllMembers, updateMember } from "../services/member.api.js";
+import {
+  createMember,
+  deleteMember,
+  getAllMembers,
+  updateMember,
+  updateProjectByID,
+} from "../services/member.api.js";
 import {
   addMemberCategory,
   deleteMemberCategory,
@@ -7,6 +13,7 @@ import {
   updateMemberCategory,
 } from "../services/memberCategory.api.js";
 import AuthContext from "./auth.context.jsx";
+import ProjectContext from "./project.context.jsx";
 
 const MemberContext = createContext({
   fetchedMembers: [],
@@ -24,6 +31,7 @@ const MemberContext = createContext({
 
 export function MemberContextProvider({ children }) {
   const { user } = useContext(AuthContext);
+  const { projects, setProjects, updateProject } = useContext(ProjectContext);
   const [fetchedMembers, setFetchedMembers] = useState([]);
   const [fetchedMemberCategories, setFetchMemberCategories] = useState([]);
 
@@ -86,8 +94,27 @@ export function MemberContextProvider({ children }) {
       updatedList.sort((a, b) => a.name.localeCompare(b.name));
       setFetchedMembers(updatedList);
     }
-  }
 
+    const projectWithThisMember = projects.filter((p) => p.team.includes(memberID));
+
+    // Removing the Member from all projects in database
+    if (projectWithThisMember.length > 0) {
+      projectWithThisMember.forEach(async (project) => {
+        const newProjectWithoutMember = {
+          ...project,
+          team: project.team.filter((id) => id !== memberID),
+        };
+        await updateProjectByID(project._id, newProjectWithoutMember);
+      });
+    }
+
+    // Removing the Member from all projects in state
+    const newProjects = projects.map((project) => {
+      const newTeam = project.team.filter((id) => id !== memberID);
+      return { ...project, team: newTeam };
+    });
+    setProjects(newProjects);
+  }
   // ------------ Category ------------
 
   async function handleAddMemberCategory(categoryObj) {

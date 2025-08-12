@@ -1,6 +1,6 @@
 import API_ENDPOINTS from "../config/api.js";
 
-const { MEMBER } = API_ENDPOINTS;
+const { MEMBER, PROJECT } = API_ENDPOINTS;
 
 export async function getAllMembers() {
   try {
@@ -117,5 +117,32 @@ export async function createMember(memberData) {
   } catch (err) {
     console.log(err);
     return { success: false, message: err.message || "Error while creating member" };
+  }
+}
+
+export async function updateProjectByID(projectID, projectData) {
+  try {
+    const response = await fetch(`${PROJECT}/${projectID}`, {
+      method: "PUT",
+      body: JSON.stringify(projectData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (
+      !response.ok &&
+      response.status !== 401 &&
+      response.status !== 404 &&
+      response.status !== 400
+    ) {
+      return { success: false, message: "Error while updating project" };
+    }
+
+    return await response.json();
+  } catch (e) {
+    console.log(e.message);
+    return { success: false, message: e.message || "Error while updating project" };
   }
 }
