@@ -5,7 +5,7 @@ export default function AddMember({ onAdd }) {
     <div className="group relative">
       <button
         onClick={onAdd}
-        className="w-full bg-gray-700/50 rounded-xl p-3 sm:p-4 hover:bg-gray-700 transition-all duration-300 border border-gray-600 hover:border-gray-500"
+        className="w-full cursor-pointer bg-gray-700/50 rounded-xl p-3 sm:p-4 hover:bg-gray-700 transition-all duration-300 border border-gray-600 hover:border-gray-500"
       >
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="w-10 h-10 sm:w-12 sm:h-12 gradient-blue rounded-full flex items-center justify-center">
@@ -16,7 +16,7 @@ export default function AddMember({ onAdd }) {
               Add Member
             </h3>
             <p className="text-xs sm:text-sm text-gray-400">
-              Invite new team member
+              add new team member 
             </p>
           </div>
         </div>

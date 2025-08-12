@@ -115,10 +115,10 @@ export function ProjectContextProvider({ children }) {
     setProjects(project);
   }
 
-  async function handleAddMember(member) {
+  async function handleAddMember(memberID) {
     const updatedProject = {
       ...selectedProject,
-      team: [...selectedProject.team, member],
+      team: [...selectedProject.team, ...memberID],
     };
     const updatedProjects = [
       updatedProject,
@@ -127,12 +127,13 @@ export function ProjectContextProvider({ children }) {
     const resData = await updateRequest(updatedProject);
     setSelectedProject(resData);
     setProjects(updatedProjects);
+    return resData;
   }
 
   async function handleRemoveMember(id) {
     const updatedProject = {
       ...selectedProject,
-      team: [...selectedProject.team.filter((p) => p._id !== id)],
+      team: [...selectedProject.team.filter((mID) => mID !== id)],
     };
     const updatedProjects = [
       updatedProject,
