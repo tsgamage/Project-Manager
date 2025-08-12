@@ -71,7 +71,7 @@ export default function AddProjectPage() {
         <main className="max-w-7xl mx-auto p-4 sm:p-6">
           <Header />
 
-          <div className="glass rounded-2xl shadow-lg border border-gray-700 p-6 sm:p-8 lg:p-10">
+          <div className="glass rounded-2xl shadow-lg border border-gray-700 p-6 sm:p-8 ">
             <form action={formActionState} className="space-y-8 sm:space-y-10">
               {/* Basic Information Section */}
               <div className="space-y-6">
