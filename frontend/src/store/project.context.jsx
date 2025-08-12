@@ -3,6 +3,12 @@ import { createContext, useState } from "react";
 import AuthContext from "./auth.context";
 import { useContext } from "react";
 import { API_ENDPOINTS } from "../config/api.js";
+import {
+  addNewProject,
+  deleteProject,
+  getAllProjects,
+  getProjectById,
+} from "../services/project.api.js";
 
 const API_URL = API_ENDPOINTS.PROJECT;
 
@@ -61,51 +67,36 @@ export function ProjectContextProvider({ children }) {
     }
   }
 
+  // ---- Project feching function ----
   async function fetchProjects() {
-    try {
-      const response = await fetch(`${API_URL}/`, {
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        return new Response(JSON.stringify({ message: "Something went wrong" }), {
-          status: 500,
-        });
-      }
-      const resData = await response.json();
+    const resData = await getAllProjects();
+    if (resData.success) {
       setProjects(resData.data);
-      console.log("Projects fetched successfully", resData.data);
-    } catch (e) {
-      return new Response(JSON.stringify({ message: e.message }), {
-        status: 500,
-      });
     }
   }
   useEffect(() => {
     fetchProjects();
   }, [user]);
 
+  async function handleAddNewProject(projectData) {
+    const resData = await addNewProject(projectData);
+    if (resData.success) {
+      setProjects([resData.data, ...projects]);
+    }
+  }
+
+  async function handleDeleteProject() {
+    const resData = await deleteProject(selectedProjectID);
+    if (resData.success) {
+      setSelectedProject(EMPTY_PROJECT);
+      setProjects(projects.filter((p) => p._id !== selectedProjectID));
+    }
+  }
+
   async function handleSetSelectedProject(selectedProjectID) {
-    try {
-      const response = await fetch(`${API_URL}/${selectedProjectID}`, {
-        credentials: "include",
-      });
-
-      const resData = await response.json();
-
-      if (response.status === 401) {
-        return window.location.replace("/auth/login");
-      } else if (!response.ok) {
-        return { success: false, message: resData.message || "Failed to fetch project data" };
-      }
-
+    const resData = await getProjectById(selectedProjectID);
+    if (resData.success) {
       setSelectedProject(resData.data.projects);
-    } catch (e) {
-      console.error("Error fetching project data:", e);
-      return {
-        success: false,
-        message: e.message || "An error occurred while fetching project data",
-      };
     }
   }
   useEffect(() => {
@@ -114,12 +105,16 @@ export function ProjectContextProvider({ children }) {
     }
   }, [selectedProjectID]);
 
+  // handle project select
   function handleSelectedProjectID(projectID) {
     setSelectedProjectID(projectID);
   }
+
+  // this will expose the projects set function to consumer components
   function handleSetProjects(project) {
     setProjects(project);
   }
+
   async function handleAddMember(member) {
     const updatedProject = {
       ...selectedProject,
@@ -133,6 +128,7 @@ export function ProjectContextProvider({ children }) {
     setSelectedProject(resData);
     setProjects(updatedProjects);
   }
+
   async function handleRemoveMember(id) {
     const updatedProject = {
       ...selectedProject,
@@ -146,6 +142,7 @@ export function ProjectContextProvider({ children }) {
     setSelectedProject(resData);
     setProjects(updatedProjects);
   }
+
   async function handleAddTask(taskName) {
     const taskObj = {
       taskName,
@@ -163,6 +160,7 @@ export function ProjectContextProvider({ children }) {
     setSelectedProject(resData);
     setProjects(updatedProjects);
   }
+
   async function handleRemoveTask(id) {
     const updatedProject = {
       ...selectedProject,
@@ -176,6 +174,7 @@ export function ProjectContextProvider({ children }) {
     setSelectedProject(resData);
     setProjects(updatedProjects);
   }
+
   async function handleSelectTask(id) {
     let task = selectedProject.tasks.find((task) => task._id === id);
     task = {
@@ -196,46 +195,12 @@ export function ProjectContextProvider({ children }) {
     setSelectedProject(resData);
     setProjects(updatedProjects);
   }
+
   async function handleUpdateProject(projectData) {
     const response = await updateRequest(projectData);
     setSelectedProject(response);
     const updatedProjects = [response, ...projects.filter((p) => p._id !== selectedProject._id)];
     setProjects(updatedProjects);
-  }
-  async function handleAddNewProject(projectData) {
-    try {
-      const response = await fetch(`${API_URL}/new`, {
-        method: "POST",
-        body: JSON.stringify(projectData),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-      if (!response.ok) {
-        throw new Response(JSON.stringify({ message: "Something went wrong" }), {
-          status: 500,
-        });
-      }
-      const resData = await response.json();
-
-      setProjects([resData.data, ...projects]);
-    } catch (e) {
-      throw new Response(JSON.stringify({ message: e.message }), {
-        status: 500,
-      });
-    }
-  }
-  async function handleDeleteProject() {
-    const response = await fetch(`${API_URL}/${selectedProjectID}`, {
-      method: "DELETE",
-      credentials: "include",
-    });
-    if (!response.ok) {
-      throw new Error("Something went wrong");
-    }
-    setSelectedProject(EMPTY_PROJECT);
-    setProjects(projects.filter((p) => p._id !== selectedProjectID));
   }
 
   const ctxValue = {

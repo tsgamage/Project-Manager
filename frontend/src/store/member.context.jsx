@@ -38,7 +38,6 @@ export function MemberContextProvider({ children }) {
 
   async function handleFetchMembers() {
     const resData = await getAllMembers();
-    console.log("fetched members", resData.data);
     if (resData.success) {
       const updatedList = resData.data;
       updatedList.sort((a, b) => a.name.localeCompare(b.name));
