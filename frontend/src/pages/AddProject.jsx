@@ -2,8 +2,6 @@ import ProjectTitle from "../components/AddProject/ProjectTitle.jsx";
 import StartDate from "../components/AddProject/StartDate.jsx";
 import EndDate from "../components/AddProject/EndDate.jsx";
 import Description from "../components/AddProject/Description.jsx";
-import TeamMembers from "../components/AddProject/TeamMembers/TeamMembers.jsx";
-import ProjectTasks from "../components/AddProject/Tasks/ProjectTasks.jsx";
 import Header from "../components/AddProject/Header.jsx";
 import { useActionState, useContext, useState } from "react";
 import ProjectContext from "../store/project.context";
