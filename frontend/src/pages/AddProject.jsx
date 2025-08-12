@@ -10,9 +10,10 @@ import SuccessErrorModal from "../components/UI/Modals/SuccessErrorModal.jsx";
 import { useRef } from "react";
 
 export default function AddProjectPage() {
-  const modal = useRef();
-  const navigate = useNavigate();
   const { addNewProject } = useContext(ProjectContext);
+
+  const navigate = useNavigate();
+
   const [teamMembers, setTeamMembers] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [modalData, setModalData] = useState({
@@ -20,26 +21,30 @@ export default function AddProjectPage() {
     message: "Your project has been created successfully!",
   });
 
+  const modal = useRef();
+  const createdProjectID = useRef();
+
   async function AddProjectForm(preState, formData) {
     const formObj = Object.fromEntries(formData);
 
     const newProjectData = {
       ...formObj,
+      // eslint-disable-next-line no-unused-vars
       team: teamMembers.map(({ id, ...rest }) => rest),
+      // eslint-disable-next-line no-unused-vars
       tasks: tasks.map(({ id, ...rest }) => rest),
     };
 
-    try {
-      await addNewProject(newProjectData);
+    const response = await addNewProject(newProjectData);
+    createdProjectID.current = response.data._id;
+
+    if (response.success) {
       modal.current.open();
-      return;
-    } catch {
+    } else {
       setModalData({
         type: "error",
-        message: "Something Went Wrong!",
+        message: response.message,
       });
-      modal.current.open();
-      return;
     }
   }
 
@@ -54,13 +59,7 @@ export default function AddProjectPage() {
           setTasks([]);
           modal.current.close();
         }}
-        onGoHome={() => navigate("/")}
-        onStay={() => {
-          navigate("/project/new");
-          setTeamMembers([]);
-          setTasks([]);
-          modal.current.close();
-        }}
+        onClick={() => navigate(`/project/view/${createdProjectID.current}`)}
         type={modalData.type}
         message={modalData.message}
       />
