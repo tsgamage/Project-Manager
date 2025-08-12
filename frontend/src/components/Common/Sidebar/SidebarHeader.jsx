@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import PageLayoutContext from "../../../store/pageLayout.context";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { PanelRightClose, PanelRightOpen } from "lucide-react";
 
 export default function SidebarHeader() {
   const { isMobileSidebarOpen, toggleMobileSidebar, toggleSidebar, isDesktopSideBarCollapsed } =
@@ -13,30 +13,26 @@ export default function SidebarHeader() {
             <div className="w-8 h-8 gradient-blue rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">PM</span>
             </div>
-            <h2 className="text-lg font-semibold text-white">
-              Project Manager
-            </h2>
+            <h2 className="text-lg font-semibold text-white">Project Manager</h2>
           </div>
           <button
             onClick={toggleMobileSidebar}
             className="p-2 rounded-lg hover:bg-gray-700 transition-colors focus-ring"
           >
-            <ChevronLeft className="h-5 w-5 text-gray-300" />
+            <PanelRightOpen className="h-5 w-5 text-gray-300" />
           </button>
         </>
       ) : (
         <button
           onClick={toggleSidebar}
           className={`mx-auto hover:bg-gray-700 transition-colors flex items-center justify-center focus-ring ${
-            isDesktopSideBarCollapsed 
-              ? "w-10 h-10 rounded-xl" 
-              : "p-2 rounded-lg w-full"
+            isDesktopSideBarCollapsed ? "w-10 h-10 rounded-xl" : "p-2 rounded-lg w-full"
           }`}
         >
           {isDesktopSideBarCollapsed ? (
-            <ChevronRight className="h-4 w-4 text-gray-300" />
+            <PanelRightClose className="h-4 w-4 text-gray-300" />
           ) : (
-            <ChevronLeft className="h-4 w-4 text-gray-300" />
+            <PanelRightOpen className="h-4 w-4 text-gray-300" />
           )}
         </button>
       )}
