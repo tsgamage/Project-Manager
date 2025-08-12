@@ -104,7 +104,7 @@ const SelectedMemberTag = ({ member, onRemove }) => {
 
 export default forwardRef(function AddMemberToProject(props, ref) {
   const { fetchedMembers } = useContext(MemberContext);
-  const { addMember } = useContext(ProjectContext);
+  const { addMember, selectedProject } = useContext(ProjectContext);
 
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -160,8 +160,9 @@ export default forwardRef(function AddMemberToProject(props, ref) {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const selectedMembersIDs = selectedMembers.map((member) => member._id);
-    console.log(selectedMembersIDs);
+    let selectedMembersIDs = selectedMembers.map((member) => member._id);
+
+    selectedMembersIDs = selectedMembersIDs.filter((id) => !selectedProject.team.includes(id));
 
     const resData = await addMember(selectedMembersIDs);
 

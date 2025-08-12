@@ -89,11 +89,11 @@ export default function ProjectCard({ project }) {
                 return (
                   <div key={memberID}>
                     <div
-                      className={`_${memberID} ${member.color} w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-semibold border border-gray-800 shadow-md transition-transform duration-200 hover:scale-105`}
+                      className={`_${memberID}${_id} ${member.color} w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-semibold border border-gray-800 shadow-md transition-transform duration-200 hover:scale-105`}
                     >
                       {member.name.charAt(0)}
                     </div>
-                    <Tooltip anchorSelect={`._${memberID}`} place="bottom-end">
+                    <Tooltip anchorSelect={`._${memberID}${_id}`} place="bottom-end">
                       {member.name}
                     </Tooltip>
                   </div>
