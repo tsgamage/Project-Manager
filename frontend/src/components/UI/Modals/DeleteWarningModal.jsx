@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useState, useEffect } from "react";
+import { forwardRef, useImperativeHandle, useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { X, AlertTriangle, Trash2 } from "lucide-react";
 
@@ -20,10 +20,10 @@ export default forwardRef(function DeleteWarningModal(
     handleClose();
   };
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     onCancel?.();
     handleClose();
-  };
+  }, [onCancel]);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -49,27 +49,27 @@ export default forwardRef(function DeleteWarningModal(
   // Close modal on escape key
   useEffect(() => {
     const handleEscape = (e) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === "Escape" && isOpen) {
         handleCancel();
       }
     };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
     };
-  }, [isOpen]);
+  }, [isOpen, handleCancel]);
 
   if (!isOpen) return null;
 
   return createPortal(
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
+    <div
+      className="fixed inset-0 z-1000 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
       <div className="w-full max-w-sm sm:max-w-md mx-auto">
@@ -81,12 +81,8 @@ export default forwardRef(function DeleteWarningModal(
                 <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
               </div>
               <div>
-                <h3 className="text-lg sm:text-xl font-semibold text-white">
-                  {title}
-                </h3>
-                <p className="text-xs sm:text-sm text-gray-400">
-                  This action cannot be undone
-                </p>
+                <h3 className="text-lg sm:text-xl font-semibold text-white">{title}</h3>
+                <p className="text-xs sm:text-sm text-gray-400">This action cannot be undone</p>
               </div>
             </div>
             <button
@@ -109,9 +105,7 @@ export default forwardRef(function DeleteWarningModal(
 
             {/* Message */}
             <div className="text-center">
-              <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-                {message}
-              </p>
+              <p className="text-sm sm:text-base text-gray-300 leading-relaxed">{message}</p>
             </div>
 
             {/* Warning Box */}
@@ -119,9 +113,7 @@ export default forwardRef(function DeleteWarningModal(
               <div className="flex items-start gap-2 sm:gap-3">
                 <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 text-red-400 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-xs sm:text-sm text-red-300 font-medium mb-1">
-                    Warning
-                  </p>
+                  <p className="text-xs sm:text-sm text-red-300 font-medium mb-1">Warning</p>
                   <p className="text-xs sm:text-sm text-red-200">
                     This action will permanently delete the item and cannot be recovered.
                   </p>

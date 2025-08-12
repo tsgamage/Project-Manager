@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useState, useEffect } from "react";
+import { forwardRef, useImperativeHandle, useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { X, Edit3, Calendar, FileText, Save } from "lucide-react";
 
@@ -23,12 +23,17 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.title.trim() || !formData.startDate || !formData.endDate || !formData.description.trim()) {
+    if (
+      !formData.title.trim() ||
+      !formData.startDate ||
+      !formData.endDate ||
+      !formData.description.trim()
+    ) {
       return;
     }
 
@@ -43,7 +48,7 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
     }
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsOpen(false);
     setFormData({
       title: project.title || "",
@@ -52,7 +57,7 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
       description: project.description || "",
     });
     onClose();
-  };
+  }, [onClose, project]);
 
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -78,27 +83,27 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
   // Close modal on escape key
   useEffect(() => {
     const handleEscape = (e) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === "Escape" && isOpen) {
         handleClose();
       }
     };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
     };
-  }, [isOpen]);
+  }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
 
   return createPortal(
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
+    <div
+      className="fixed inset-0 z-1000 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
       <div className="w-full max-w-xs sm:max-w-md mx-auto max-h-[90vh] overflow-y-auto">
@@ -110,12 +115,8 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
                 <Edit3 className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-white" />
               </div>
               <div>
-                <h3 className="text-base sm:text-xl font-semibold text-white">
-                  Edit Project
-                </h3>
-                <p className="text-xs sm:text-sm text-gray-400">
-                  Update project details
-                </p>
+                <h3 className="text-base sm:text-xl font-semibold text-white">Edit Project</h3>
+                <p className="text-xs sm:text-sm text-gray-400">Update project details</p>
               </div>
             </div>
             <button
@@ -131,10 +132,7 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
           <form onSubmit={handleSubmit} className="p-3 sm:p-6 space-y-3 sm:space-y-6">
             {/* Project Title */}
             <div>
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium text-white mb-2"
-              >
+              <label htmlFor="title" className="block text-sm font-medium text-white mb-2">
                 Project Title*
               </label>
               <input
@@ -152,10 +150,7 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
             {/* Date Range */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label
-                  htmlFor="startDate"
-                  className="block text-sm font-medium text-white mb-2"
-                >
+                <label htmlFor="startDate" className="block text-sm font-medium text-white mb-2">
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
                     Start Date*
@@ -172,10 +167,7 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
                 />
               </div>
               <div>
-                <label
-                  htmlFor="endDate"
-                  className="block text-sm font-medium text-white mb-2"
-                >
+                <label htmlFor="endDate" className="block text-sm font-medium text-white mb-2">
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
                     End Date*
@@ -195,10 +187,7 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
 
             {/* Description */}
             <div>
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-white mb-2"
-              >
+              <label htmlFor="description" className="block text-sm font-medium text-white mb-2">
                 <div className="flex items-center gap-2">
                   <FileText className="h-4 w-4" />
                   Description*
@@ -228,7 +217,13 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
               </button>
               <button
                 type="submit"
-                disabled={isLoading || !formData.title.trim() || !formData.startDate || !formData.endDate || !formData.description.trim()}
+                disabled={
+                  isLoading ||
+                  !formData.title.trim() ||
+                  !formData.startDate ||
+                  !formData.endDate ||
+                  !formData.description.trim()
+                }
                 className="flex-1 px-3 sm:px-4 py-2 sm:py-3 gradient-blue hover:shadow-lg text-white rounded-lg sm:rounded-xl font-medium transition-all duration-300 hover-lift disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base flex items-center justify-center gap-2"
               >
                 {isLoading ? (

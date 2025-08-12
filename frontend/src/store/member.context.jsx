@@ -31,7 +31,7 @@ const MemberContext = createContext({
 
 export function MemberContextProvider({ children }) {
   const { user } = useContext(AuthContext);
-  const { projects, setProjects, updateProject } = useContext(ProjectContext);
+  const { projects, setProjects } = useContext(ProjectContext);
   const [fetchedMembers, setFetchedMembers] = useState([]);
   const [fetchedMemberCategories, setFetchMemberCategories] = useState([]);
 

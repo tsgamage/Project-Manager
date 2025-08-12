@@ -76,7 +76,7 @@ export default forwardRef(function SuccessErrorModal(
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-1000 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
       <div className="w-full max-w-xs sm:max-w-md mx-auto">
