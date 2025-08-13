@@ -4,7 +4,7 @@ import MemberContext from "../store/member.context.jsx";
 import TeamHeader from "../components/Team/TeamHeader.jsx";
 import TeamStats from "../components/Team/TeamStats.jsx";
 import TopActionButtons from "../components/Team/TopActionButtons.jsx";
-import GridMemberCard from "../components/Team/gridMemberCard.jsx";
+import GridMemberCard from "../components/Team/GridMemberCard.jsx";
 import NoMember from "../components/Team/NoMember.jsx";
 import ListMemberCard from "../components/Team/ListMemberCard.jsx";
 import MemberModal from "../components/UI/Modals/MemberModal.jsx";
