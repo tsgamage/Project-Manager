@@ -185,8 +185,6 @@ export function AuthContextProvider({ children }) {
 
       const data = await response.json();
 
-      console.log("Auth status response:", data);
-
       if (response.ok) {
         setUser(data.user);
         setIsAuthenticated(true);

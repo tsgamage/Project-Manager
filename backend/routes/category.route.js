@@ -18,7 +18,7 @@ const router = Router();
 router.use(verifyToken);
 
 router.get("/member", getMemberCategories);
-router.get("/tasks/:projectID", getTasksCategories);
+router.get("/tasks", getTasksCategories);
 
 router.post("/member/new", addMemberCategory);
 router.post("/tasks/new", addTaskCategory);

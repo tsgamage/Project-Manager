@@ -156,10 +156,6 @@ export default forwardRef(function AddMemberToProject(props, ref) {
     if (selectedMembers.length === 0) return;
 
     setIsLoading(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
     let selectedMembersIDs = selectedMembers.map((member) => member._id);
 
     selectedMembersIDs = selectedMembersIDs.filter((id) => !selectedProject.team.includes(id));

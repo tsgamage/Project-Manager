@@ -4,10 +4,9 @@ import getUserID from "../utils/getUserID.js";
 
 export async function getTasksCategories(req, res) {
   const userID = getUserID(req, res);
-  const { projectID } = req.params;
 
   try {
-    const categories = await TaskCategory.find({ userID, projectID });
+    const categories = await TaskCategory.find({ userID });
     res.status(200).json({ success: true, data: categories });
   } catch (err) {
     console.log("Error while getting categories: ", err);
