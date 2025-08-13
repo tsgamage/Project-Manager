@@ -89,6 +89,7 @@ export function ProjectContextProvider({ children }) {
     if (resData.success) {
       setProjects([resData.data, ...projects]);
     }
+    return resData;
   }
 
   async function handleDeleteProject() {
@@ -97,6 +98,7 @@ export function ProjectContextProvider({ children }) {
       setSelectedProject(EMPTY_PROJECT);
       setProjects(projects.filter((p) => p._id !== selectedProjectID));
     }
+    return resData;
   }
 
   async function handleSetSelectedProject(selectedProjectID) {
