@@ -2,7 +2,7 @@ import { useContext, useRef } from "react";
 import { Target, CheckCircle, Clock, TrendingUp, Grid2x2Plus } from "lucide-react";
 import { Tooltip } from "react-tooltip";
 import ProjectContext from "../../../store/project.context.jsx";
-import TasksCategoryModal from "../../UI/Modals/tasksCategoryModal.jsx";
+import TasksCategoryModal from "../../UI/Modals/TasksCategoryModal.jsx";
 import CategoryAccordion from "../../Tasks/CategoryAccordion.jsx";
 
 export default function ProjectTasks({ tasks }) {

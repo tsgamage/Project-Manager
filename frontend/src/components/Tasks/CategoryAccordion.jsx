@@ -3,7 +3,7 @@ import { toast } from "react-hot-toast";
 import { useContext, useRef, useState } from "react";
 import ProjectContext from "../../store/project.context.jsx";
 import TaskItem from "./TaskItem.jsx";
-import TasksCategoryModal from "../UI/Modals/tasksCategoryModal.jsx";
+import TasksCategoryModal from "../UI/Modals/TasksCategoryModal.jsx";
 import DeleteWarningModal from "../UI/Modals/DeleteWarningModal.jsx";
 
 export default function CategoryAccordion({
