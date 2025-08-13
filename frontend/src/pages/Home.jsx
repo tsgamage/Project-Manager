@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ProjectContext from "../store/project.context.jsx";
 import AuthContext from "../store/auth.context.jsx";
@@ -17,7 +17,7 @@ import {
   Activity,
   Star,
   Zap,
-  Home
+  Home,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -39,45 +39,46 @@ export default function HomePage() {
   const [recentProjects, setRecentProjects] = useState([]);
   const [upcomingDeadlines, setUpcomingDeadlines] = useState([]);
 
-  useEffect(() => {
-    calculateStats();
-    updateRecentProjects();
-    updateUpcomingDeadlines();
-  }, [projects]);
-
-  function calculateStats() {
+  const calculateStats = useCallback(() => {
     const totalProjects = projects.length;
-    const completedProjects = projects.filter(project =>
-      project.tasks.length > 0 && project.tasks.every(task => task.completed)
+    const completedProjects = projects.filter(
+      (project) => project.tasks.length > 0 && project.tasks.every((task) => task.completed)
     ).length;
-    const notStartedProjects = projects.filter(project =>
-      project.tasks.every(task => task.completed === false)
+    const notStartedProjects = projects.filter((project) =>
+      project.tasks.every((task) => task.completed === false)
     ).length;
     const inProgressProjects = totalProjects - completedProjects - notStartedProjects;
 
-    const overdueProjects = projects.filter(project => {
+    const overdueProjects = projects.filter((project) => {
       if (!project.endDate) return false;
-      return new Date(project.endDate) < new Date() &&
-        !(project.tasks.length > 0 && project.tasks.every(task => task.completed));
+      return (
+        new Date(project.endDate) < new Date() &&
+        !(project.tasks.length > 0 && project.tasks.every((task) => task.completed))
+      );
     }).length;
 
     const totalTasks = projects.reduce((sum, project) => sum + project.tasks.length, 0);
-    const completedTasks = projects.reduce((sum, project) =>
-      sum + project.tasks.filter(task => task.completed).length, 0
+    const completedTasks = projects.reduce(
+      (sum, project) => sum + project.tasks.filter((task) => task.completed).length,
+      0
     );
 
     // Get unique team members
     const allMembers = new Set();
-    projects.forEach(project => {
-      project.team.forEach(member => allMembers.add(member._id));
+    projects.forEach((project) => {
+      project.team.forEach((member) => allMembers.add(member._id));
     });
 
     // Calculate productivity score (0-100)
     const productivityScore = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
     // Calculate average completion time (simplified)
-    const completedProjectsWithDates = projects.filter(project =>
-      project.tasks.length > 0 && project.tasks.every(task => task.completed) && project.startDate && project.endDate
+    const completedProjectsWithDates = projects.filter(
+      (project) =>
+        project.tasks.length > 0 &&
+        project.tasks.every((task) => task.completed) &&
+        project.startDate &&
+        project.endDate
     );
 
     let averageDays = 0;
@@ -102,36 +103,45 @@ export default function HomePage() {
       productivityScore,
       averageCompletionTime: averageDays,
     });
-  }
+  }, [projects]);
 
-  function updateRecentProjects() {
+  const updateRecentProjects = useCallback(() => {
     const recent = [...projects]
       .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
       .slice(0, 6);
     setRecentProjects(recent);
-  }
+  }, [projects]);
 
-  function updateUpcomingDeadlines() {
+  const updateUpcomingDeadlines = useCallback(() => {
     const upcoming = projects
-      .filter(project => {
+      .filter((project) => {
         if (!project.endDate) return false;
         const deadline = new Date(project.endDate);
         const today = new Date();
         const diffDays = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
-        return diffDays >= 0 && diffDays <= 7 &&
-          !(project.tasks.length > 0 && project.tasks.every(task => task.completed));
+        return (
+          diffDays >= 0 &&
+          diffDays <= 7 &&
+          !(project.tasks.length > 0 && project.tasks.every((task) => task.completed))
+        );
       })
       .sort((a, b) => new Date(a.endDate) - new Date(b.endDate))
       .slice(0, 5);
     setUpcomingDeadlines(upcoming);
-  }
+  }, [projects]);
+
+  useEffect(() => {
+    calculateStats();
+    updateRecentProjects();
+    updateUpcomingDeadlines();
+  }, [projects, user, calculateStats, updateRecentProjects, updateUpcomingDeadlines]);
 
   function getProjectStatus(project) {
     if (project.tasks.length === 0) return "Not Started";
-    if (project.tasks.every(task => task.completed)) return "Completed";
+    if (project.tasks.every((task) => task.completed)) return "Completed";
 
     const totalTasks = project.tasks.length;
-    const completedTasks = project.tasks.filter(task => task.completed).length;
+    const completedTasks = project.tasks.filter((task) => task.completed).length;
 
     if (completedTasks === 0) return "Not Started";
     if (completedTasks < totalTasks) return "In Progress";
@@ -153,7 +163,7 @@ export default function HomePage() {
 
   function getProgressPercentage(project) {
     if (project.tasks.length === 0) return 0;
-    const completedTasks = project.tasks.filter(task => task.completed).length;
+    const completedTasks = project.tasks.filter((task) => task.completed).length;
     return Math.round((completedTasks / project.tasks.length) * 100);
   }
 
@@ -203,9 +213,7 @@ export default function HomePage() {
               </div>
               <TrendingUp className="h-5 w-5 text-green-400" />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-1">
-              {stats.totalProjects}
-            </h3>
+            <h3 className="text-2xl font-bold text-white mb-1">{stats.totalProjects}</h3>
             <p className="text-gray-400 text-sm">Total Projects</p>
           </div>
 
@@ -216,13 +224,15 @@ export default function HomePage() {
               </div>
               <div className="text-right">
                 <span className="text-xs text-green-400 font-medium">
-                  +{stats.completedProjects > 0 ? Math.round((stats.completedProjects / stats.totalProjects) * 100) : 0}%
+                  +
+                  {stats.completedProjects > 0
+                    ? Math.round((stats.completedProjects / stats.totalProjects) * 100)
+                    : 0}
+                  %
                 </span>
               </div>
             </div>
-            <h3 className="text-2xl font-bold text-white mb-1">
-              {stats.completedProjects}
-            </h3>
+            <h3 className="text-2xl font-bold text-white mb-1">{stats.completedProjects}</h3>
             <p className="text-gray-400 text-sm">Completed</p>
           </div>
 
@@ -232,14 +242,10 @@ export default function HomePage() {
                 <Clock className="h-6 w-6 text-white" />
               </div>
               <div className="text-right">
-                <span className="text-xs text-yellow-400 font-medium">
-                  Active
-                </span>
+                <span className="text-xs text-yellow-400 font-medium">Active</span>
               </div>
             </div>
-            <h3 className="text-2xl font-bold text-white mb-1">
-              {stats.inProgressProjects}
-            </h3>
+            <h3 className="text-2xl font-bold text-white mb-1">{stats.inProgressProjects}</h3>
             <p className="text-gray-400 text-sm">In Progress</p>
           </div>
 
@@ -249,14 +255,10 @@ export default function HomePage() {
                 <Users className="h-6 w-6 text-white" />
               </div>
               <div className="text-right">
-                <span className="text-xs text-purple-400 font-medium">
-                  Team
-                </span>
+                <span className="text-xs text-purple-400 font-medium">Team</span>
               </div>
             </div>
-            <h3 className="text-2xl font-bold text-white mb-1">
-              {stats.totalTeamMembers}
-            </h3>
+            <h3 className="text-2xl font-bold text-white mb-1">{stats.totalTeamMembers}</h3>
             <p className="text-gray-400 text-sm">Team Members</p>
           </div>
         </div>
@@ -269,15 +271,15 @@ export default function HomePage() {
               <h3 className="font-semibold text-white">Task Completion</h3>
             </div>
             <div className="flex items-end gap-2">
-              <span className="text-3xl font-bold text-white">
-                {stats.completedTasks}
-              </span>
+              <span className="text-3xl font-bold text-white">{stats.completedTasks}</span>
               <span className="text-blue-400 mb-1">/ {stats.totalTasks}</span>
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2 mt-3">
               <div
                 className="gradient-blue h-2 rounded-full transition-all duration-500"
-                style={{ width: `${stats.totalTasks > 0 ? (stats.completedTasks / stats.totalTasks) * 100 : 0}%` }}
+                style={{
+                  width: `${stats.totalTasks > 0 ? (stats.completedTasks / stats.totalTasks) * 100 : 0}%`,
+                }}
               ></div>
             </div>
           </div>
@@ -288,15 +290,13 @@ export default function HomePage() {
               <h3 className="font-semibold text-white">Productivity</h3>
             </div>
             <div className="flex items-end gap-2">
-              <span className="text-3xl font-bold text-white">
-                {stats.productivityScore}%
-              </span>
+              <span className="text-3xl font-bold text-white">{stats.productivityScore}%</span>
             </div>
             <div className="flex items-center gap-1 mt-2">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className={`h-4 w-4 ${i < Math.floor(stats.productivityScore / 20) ? 'text-yellow-400 fill-current' : 'text-gray-600'}`}
+                  className={`h-4 w-4 ${i < Math.floor(stats.productivityScore / 20) ? "text-yellow-400 fill-current" : "text-gray-600"}`}
                 />
               ))}
             </div>
@@ -308,9 +308,7 @@ export default function HomePage() {
               <h3 className="font-semibold text-white">Avg. Completion</h3>
             </div>
             <div className="flex items-end gap-2">
-              <span className="text-3xl font-bold text-white">
-                {stats.averageCompletionTime}
-              </span>
+              <span className="text-3xl font-bold text-white">{stats.averageCompletionTime}</span>
               <span className="text-purple-400 mb-1">days</span>
             </div>
             <p className="text-sm text-purple-400 mt-1">Per project</p>
@@ -324,11 +322,9 @@ export default function HomePage() {
             <div className="glass rounded-2xl shadow-lg border border-gray-700">
               <div className="p-6 border-b border-gray-700">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-semibold text-white">
-                    Recent Projects
-                  </h2>
+                  <h2 className="text-xl font-semibold text-white">Recent Projects</h2>
                   <Link
-                    to="/projects"
+                    to="/project/all"
                     className="text-blue-400 hover:text-blue-300 text-sm font-medium flex items-center gap-1 transition-colors"
                   >
                     View All
@@ -344,7 +340,7 @@ export default function HomePage() {
                     </div>
                     <p className="text-gray-400 mb-4">No projects yet</p>
                     <Link
-                      to="/add-project"
+                      to="/project/new"
                       className="inline-flex items-center gap-2 gradient-blue hover:shadow-lg text-white px-4 py-2 rounded-xl transition-all duration-300 hover-lift"
                     >
                       <Plus className="h-4 w-4" />
@@ -354,42 +350,46 @@ export default function HomePage() {
                 ) : (
                   <div className="space-y-4">
                     {recentProjects.map((project) => (
-                      <div key={project._id} className="group hover:bg-gray-700/50 rounded-xl p-4 transition-all duration-200">
-                        <div className="flex items-center justify-between mb-3">
-                          <h3 className="font-semibold text-white group-hover:text-blue-300 transition-colors">
-                            {project.title}
-                          </h3>
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(getProjectStatus(project))}`}>
-                            {getProjectStatus(project)}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-400 mb-3 line-clamp-2">
-                          {project.description || "No description available"}
-                        </p>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4 text-xs text-gray-500">
-                            <span className="flex items-center gap-1">
-                              <Users className="h-3 w-3" />
-                              {project.team.length} members
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Target className="h-3 w-3" />
-                              {project.tasks.length} tasks
+                      <Link key={project._id} to={`/project/view/${project._id}`}>
+                        <div className="group hover:bg-gray-700/50 rounded-xl p-4 transition-all duration-200">
+                          <div className="flex items-center justify-between mb-3">
+                            <h3 className="font-semibold text-white group-hover:text-blue-300 transition-colors">
+                              {project.title}
+                            </h3>
+                            <span
+                              className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(getProjectStatus(project))}`}
+                            >
+                              {getProjectStatus(project)}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <div className="w-16 bg-gray-700 rounded-full h-2">
-                              <div
-                                className="gradient-blue h-2 rounded-full transition-all duration-300"
-                                style={{ width: `${getProgressPercentage(project)}%` }}
-                              ></div>
+                          <p className="text-sm text-gray-400 mb-3 line-clamp-2">
+                            {project.description || "No description available"}
+                          </p>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4 text-xs text-gray-500">
+                              <span className="flex items-center gap-1">
+                                <Users className="h-3 w-3" />
+                                {project.team.length} members
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Target className="h-3 w-3" />
+                                {project.tasks.length} tasks
+                              </span>
                             </div>
-                            <span className="text-xs font-medium text-gray-400">
-                              {getProgressPercentage(project)}%
-                            </span>
+                            <div className="flex items-center gap-2">
+                              <div className="w-16 bg-gray-700 rounded-full h-2">
+                                <div
+                                  className="gradient-blue h-2 rounded-full transition-all duration-300"
+                                  style={{ width: `${getProgressPercentage(project)}%` }}
+                                ></div>
+                              </div>
+                              <span className="text-xs font-medium text-gray-400">
+                                {getProgressPercentage(project)}%
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 )}
@@ -401,12 +401,10 @@ export default function HomePage() {
           <div className="space-y-6">
             {/* Quick Actions */}
             <div className="glass rounded-2xl shadow-lg border border-gray-700 p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">
-                Quick Actions
-              </h3>
+              <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
               <div className="space-y-3">
                 <Link
-                  to="/add-project"
+                  to="/project/new"
                   className="flex items-center gap-3 p-3 bg-blue-500/10 hover:bg-blue-500/20 rounded-xl transition-colors group"
                 >
                   <div className="w-10 h-10 gradient-blue rounded-lg flex items-center justify-center group-hover:shadow-lg transition-all duration-300">
@@ -419,7 +417,7 @@ export default function HomePage() {
                 </Link>
 
                 <Link
-                  to="/teams"
+                  to="/team/members"
                   className="flex items-center gap-3 p-3 bg-green-500/10 hover:bg-green-500/20 rounded-xl transition-colors group"
                 >
                   <div className="w-10 h-10 gradient-green rounded-lg flex items-center justify-center group-hover:shadow-lg transition-all duration-300">
@@ -435,9 +433,7 @@ export default function HomePage() {
 
             {/* Upcoming Deadlines */}
             <div className="glass rounded-2xl shadow-lg border border-gray-700 p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">
-                Upcoming Deadlines
-              </h3>
+              <h3 className="text-lg font-semibold text-white mb-4">Upcoming Deadlines</h3>
               {upcomingDeadlines.length === 0 ? (
                 <p className="text-sm text-gray-400">No upcoming deadlines</p>
               ) : (
@@ -445,21 +441,27 @@ export default function HomePage() {
                   {upcomingDeadlines.map((project) => {
                     const daysLeft = getDaysUntilDeadline(project.endDate);
                     return (
-                      <div key={project._id} className="flex items-center justify-between p-3 bg-red-500/10 rounded-xl">
+                      <div
+                        key={project._id}
+                        className="flex items-center justify-between p-3 bg-red-500/10 rounded-xl"
+                      >
                         <div>
-                          <p className="font-medium text-white text-sm">
-                            {project.title}
-                          </p>
+                          <p className="font-medium text-white text-sm">{project.title}</p>
                           <p className="text-xs text-gray-400">
                             Due {new Date(project.endDate).toLocaleDateString()}
                           </p>
                         </div>
                         <div className="text-right">
-                          <span className={`text-sm font-bold ${daysLeft === 0 ? 'text-red-400' :
-                              daysLeft <= 2 ? 'text-orange-400' :
-                                'text-yellow-400'
-                            }`}>
-                            {daysLeft === 0 ? 'Today' : `${daysLeft}d left`}
+                          <span
+                            className={`text-sm font-bold ${
+                              daysLeft === 0
+                                ? "text-red-400"
+                                : daysLeft <= 2
+                                  ? "text-orange-400"
+                                  : "text-yellow-400"
+                            }`}
+                          >
+                            {daysLeft === 0 ? "Today" : `${daysLeft}d left`}
                           </span>
                         </div>
                       </div>
@@ -471,9 +473,7 @@ export default function HomePage() {
 
             {/* Project Status Overview */}
             <div className="glass rounded-2xl shadow-lg border border-gray-700 p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">
-                Project Status
-              </h3>
+              <h3 className="text-lg font-semibold text-white mb-4">Project Status</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-400">Completed</span>
