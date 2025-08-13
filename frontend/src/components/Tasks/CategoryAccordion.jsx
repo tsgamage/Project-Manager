@@ -6,7 +6,13 @@ import TaskItem from "./TaskItem.jsx";
 import TasksCategoryModal from "../UI/Modals/tasksCategoryModal.jsx";
 import DeleteWarningModal from "../UI/Modals/DeleteWarningModal.jsx";
 
-export default function CategoryAccordion({ category, tasks, projectTitle }) {
+export default function CategoryAccordion({
+  category,
+  tasks,
+  projectTitle,
+  closedAccodion,
+  onClick,
+}) {
   const {
     addTask,
     toggleSelectTask,
@@ -16,7 +22,7 @@ export default function CategoryAccordion({ category, tasks, projectTitle }) {
     deleteTaskCategory,
   } = useContext(ProjectContext);
 
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(!closedAccodion);
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [editedName, setEditedName] = useState("");
   const [editedDescription, setEditedDescription] = useState("");
@@ -78,7 +84,10 @@ export default function CategoryAccordion({ category, tasks, projectTitle }) {
         onCancel={() => categoryDeleteModal.current.close()}
       />
 
-      <div className="glass rounded-2xl shadow-lg border border-gray-700 overflow-hidden mb-4">
+      <div
+        onClick={onClick}
+        className="glass rounded-2xl shadow-lg border border-gray-700 overflow-hidden mb-4"
+      >
         <div
           onClick={() => {
             setIsExpanded((preValue) => !preValue);
