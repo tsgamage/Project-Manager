@@ -1,110 +1,44 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import CategoryAccordion from "../components/Tasks/CategoryAccordion";
 import { CheckCircle, Clock, Search, X, List, Target } from "lucide-react";
-
-// --- FAKE DATA ---
-const fakeProjects = [
-  { _id: "proj1", title: "Project Phoenix" },
-  { _id: "proj2", title: "Project Neptune" },
-];
-
-const fakeTaskCategories = [
-  { _id: "cat1", projectId: "proj1", name: "Frontend Development", color: "#3b82f6" },
-  { _id: "cat2", projectId: "proj1", name: "Backend API", color: "#10b981" },
-  { _id: "cat3", projectId: "proj2", name: "UI/UX Design", color: "#8b5cf6" },
-  { _id: "cat4", projectId: "proj2", name: "DevOps", color: "#f97316" },
-];
-
-const fakeTasks = [
-  {
-    _id: "task1",
-    categoryId: "cat1",
-    taskName: "Implement User Authentication",
-    taskDescription: "Set up login, signup, and password reset pages.",
-    completed: true,
-  },
-  {
-    _id: "task2",
-    categoryId: "cat1",
-    taskName: "Build Task List UI",
-    taskDescription: "Create the main tasks page with categories and tasks.",
-    completed: false,
-  },
-  {
-    _id: "task3",
-    categoryId: "cat2",
-    taskName: "Create Project Endpoints",
-    taskDescription: "Develop API endpoints for CRUD operations on projects.",
-    completed: true,
-  },
-  {
-    _id: "task4",
-    categoryId: "cat2",
-    taskName: "Set up Task Model",
-    taskDescription: "Define the Mongoose schema for tasks and categories.",
-    completed: true,
-  },
-  {
-    _id: "task5",
-    categoryId: "cat3",
-    taskName: "Design Landing Page",
-    taskDescription: "Create mockups and wireframes for the landing page.",
-    completed: false,
-  },
-  {
-    _id: "task6",
-    categoryId: "cat3",
-    taskName: "Prototype Dashboard",
-    taskDescription: "Build an interactive prototype for the main dashboard.",
-    completed: false,
-  },
-  {
-    _id: "task7",
-    categoryId: "cat4",
-    taskName: "Configure CI/CD Pipeline",
-    taskDescription: "Use GitHub Actions to automate testing and deployment.",
-    completed: false,
-  },
-];
-
-// --- COMPONENTS ---
+import ProjectContext from "../store/project.context";
 
 export default function TasksPage() {
-  const [projects] = useState(fakeProjects);
-  const [taskCategories] = useState(fakeTaskCategories);
-  const [tasks, setTasks] = useState(fakeTasks);
+  const { projects, tasksCategories, setSelectedProjectID } = useContext(ProjectContext);
 
+  const [tasks, setTasks] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterProject, setFilterProject] = useState("all");
 
-  const handleTaskAction = (action, categoryId, payload) => {
-    setTasks((currentTasks) => {
-      if (action === "toggle") {
-        return currentTasks.map((t) =>
-          t._id === payload.taskId ? { ...t, completed: !t.completed } : t
-        );
-      }
-      if (action === "delete") {
-        return currentTasks.filter((t) => t._id !== payload.taskId);
-      }
-      if (action === "save") {
-        return currentTasks.map((t) =>
-          t._id === payload.taskId
-            ? { ...t, taskName: payload.name, taskDescription: payload.description }
-            : t
-        );
-      }
-      return currentTasks;
-    });
-  };
+  useEffect(() => {
+    const allTasks = [];
+    projects?.forEach((pro) => pro.tasks.forEach((task) => allTasks.push(task)));
+    setTasks(allTasks);
+  }, [projects]);
 
   // Filtering logic
-  const filteredCategories = taskCategories.filter((category) => {
-    const project = projects.find((p) => p._id === category.projectId);
-    const categoryTasks = tasks.filter((t) => t.categoryId === category._id);
+  const filteredCategories = tasksCategories.filter((category) => {
+    const project = projects.find((p) => p._id === category.projectID);
+    const categoryTasks = tasks.filter((t) => t.taskCategory === category._id);
 
-    if (filterProject !== "all" && category.projectId !== filterProject) {
+    if (filterProject !== "all" && category.projectID !== filterProject) {
       return false;
+    }
+
+    // If there are no tasks in this category, still show the category
+    if (categoryTasks.length === 0) {
+      if (searchQuery) {
+        const searchLower = searchQuery.toLowerCase();
+        // Show if project title or category name matches search
+        if (
+          (project && project.title.toLowerCase().includes(searchLower)) ||
+          (category.categoryName && category.categoryName.toLowerCase().includes(searchLower))
+        ) {
+          return true;
+        }
+        return false;
+      }
+      return true;
     }
 
     const tasksToConsider = categoryTasks.filter((task) => {
@@ -119,6 +53,7 @@ export default function TasksPage() {
       return true;
     });
 
+    // Show the category if it has any matching tasks, or if it has no tasks (handled above)
     return tasksToConsider.length > 0;
   });
 
@@ -126,7 +61,7 @@ export default function TasksPage() {
     total: tasks.length,
     completed: tasks.filter((task) => task.completed).length,
     pending: tasks.filter((task) => !task.completed).length,
-    categories: taskCategories.length,
+    categories: tasksCategories.length,
   };
 
   return (
@@ -224,9 +159,10 @@ export default function TasksPage() {
             <CategoryAccordion
               key={category._id}
               category={category}
-              tasks={tasks.filter((t) => t.categoryId === category._id)}
-              projectTitle={projects.find((p) => p._id === category.projectId)?.title}
-              onTaskAction={handleTaskAction}
+              tasks={tasks.filter((t) => t.taskCategory === category._id)}
+              projectTitle={projects.find((p) => p._id === category.projectID)?.title}
+              onClick={() => setSelectedProjectID(category.projectID)}
+              closedAccodion
             />
           ))}
         </div>

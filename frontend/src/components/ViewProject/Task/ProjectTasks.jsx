@@ -52,13 +52,13 @@ export default function ProjectTasks({ tasks }) {
           </div>
 
           {/* Add Category */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-end gap-2">
             <button
               onClick={() => taskCategoryModal.current.open()}
-              className="_add-category cursor-pointer border-1 border-transparent hover:border-1 hover:border-stone-500 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all duration-300"
+              className="_add-category cursor-pointer border-1 border-stone-500 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all duration-300"
             >
               <Grid2x2Plus className="h-4 w-4 text-stone-300" />
-              <span className="hidden lg:inline text-stone-300">Add a Category</span>
+              <span className="inline text-stone-300">Add a Category</span>
             </button>
             <Tooltip anchorSelect="._add-category">Add Category</Tooltip>
           </div>
