@@ -64,7 +64,7 @@ export default function Footer() {
         {/* Copyright and Links */}
         <div className="mt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-xs text-gray-400 mb-2 md:mb-0">
-            © {new Date().getFullYear()} Princess Software Solutions. All rights reserved.
+            © {new Date().getFullYear()} Crownix Technologies. All rights reserved.
           </p>
 
           <div className="flex space-x-4">

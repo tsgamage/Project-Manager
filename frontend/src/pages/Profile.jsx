@@ -1,32 +1,37 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../store/auth.context.jsx";
 import ProjectContext from "../store/project.context.jsx";
-import UserContext from "../store/user.context.jsx";
-import { toast } from "react-hot-toast";
 import {
   User,
   Mail,
   Calendar,
   CheckCircle,
   Clock,
-  Edit3,
   ArrowLeft,
   Briefcase,
   CheckSquare,
-  Square,
   TrendingUp,
   Target,
   Shield,
+  UserRound,
+  LogOut,
 } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function Profile() {
-  const { user, checkAuthStatus } = useContext(AuthContext);
-  const { projects } = useContext(ProjectContext);
-  const { updateName } = useContext(UserContext);
+  const { user, logout } = useContext(AuthContext);
+  const { projects, setProjects, setMembers, setMemberCategories } = useContext(ProjectContext);
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedName, setEditedName] = useState(user?.name || "User");
+  function handleLogout() {
+    logout();
+    toast.success("Logged out successfully");
+    setProjects([]);
+    setMembers([]);
+    setMemberCategories([]);
+    sessionStorage.clear();
+    window.location.reload();
+  }
 
   // Calculate account age
   const createdAtIndays =
@@ -53,16 +58,12 @@ export default function Profile() {
     const completedTasks = project.tasks.filter((task) => task.completed).length;
     return totalTasks > 0 && completedTasks > 0 && completedTasks < totalTasks;
   }).length;
-  const notStartedProjects = projects.filter(
-    (project) => project.tasks.length === 0 || project.tasks.every((task) => !task.completed)
-  ).length;
 
   // Calculate achievements
-  const totalTasks = projects.reduce((sum, project) => sum + project.tasks.length, 0);
-  const completedTasks = projects.reduce((sum, project) => 
-    sum + project.tasks.filter(task => task.completed).length, 0
+  const completedTasks = projects.reduce(
+    (sum, project) => sum + project.tasks.filter((task) => task.completed).length,
+    0
   );
-  const productivityScore = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   // Format last login time
   const formatLastLogin = (lastLogin) => {
@@ -75,30 +76,6 @@ export default function Profile() {
     if (diffInHours < 24) return `${diffInHours} hours ago`;
     if (diffInHours < 48) return "Yesterday";
     return loginTime.toLocaleDateString();
-  };
-
-  const handleSaveName = async () => {
-    if (editedName.trim().length < 3 || editedName.trim().length > 40) {
-      return toast.error("Invalid Name");
-    }
-
-    if (editedName && !/^[a-zA-Z\s]+$/.test(editedName)) {
-      return toast.error("Name can only contain letters and spaces");
-    }
-
-    const response = await updateName(editedName);
-    if (response.success) {
-      toast.success(response.message);
-    } else {
-      toast.error(response.message);
-    }
-    checkAuthStatus();
-    setIsEditing(false);
-  };
-
-  const handleCancelEdit = () => {
-    setEditedName(user?.name || "User");
-    setIsEditing(false);
   };
 
   if (!user) {
@@ -116,29 +93,36 @@ export default function Profile() {
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto p-4 sm:p-6">
         {/* Header */}
+
         <div className="mb-6 sm:mb-8 fade-in">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-3 sm:gap-4">
-              <Link
-                to="/"
-                className="p-2 rounded-xl hover:bg-gray-700 transition-colors"
-              >
+              <Link to="/" className="p-2 rounded-xl hover:bg-gray-700 transition-colors">
                 <ArrowLeft className="h-5 w-5 text-gray-400" />
               </Link>
+              <div className="w-10 h-10 gradient-blue rounded-xl flex items-center justify-center">
+                <UserRound className="h-5 w-5 text-white" />
+              </div>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">Profile</h1>
                 <p className="text-sm sm:text-base text-gray-400">Manage your account</p>
               </div>
+
+              <button
+                onClick={handleLogout}
+                className="max-sm:flex hidden cursor-pointer  items-center gap-2 px-4 py-2 rounded-lg text-white font-semibold shadow-lg border border-red-500/50 bg-red-900/40 hover:bg-red-900/50 transition-all duration-300 hover-lift"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="glass rounded-xl p-3 shadow-lg border border-gray-700">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-xs sm:text-sm font-medium text-white">
-                    {productivityScore}% Productive
-                  </span>
-                </div>
-              </div>
+            <div className=" hidden sm:flex items-center justify-end gap-3">
+              <button
+                onClick={handleLogout}
+                className="cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg text-white font-semibold shadow-lg border border-red-500/50 bg-red-900/40 hover:bg-red-900/50 transition-all duration-300 hover-lift"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:block">Log Out</span>
+              </button>
             </div>
           </div>
         </div>
@@ -176,44 +160,11 @@ export default function Profile() {
               {/* User Info */}
               <div className="text-center w-full">
                 <div className="mb-4">
-                  {isEditing ? (
-                    <div className="flex flex-col items-center gap-3">
-                      <input
-                        type="text"
-                        value={editedName}
-                        onChange={(e) => setEditedName(e.target.value)}
-                        className="text-xl sm:text-2xl lg:text-3xl font-bold bg-transparent border-b-2 border-blue-500 focus:outline-none text-white text-center min-w-0 px-2 py-1"
-                        autoFocus
-                      />
-                      <div className="flex gap-2 sm:gap-3">
-                        <button
-                          onClick={handleSaveName}
-                          className="px-3 sm:px-4 py-2 gradient-green hover:shadow-lg text-white font-medium rounded-xl transition-all duration-300 hover-lift text-sm sm:text-base"
-                          disabled={editedName.trim() === user.name}
-                        >
-                          Save
-                        </button>
-                        <button
-                          onClick={handleCancelEdit}
-                          className="px-3 sm:px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white font-medium rounded-xl transition-all duration-300 text-sm sm:text-base"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center gap-3">
-                      <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
-                        {user.name}
-                      </h2>
-                      <button
-                        onClick={() => setIsEditing(true)}
-                        className="p-2 bg-gray-700 hover:bg-gray-600 rounded-xl transition-all duration-300 hover-lift"
-                      >
-                        <Edit3 className="h-4 w-4 sm:h-5 sm:w-5 text-gray-300" />
-                      </button>
-                    </div>
-                  )}
+                  <div className="flex flex-col items-center gap-3">
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
+                      {user.name}
+                    </h2>
+                  </div>
                 </div>
 
                 <div className="space-y-2 text-gray-300 text-sm sm:text-base">
@@ -255,7 +206,11 @@ export default function Profile() {
               </div>
               <div className="text-right">
                 <span className="text-xs text-green-400 font-medium">
-                  +{completedProjects > 0 ? Math.round((completedProjects / totalProjects) * 100) : 0}%
+                  +
+                  {completedProjects > 0
+                    ? Math.round((completedProjects / totalProjects) * 100)
+                    : 0}
+                  %
                 </span>
               </div>
             </div>
@@ -306,7 +261,9 @@ export default function Profile() {
               </div>
               <div className="flex justify-between items-center py-2 sm:py-3 border-b border-gray-700">
                 <span className="text-sm sm:text-base text-gray-400">Email status</span>
-                <span className={`font-medium text-sm sm:text-base ${user.isVerified ? "text-green-400" : "text-red-400"}`}>
+                <span
+                  className={`font-medium text-sm sm:text-base ${user.isVerified ? "text-green-400" : "text-red-400"}`}
+                >
                   {user.isVerified ? "Verified" : "Not verified"}
                 </span>
               </div>

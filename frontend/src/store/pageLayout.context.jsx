@@ -2,22 +2,17 @@ import { createContext, useEffect, useState } from "react";
 
 const PageLayoutContext = createContext({
   isMobileSidebarOpen: false,
-  setIsMobileSidebarOpen: () => { },
-  toggleMobileSidebar: () => { },
+  setIsMobileSidebarOpen: () => {},
+  toggleMobileSidebar: () => {},
 
   isDesktopSideBarCollapsed: false,
-  setIsCollapsed: () => { },
-  toggleSidebar: () => { },
-
-  isProjectSidebarOpen: false,
-  setIsProjectSidebarOpen: () => { },
-  toggleProjectSidebar: () => { },
+  setIsCollapsed: () => {},
+  toggleSidebar: () => {},
 });
 
 export function PageLayoutContextProvider({ children }) {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isProjectSidebarOpen, setIsProjectSidebarOpen] = useState(false);
 
   // Close mobile sidebar when window resizes to desktop
   useEffect(() => {
@@ -37,23 +32,15 @@ export function PageLayoutContextProvider({ children }) {
   };
 
   const toggleMobileSidebar = () => {
-    setIsCollapsed(false)
+    setIsCollapsed(false);
     setIsMobileSidebarOpen((prev) => !prev);
   };
-
-  function toggleProjectSidebar() {
-    setIsMobileSidebarOpen(false)
-    setIsProjectSidebarOpen((prev) => !prev);
-  }
 
   const pageLayoutContextValue = {
     toggleSidebar,
     isDesktopSideBarCollapsed: isCollapsed,
     toggleMobileSidebar,
     isMobileSidebarOpen: isMobileSidebarOpen,
-    isProjectSidebarOpen,
-    toggleProjectSidebar,
-    setIsProjectSidebarOpen,
     setIsMobileSidebarOpen,
     setIsCollapsed,
   };

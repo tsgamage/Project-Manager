@@ -7,10 +7,11 @@ import { Tooltip } from "react-tooltip";
 
 export default function ProjectsDropdown() {
   const location = useLocation();
-  const isActive = location.pathname === "/project/all" || location.pathname.startsWith("/project/view/");
+  const isActive =
+    location.pathname === "/project/all" || location.pathname.startsWith("/project/view/");
   const { projects } = useContext(ProjectContext);
   const [isProjectsDropdownOpen, setIsProjectsDropdownOpen] = useState(false);
-  const { isDesktopSideBarCollapsed, toggleSidebar, setIsProjectSidebarOpen } = useContext(PageLayoutContext);
+  const { isDesktopSideBarCollapsed, toggleSidebar } = useContext(PageLayoutContext);
 
   const ProjectsDropdownItem = ({ project }) => {
     const isActive = location.pathname === `/project/view/${project._id}`;
@@ -25,21 +26,8 @@ export default function ProjectsDropdown() {
     );
   };
 
-  let hoverTimer
-  function handleHoverProjects() {
-    if (isDesktopSideBarCollapsed) {
-      hoverTimer = setTimeout(() => {
-        setIsProjectSidebarOpen(true);
-      }, 200);
-    }
-  }
-  function handleLeaveProjects() {
-    clearTimeout(hoverTimer)
-    setIsProjectSidebarOpen(false);
-  }
-
   return (
-    <div className="space-y-1 projects-dev" onMouseEnter={handleHoverProjects} onMouseLeave={handleLeaveProjects}>
+    <div className="space-y-1 projects-dev">
       {isDesktopSideBarCollapsed && (
         <Tooltip anchorSelect=".projects-dev" place="right" delayShow={70}>
           All Projects
@@ -49,10 +37,11 @@ export default function ProjectsDropdown() {
       <div className="relative">
         <Link
           to="/project/all"
-          className={`group flex items-center transition-all duration-300 hover-lift ${isActive
-            ? "gradient-blue text-white shadow-lg"
-            : "text-gray-300 hover:bg-gray-700 hover:text-white"
-            } ${isDesktopSideBarCollapsed ? "justify-center w-10 h-10 rounded-xl mx-auto" : "px-3 py-3 rounded-xl justify-start"}`}
+          className={`group flex items-center transition-all duration-300 hover-lift ${
+            isActive
+              ? "gradient-blue text-white shadow-lg"
+              : "text-gray-300 hover:bg-gray-700 hover:text-white"
+          } ${isDesktopSideBarCollapsed ? "justify-center w-10 h-10 rounded-xl mx-auto" : "px-3 py-3 rounded-xl justify-start"}`}
         >
           <FolderOpen
             onDoubleClick={toggleSidebar}
@@ -74,8 +63,9 @@ export default function ProjectsDropdown() {
                   className="p-1 hover:bg-gray-600 rounded transition-colors"
                 >
                   <ChevronDown
-                    className={`h-4 w-4 transition-transform duration-200 ${isProjectsDropdownOpen ? "rotate-180" : ""
-                      }`}
+                    className={`h-4 w-4 transition-transform duration-200 ${
+                      isProjectsDropdownOpen ? "rotate-180" : ""
+                    }`}
                   />
                 </button>
               </div>

@@ -1,6 +1,5 @@
-import { CircleCheckBig, Home } from "lucide-react";
+import { CircleCheckBig, Home, Users } from "lucide-react";
 import ProjectsDropdown from "./Dropdowns/ProjectsDropdown";
-import TeamDropdown from "./Dropdowns/TeamDropDown";
 import SidebarSection from "./SidebarSection";
 
 export default function ScrollableSection() {
@@ -9,17 +8,22 @@ export default function ScrollableSection() {
       name: "Home",
       icon: Home,
       path: "/home",
-    }, {
+    },
+    {
       name: "Tasks",
       icon: CircleCheckBig,
-      path: "/project/tasks"
+      path: "/project/tasks",
+    },
+    {
+      name: "Teams",
+      icon: Users,
+      path: "/team/members",
     },
   ];
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="p-4 space-y-3">
         <SidebarSection items={topItems} />
-        <TeamDropdown />
         <ProjectsDropdown />
       </div>
     </div>

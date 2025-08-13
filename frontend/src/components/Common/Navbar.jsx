@@ -110,18 +110,12 @@ export default function Navbar() {
                 {/* Dropdown Menu */}
                 {isDropdownOpen && (
                   <>
-                    {/* Backdrop for mobile - positioned behind dropdown */}
-                    <div
-                      className="fixed inset-0 z-40 lg:hidden bg-black/40 backdrop-blur-sm"
-                      onClick={() => setIsDropdownOpen(false)}
-                    ></div>
-
                     {/* Dropdown content */}
-                    <div className="absolute right-0 mt-2 w-72 sm:w-80 backdrop-blur-xl bg-black/40 rounded-xl shadow-2xl border border-gray-800/50 overflow-hidden z-50 transform transition-all duration-200 ease-out slide-in">
+                    <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-gray-900 rounded-xl shadow-2xl border border-gray-800/50 overflow-hidden z-50 transform transition-all duration-200 ease-out slide-in">
                       {/* Header */}
-                      <div className="px-4 py-3 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 border-b border-gray-800/50">
+                      <div className="px-4 py-3 bg-gray-800 border-b border-gray-800/50">
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/25">
+                          <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center shadow-lg">
                             <span className="text-white font-semibold text-sm">U</span>
                           </div>
                           <div className="flex-1 min-w-0">
@@ -151,7 +145,7 @@ export default function Navbar() {
                         </Link>
 
                         <Link
-                          to="/settings"
+                          to="/user/settings"
                           className="flex items-center px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800/50 transition-all duration-300 group"
                           onClick={() => setIsDropdownOpen(false)}
                         >
@@ -160,7 +154,7 @@ export default function Navbar() {
                         </Link>
 
                         <Link
-                          to="/projects"
+                          to="/project/all"
                           className="flex items-center px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800/50 transition-all duration-300 group"
                           onClick={() => setIsDropdownOpen(false)}
                         >

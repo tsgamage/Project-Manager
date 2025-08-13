@@ -3,33 +3,16 @@ import { Link } from "react-router-dom";
 import AuthContext from "../store/auth.context.jsx";
 import UserContext from "../store/user.context.jsx";
 import { toast } from "react-hot-toast";
-import {
-  User,
-  Mail,
-  Lock,
-  Bell,
-  Palette,
-  Shield,
-  Download,
-  Trash2,
-  Save,
-  Edit3,
-  Eye,
-  EyeOff,
-  Check,
-  X,
-  ArrowLeft,
-  Settings,
-  CheckCircle
-} from "lucide-react";
+import { User, Lock, Save, Edit3, Eye, EyeOff, X, ArrowLeft, Settings } from "lucide-react";
 
 export default function SettingsPage() {
-  const { user } = useContext(AuthContext);
+  const { user, checkAuthStatus, changePassword } = useContext(AuthContext);
   const { updateName } = useContext(UserContext);
 
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingPasswordChange, setIsLoadingPasswordChange] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -42,43 +25,16 @@ export default function SettingsPage() {
     confirmPassword: "",
   });
 
-  const [preferences, setPreferences] = useState({
-    theme: "dark",
-    notifications: {
-      email: true,
-      projectUpdates: true,
-      deadlineReminders: true,
-      teamActivity: false,
-    },
-    privacy: {
-      profileVisibility: "public",
-      showEmail: false,
-      allowTeamInvites: true,
-    }
-  });
-
   const tabs = [
     { id: "profile", label: "Profile", icon: User },
     { id: "security", label: "Security", icon: Lock },
-    { id: "notifications", label: "Notifications", icon: Bell },
-    { id: "privacy", label: "Privacy", icon: Shield },
   ];
 
   function handleInputChange(e) {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
-    }));
-  }
-
-  function handlePreferenceChange(category, key, value) {
-    setPreferences(prev => ({
-      ...prev,
-      [category]: {
-        ...prev[category],
-        [key]: value
-      }
+      [name]: value,
     }));
   }
 
@@ -92,49 +48,41 @@ export default function SettingsPage() {
     }
 
     setIsLoading(true);
+    const resData = await updateName(formData.name);
 
-    try {
-      const result = await updateName(formData.name);
-
-      if (result.success) {
-        toast.success("Profile updated successfully!");
-        setIsEditing(false);
-      } else {
-        toast.error(result.message || "Failed to update profile");
-      }
-    } catch (error) {
-      toast.error("An error occurred while updating profile");
-    } finally {
-      setIsLoading(false);
+    if (resData.success) {
+      checkAuthStatus();
+      toast.success("Profile updated successfully!");
+      setIsEditing(false);
+    } else {
+      toast.error(resData.message || "Failed to update profile");
     }
+    setIsLoading(false);
   }
 
-  function handlePasswordChange() {
+  async function handlePasswordChange() {
     if (formData.newPassword !== formData.confirmPassword) {
       return toast.error("New passwords don't match");
     }
 
-    if (formData.newPassword.length < 6) {
-      return toast.error("Password must be at least 6 characters long");
+    if (formData.newPassword.length < 8) {
+      return toast.error("Password must be at least 8 characters long");
     }
+    setIsLoadingPasswordChange(true);
+    const resData = await changePassword(formData.currentPassword, formData.newPassword);
 
-    toast.success("Password updated successfully!");
-    setFormData(prev => ({
-      ...prev,
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: ""
-    }));
-  }
-
-  function handleExportData() {
-    toast.success("Data export started. You'll receive an email when ready.");
-  }
-
-  function handleDeleteAccount() {
-    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
-      toast.success("Account deletion request submitted. You'll receive a confirmation email.");
+    if (resData.success) {
+      toast.success(resData.message || "Password updated successfully");
+      setFormData((prev) => ({
+        ...prev,
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      }));
+    } else {
+      toast.error(resData.message || "Failed to update password");
     }
+    setIsLoadingPasswordChange(false);
   }
 
   return (
@@ -143,10 +91,7 @@ export default function SettingsPage() {
         {/* Header */}
         <div className="mb-6 sm:mb-8 fade-in">
           <div className="flex items-center gap-3 sm:gap-4 mb-4">
-            <Link
-              to="/"
-              className="p-2 rounded-xl hover:bg-gray-700 transition-colors"
-            >
+            <Link to="/" className="p-2 rounded-xl hover:bg-gray-700 transition-colors">
               <ArrowLeft className="h-5 w-5 text-gray-400" />
             </Link>
             <div className="w-10 h-10 gradient-blue rounded-xl flex items-center justify-center">
@@ -188,7 +133,6 @@ export default function SettingsPage() {
           {/* Main Content */}
           <div className="lg:col-span-3">
             <div className="glass rounded-2xl shadow-lg border border-gray-700 p-4 sm:p-6">
-
               {/* Profile Tab */}
               {activeTab === "profile" && (
                 <div>
@@ -200,7 +144,7 @@ export default function SettingsPage() {
                     {!isEditing && (
                       <button
                         onClick={() => setIsEditing(true)}
-                        className="flex items-center gap-2 gradient-blue hover:shadow-lg text-white px-4 py-2 rounded-xl transition-all duration-300 hover-lift"
+                        className="flex cursor-pointer items-center gap-2 gradient-blue hover:shadow-lg text-white px-4 py-2 rounded-xl transition-all duration-300 hover-lift"
                       >
                         <Edit3 className="h-4 w-4" />
                         Edit Profile
@@ -244,7 +188,7 @@ export default function SettingsPage() {
                         <button
                           onClick={handleSaveProfile}
                           disabled={isLoading}
-                          className="flex items-center justify-center gap-2 gradient-green hover:shadow-lg text-white px-4 py-3 rounded-xl transition-all duration-300 hover-lift disabled:opacity-50"
+                          className="flex items-center cursor-pointer justify-center gap-2 bg-blue-500/50 hover:shadow-lg text-white px-4 py-3 rounded-xl transition-all duration-300 hover-lift disabled:opacity-50"
                         >
                           <Save className="h-4 w-4" />
                           {isLoading ? "Saving..." : "Save Changes"}
@@ -252,7 +196,7 @@ export default function SettingsPage() {
                         <button
                           onClick={() => {
                             setIsEditing(false);
-                            setFormData(prev => ({ ...prev, name: user?.name || "" }));
+                            setFormData((prev) => ({ ...prev, name: user?.name || "" }));
                           }}
                           className="px-4 py-3 border border-gray-600 text-gray-300 rounded-xl hover:bg-gray-700 transition-all duration-300"
                         >
@@ -291,7 +235,11 @@ export default function SettingsPage() {
                           onClick={() => setShowPassword(!showPassword)}
                           className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300"
                         >
-                          {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                          {showPassword ? (
+                            <EyeOff className="h-5 w-5" />
+                          ) : (
+                            <Eye className="h-5 w-5" />
+                          )}
                         </button>
                       </div>
                     </div>
@@ -314,7 +262,11 @@ export default function SettingsPage() {
                           onClick={() => setShowNewPassword(!showNewPassword)}
                           className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300"
                         >
-                          {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                          {showNewPassword ? (
+                            <EyeOff className="h-5 w-5" />
+                          ) : (
+                            <Eye className="h-5 w-5" />
+                          )}
                         </button>
                       </div>
                     </div>
@@ -337,168 +289,22 @@ export default function SettingsPage() {
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                           className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300"
                         >
-                          {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                          {showConfirmPassword ? (
+                            <EyeOff className="h-5 w-5" />
+                          ) : (
+                            <Eye className="h-5 w-5" />
+                          )}
                         </button>
                       </div>
                     </div>
 
                     <button
                       onClick={handlePasswordChange}
-                      className="gradient-blue hover:shadow-lg text-white px-6 py-3 rounded-xl transition-all duration-300 hover-lift"
+                      disabled={isLoadingPasswordChange}
+                      className="bg-blue-500/50 cursor-pointer hover:shadow-lg text-white px-6 py-3 rounded-xl transition-all duration-300 hover-lift disabled:bg-blue-500 disabled:opacity-50"
                     >
-                      Update Password
+                      {isLoadingPasswordChange ? "Updating..." : "Update Password"}
                     </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Notifications Tab */}
-              {activeTab === "notifications" && (
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <Bell className="h-5 w-5 text-yellow-400" />
-                    Notification Preferences
-                  </h2>
-
-                  <div className="space-y-6">
-                    <div>
-                      <h3 className="text-lg font-medium text-white mb-4 flex items-center gap-2">
-                        <Mail className="h-4 w-4 text-blue-400" />
-                        Email Notifications
-                      </h3>
-                      <div className="space-y-4">
-                        {Object.entries(preferences.notifications).map(([key, value]) => (
-                          <div key={key} className="flex items-center justify-between p-4 bg-gray-700/50 rounded-xl hover:bg-gray-700 transition-colors">
-                            <div>
-                              <div className="font-medium text-white capitalize">
-                                {key.replace(/([A-Z])/g, ' $1').trim()}
-                              </div>
-                              <div className="text-sm text-gray-400">
-                                Receive notifications via email
-                              </div>
-                            </div>
-                            <button
-                              onClick={() => handlePreferenceChange("notifications", key, !value)}
-                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                                value ? "bg-blue-500" : "bg-gray-600"
-                              }`}
-                            >
-                              <span
-                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                  value ? "translate-x-6" : "translate-x-1"
-                                }`}
-                              />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="pt-6 border-t border-gray-700">
-                      <h3 className="text-lg font-medium text-white mb-4 flex items-center gap-2">
-                        <Palette className="h-4 w-4 text-purple-400" />
-                        Theme
-                      </h3>
-                      <div className="grid grid-cols-3 gap-3">
-                        {["light", "dark", "system"].map((theme) => (
-                          <button
-                            key={theme}
-                            onClick={() => handlePreferenceChange("theme", "theme", theme)}
-                            className={`p-4 rounded-xl border transition-all duration-300 ${
-                              preferences.theme === theme
-                                ? "border-blue-500 bg-blue-500/20 text-blue-300"
-                                : "border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
-                            }`}
-                          >
-                            <div className="capitalize font-medium">{theme}</div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Privacy Tab */}
-              {activeTab === "privacy" && (
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <Shield className="h-5 w-5 text-green-400" />
-                    Privacy Settings
-                  </h2>
-
-                  <div className="space-y-6">
-                    <div>
-                      <label className="block text-sm sm:text-base font-medium text-white mb-2 sm:mb-3">
-                        Profile Visibility
-                      </label>
-                      <select
-                        value={preferences.privacy.profileVisibility}
-                        onChange={(e) => handlePreferenceChange("privacy", "profileVisibility", e.target.value)}
-                        className="w-full px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base border border-gray-600 rounded-xl bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                      >
-                        <option value="public">Public</option>
-                        <option value="team">Team Only</option>
-                        <option value="private">Private</option>
-                      </select>
-                    </div>
-
-                    <div className="space-y-4">
-                      {Object.entries(preferences.privacy).slice(1).map(([key, value]) => (
-                        <div key={key} className="flex items-center justify-between p-4 bg-gray-700/50 rounded-xl hover:bg-gray-700 transition-colors">
-                          <div>
-                            <div className="font-medium text-white capitalize">
-                              {key.replace(/([A-Z])/g, ' $1').trim()}
-                            </div>
-                            <div className="text-sm text-gray-400">
-                              {key === "showEmail" ? "Allow others to see your email" : "Allow team members to invite you to projects"}
-                            </div>
-                          </div>
-                          <button
-                            onClick={() => handlePreferenceChange("privacy", key, !value)}
-                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                              value ? "bg-blue-500" : "bg-gray-600"
-                            }`}
-                          >
-                            <span
-                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                value ? "translate-x-6" : "translate-x-1"
-                              }`}
-                            />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="pt-6 border-t border-gray-700">
-                      <h3 className="text-lg font-medium text-white mb-4 flex items-center gap-2">
-                        <Download className="h-4 w-4 text-yellow-400" />
-                        Data Management
-                      </h3>
-                      <div className="space-y-3">
-                        <button
-                          onClick={handleExportData}
-                          className="flex items-center gap-3 w-full p-4 bg-gray-700/50 rounded-xl text-left hover:bg-gray-700 transition-colors"
-                        >
-                          <Download className="h-5 w-5 text-blue-400" />
-                          <div>
-                            <div className="font-medium text-white">Export Data</div>
-                            <div className="text-sm text-gray-400">Download your project data</div>
-                          </div>
-                        </button>
-
-                        <button
-                          onClick={handleDeleteAccount}
-                          className="flex items-center gap-3 w-full p-4 bg-red-500/10 rounded-xl text-left hover:bg-red-500/20 transition-colors"
-                        >
-                          <Trash2 className="h-5 w-5 text-red-400" />
-                          <div>
-                            <div className="font-medium text-red-400">Delete Account</div>
-                            <div className="text-sm text-red-400/70">Permanently delete your account</div>
-                          </div>
-                        </button>
-                      </div>
-                    </div>
                   </div>
                 </div>
               )}
@@ -508,4 +314,4 @@ export default function SettingsPage() {
       </div>
     </div>
   );
-} 
+}
