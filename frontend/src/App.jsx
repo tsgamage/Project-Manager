@@ -22,7 +22,6 @@ import HomePage from "./pages/Home.jsx";
 import TeamsPage from "./pages/Team.jsx";
 import TasksPage from "./pages/Tasks.jsx";
 import SettingsPage from "./pages/Settings.jsx";
-import TrashPage from "./pages/Trash.jsx";
 import { MemberContextProvider } from "./store/member.context.jsx";
 import RedirectToLoginPage from "./components/Auth/RedirectToLoginPage.jsx";
 
@@ -50,7 +49,7 @@ export default function App() {
       path: "/auth",
       element: (
         <RedirectUserIfAuthenticated>
-            <AuthRoot />
+          <AuthRoot />
         </RedirectUserIfAuthenticated>
       ),
       children: [
@@ -93,7 +92,6 @@ export default function App() {
       children: [
         { path: "profile", element: <ProfilePage /> },
         { path: "settings", element: <SettingsPage /> },
-        { path: "trash", element: <TrashPage /> },
       ],
     },
     {
