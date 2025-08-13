@@ -23,9 +23,9 @@ export async function getAllProjects() {
     }
 
     return await response.json();
-  } catch (e) {
-    console.log("Failed to fetch projects", e);
-    return { success: false, message: e.message || "Failed to fetch projects" };
+  } catch (err) {
+    console.log("Failed to fetch projects", err);
+    return { success: false, message: err.message || "Failed to fetch projects" };
   }
 }
 export async function addNewProject(projectData) {
@@ -44,8 +44,9 @@ export async function addNewProject(projectData) {
     }
 
     return await response.json();
-  } catch (e) {
-    return { success: false, message: e.message || "Failed to create project" };
+  } catch (err) {
+    console.log("Failed to create project", err);
+    return { success: false, message: err.message || "Failed to create project" };
   }
 }
 export async function deleteProject(selectedProjectID) {
@@ -60,8 +61,9 @@ export async function deleteProject(selectedProjectID) {
     }
 
     return await response.json();
-  } catch (e) {
-    return { success: false, message: e.message || "Failed to Delete project" };
+  } catch (err) {
+    console.log("Failed to Delete project", err);
+    return { success: false, message: err.message || "Failed to Delete project" };
   }
 }
 export async function getProjectById(projectID) {
@@ -77,11 +79,35 @@ export async function getProjectById(projectID) {
     }
 
     return await response.json();
-  } catch (e) {
-    console.error("Error fetching project data:", e);
+  } catch (err) {
+    console.error("Error fetching project data:", err);
     return {
       success: false,
-      message: e.message || "An error occurred while fetching project data",
+      message: err.message || "An error occurred while fetching project data",
     };
+  }
+}
+export async function updateProject(projectID, newProjectData) {
+  try {
+    const response = await fetch(`${API_URL}/${projectID}`, {
+      method: "PUT",
+      body: JSON.stringify(newProjectData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (responseNotOkay(response)) {
+      return { success: false, message: "Failed to update project" };
+    }
+    if (response.status === 401) {
+      window.location.replace("/auth/login");
+    }
+
+    return await response.json();
+  } catch (err) {
+    console.log("Failed to update project", err);
+    return { success: false, message: err.message || "Failed to update project" };
   }
 }

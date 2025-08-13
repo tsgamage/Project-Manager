@@ -8,6 +8,7 @@ import {
   deleteProject,
   getAllProjects,
   getProjectById,
+  updateProject,
 } from "../services/project.api.js";
 import {
   createTaskCategory,
@@ -57,29 +58,6 @@ export function ProjectContextProvider({ children }) {
   const [tasksCategories, setTasksCategories] = useState([]);
   const { user } = useContext(AuthContext);
 
-  async function updateRequest(projectData) {
-    try {
-      const response = await fetch(`${API_URL}/${selectedProjectID}`, {
-        method: "PUT",
-        body: JSON.stringify(projectData),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-      if (response.status === 401) {
-        window.location.replace("/auth/login");
-        return [EMPTY_PROJECT];
-      } else if (!response.ok) {
-        throw new Error("Something went wrong");
-      }
-      const resData = await response.json();
-      return resData.data;
-    } catch (e) {
-      console.log(e.message);
-    }
-  }
-
   // ---- Project Fetching Function ----
   async function fetchProjects() {
     const resData = await getAllProjects();
@@ -88,6 +66,7 @@ export function ProjectContextProvider({ children }) {
     }
   }
 
+  // ---- Tasks Categories Fetching Function ----
   async function fetchTasksCategories() {
     const resData = await getTasksCategories();
     if (resData.success) {
@@ -100,6 +79,7 @@ export function ProjectContextProvider({ children }) {
     fetchTasksCategories();
   }, [user]);
 
+  // ------------------- PROJECT -------------------
   async function handleAddNewProject(projectData) {
     const resData = await addNewProject(projectData);
     if (resData.success) {
@@ -127,23 +107,17 @@ export function ProjectContextProvider({ children }) {
     }
   }, [selectedProjectID]);
 
-  // handle project select
-  function handleSelectedProjectID(projectID) {
-    setSelectedProjectID(projectID);
-  }
-
-  // this will expose the project set function to consumer components
-  function handleSetProjects(project) {
-    setProjects(project);
-  }
-
-  async function handleUpdateProject(projectData) {
-    const response = await updateRequest(projectData);
-    setSelectedProject(response);
-    const updatedProjects = [response, ...projects.filter((p) => p._id !== selectedProject._id)];
+  async function handleUpdateProject(newProjectData) {
+    const resData = await updateProject(selectedProject._id, newProjectData);
+    setSelectedProject(resData.data);
+    const updatedProjects = [
+      resData.data,
+      ...projects.filter((p) => p._id !== selectedProject._id),
+    ];
     setProjects(updatedProjects);
   }
 
+  // ------------------- MEMBER -------------------
   async function handleAddMember(memberID) {
     const updatedProject = {
       ...selectedProject,
@@ -153,9 +127,12 @@ export function ProjectContextProvider({ children }) {
       updatedProject,
       ...projects.filter((p) => p._id !== selectedProject._id),
     ];
-    const resData = await updateRequest(updatedProject);
-    setSelectedProject(resData);
-    setProjects(updatedProjects);
+
+    const resData = await updateProject(updatedProject);
+    if (resData.success) {
+      setSelectedProject(resData.data);
+      setProjects(updatedProjects);
+    }
     return resData;
   }
 
@@ -168,10 +145,16 @@ export function ProjectContextProvider({ children }) {
       updatedProject,
       ...projects.filter((p) => p._id !== selectedProject._id),
     ];
-    const resData = await updateRequest(updatedProject);
-    setSelectedProject(resData);
-    setProjects(updatedProjects);
+
+    const resData = await updateProject(updatedProject);
+    if (resData.success) {
+      setSelectedProject(resData.data);
+      setProjects(updatedProjects);
+    }
+    return resData;
   }
+
+  // ------------------- TASKS -------------------
 
   async function handleAddTask(taskObj) {
     const updatedProject = {
@@ -183,9 +166,11 @@ export function ProjectContextProvider({ children }) {
       updatedProject,
       ...projects.filter((p) => p._id !== selectedProject._id),
     ];
-    const resData = await updateRequest(updatedProject);
-    setSelectedProject(resData);
-    setProjects(updatedProjects);
+    const resData = await updateProject(updatedProject);
+    if (resData.success) {
+      setSelectedProject(resData.data);
+      setProjects(updatedProjects);
+    }
     return resData;
   }
 
@@ -198,20 +183,23 @@ export function ProjectContextProvider({ children }) {
       updatedProject,
       ...projects.filter((p) => p._id !== selectedProject._id),
     ];
-    const resData = await updateRequest(updatedProject);
-    setSelectedProject(resData);
-    setProjects(updatedProjects);
+
+    const resData = await updateProject(updatedProject);
+    if (resData.success) {
+      setSelectedProject(resData.data);
+      setProjects(updatedProjects);
+    }
+    return resData;
   }
 
   async function handleSelectTask(id) {
-    let task = selectedProject.tasks.find((task) => task._id === id);
-    task = {
-      ...task,
-      completed: !task.completed,
-    };
+    const updatedTasks = selectedProject.tasks.map((task) =>
+      task._id === id ? { ...task, completed: !task.completed } : task
+    );
+
     const updatedProject = {
       ...selectedProject,
-      tasks: [...selectedProject.tasks.filter((task) => task._id !== id), task],
+      tasks: updatedTasks,
     };
 
     const updatedProjects = [
@@ -219,9 +207,12 @@ export function ProjectContextProvider({ children }) {
       ...projects.filter((p) => p._id !== selectedProject._id),
     ];
 
-    const resData = await updateRequest(updatedProject);
-    setSelectedProject(resData);
-    setProjects(updatedProjects);
+    const resData = await updateProject(updatedProject);
+    if (resData.success) {
+      setSelectedProject(resData.data);
+      setProjects(updatedProjects);
+    }
+    return resData;
   }
 
   //  -------------------------- Task Category Functions ---------------------------------
@@ -257,10 +248,10 @@ export function ProjectContextProvider({ children }) {
 
   const ctxValue = {
     projects,
-    setProjects: handleSetProjects,
+    setProjects,
     selectedProject,
     setSelectedProject: handleSetSelectedProject,
-    setSelectedProjectID: handleSelectedProjectID,
+    setSelectedProjectID,
     addMember: handleAddMember,
     removeMember: handleRemoveMember,
     addTask: handleAddTask,
