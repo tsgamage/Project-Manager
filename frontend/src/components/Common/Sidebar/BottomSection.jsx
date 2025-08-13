@@ -29,9 +29,9 @@ export default function BottomSection() {
             Add New
           </Link>
         ) : (
-          <button className="cursor-pointer w-10 h-10 flex items-center justify-center gradient-blue hover:shadow-lg text-white rounded-xl transition-all duration-300 hover-lift mx-auto">
+          <Link to="/project/new" className="cursor-pointer w-10 h-10 flex items-center justify-center gradient-blue hover:shadow-lg text-white rounded-xl transition-all duration-300 hover-lift mx-auto">
             <Plus className="w-4 h-4" />
-          </button>
+          </Link>
         )}
 
         <SidebarSection items={bottomItems} />
