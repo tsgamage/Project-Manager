@@ -25,11 +25,15 @@ const ProjectContext = createContext({
   selectedProject: {},
   setSelectedProject: () => {},
   setSelectedProjectID: () => {},
+
   addMember: () => {},
   removeMember: () => {},
+
   addTask: () => {},
   removeTask: () => {},
   toggleSelectTask: () => {},
+  updateTask: () => {},
+
   updateProject: () => {},
   addNewProject: () => {},
   deleteProject: () => {},
@@ -128,7 +132,7 @@ export function ProjectContextProvider({ children }) {
       ...projects.filter((p) => p._id !== selectedProject._id),
     ];
 
-    const resData = await updateProject(updatedProject);
+    const resData = await updateProject(selectedProject._id, updatedProject);
     if (resData.success) {
       setSelectedProject(resData.data);
       setProjects(updatedProjects);
@@ -146,7 +150,7 @@ export function ProjectContextProvider({ children }) {
       ...projects.filter((p) => p._id !== selectedProject._id),
     ];
 
-    const resData = await updateProject(updatedProject);
+    const resData = await updateProject(selectedProject._id, updatedProject);
     if (resData.success) {
       setSelectedProject(resData.data);
       setProjects(updatedProjects);
@@ -166,7 +170,7 @@ export function ProjectContextProvider({ children }) {
       updatedProject,
       ...projects.filter((p) => p._id !== selectedProject._id),
     ];
-    const resData = await updateProject(updatedProject);
+    const resData = await updateProject(selectedProject._id, updatedProject);
     if (resData.success) {
       setSelectedProject(resData.data);
       setProjects(updatedProjects);
@@ -184,7 +188,28 @@ export function ProjectContextProvider({ children }) {
       ...projects.filter((p) => p._id !== selectedProject._id),
     ];
 
-    const resData = await updateProject(updatedProject);
+    const resData = await updateProject(selectedProject._id, updatedProject);
+    if (resData.success) {
+      setSelectedProject(resData.data);
+      setProjects(updatedProjects);
+    }
+    return resData;
+  }
+
+  async function handleUpdateTask(id, name, description) {
+    const updatedProject = {
+      ...selectedProject,
+      tasks: selectedProject.tasks.map((task) =>
+        task._id === id ? { ...task, taskName: name, taskDescription: description } : task
+      ),
+    };
+
+    const updatedProjects = [
+      updatedProject,
+      ...projects.filter((p) => p._id !== selectedProject._id),
+    ];
+
+    const resData = await updateProject(selectedProject._id, updatedProject);
     if (resData.success) {
       setSelectedProject(resData.data);
       setProjects(updatedProjects);
@@ -207,7 +232,7 @@ export function ProjectContextProvider({ children }) {
       ...projects.filter((p) => p._id !== selectedProject._id),
     ];
 
-    const resData = await updateProject(updatedProject);
+    const resData = await updateProject(selectedProject._id, updatedProject);
     if (resData.success) {
       setSelectedProject(resData.data);
       setProjects(updatedProjects);
@@ -239,8 +264,9 @@ export function ProjectContextProvider({ children }) {
   async function handleUpdateTaskCategory(categoryID, category) {
     const resData = await updateTaskCategory(categoryID, category);
     if (resData.success) {
-      const updatedList = tasksCategories.filter((cat) => cat._id !== categoryID);
-      updatedList.push(resData.data);
+      const updatedList = tasksCategories.map((category) =>
+        category._id === categoryID ? resData.data : category
+      );
       setTasksCategories(updatedList);
     }
     return resData;
@@ -252,11 +278,15 @@ export function ProjectContextProvider({ children }) {
     selectedProject,
     setSelectedProject: handleSetSelectedProject,
     setSelectedProjectID,
+
     addMember: handleAddMember,
     removeMember: handleRemoveMember,
+
     addTask: handleAddTask,
     removeTask: handleRemoveTask,
     toggleSelectTask: handleSelectTask,
+    updateTask: handleUpdateTask,
+
     updateProject: handleUpdateProject,
     addNewProject: handleAddNewProject,
     deleteProject: handleDeleteProject,

@@ -1,38 +1,23 @@
-import { useContext, useRef, useState } from "react";
-import Task from "./Task";
-import ProjectContext from "../../../store/project.context";
-import { Plus, Target, CheckCircle, Clock, TrendingUp, Filter } from "lucide-react";
-import TasksCategoryModal from "../../UI/Modals/tasksCategoryModal";
-import CategoryAccordion from "../../Tasks/CategoryAccordion";
+import { useContext, useRef } from "react";
+import { Target, CheckCircle, Clock, TrendingUp, Grid2x2Plus } from "lucide-react";
+import { Tooltip } from "react-tooltip";
+import ProjectContext from "../../../store/project.context.jsx";
+import TasksCategoryModal from "../../UI/Modals/tasksCategoryModal.jsx";
+import CategoryAccordion from "../../Tasks/CategoryAccordion.jsx";
 
 export default function ProjectTasks({ tasks }) {
   const { tasksCategories, addTaskCategory, selectedProject } = useContext(ProjectContext);
-  const [filter, setFilter] = useState("all");
   const taskCategoryModal = useRef();
 
-  function handleKeyPress(e) {
-    if (e.key === "Enter") {
-      handleAddTask();
-    }
-  }
+  const projectTasksCategories = tasksCategories.filter(
+    (cat) => cat.projectID === selectedProject._id
+  );
 
   // Calculate statistics
   const totalTasks = tasks.length;
   const completedTasks = tasks.filter((task) => task.completed).length;
   const pendingTasks = totalTasks - completedTasks;
   const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-
-  // Filter tasks
-  const filteredTasks = tasks.filter((task) => {
-    switch (filter) {
-      case "completed":
-        return task.completed;
-      case "pending":
-        return !task.completed;
-      default:
-        return true;
-    }
-  });
 
   return (
     <>
@@ -66,18 +51,16 @@ export default function ProjectTasks({ tasks }) {
             </div>
           </div>
 
-          {/* Filter */}
+          {/* Add Category */}
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-gray-400" />
-            <select
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-              className="px-3 py-2 text-sm border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+            <button
+              onClick={() => taskCategoryModal.current.open()}
+              className="_add-category cursor-pointer border-1 border-transparent hover:border-1 hover:border-stone-500 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all duration-300"
             >
-              <option value="all">All Tasks</option>
-              <option value="pending">Pending</option>
-              <option value="completed">Completed</option>
-            </select>
+              <Grid2x2Plus className="h-4 w-4 text-stone-300" />
+              <span className="hidden lg:inline text-stone-300">Add a Category</span>
+            </button>
+            <Tooltip anchorSelect="._add-category">Add Category</Tooltip>
           </div>
         </div>
 
@@ -102,8 +85,8 @@ export default function ProjectTasks({ tasks }) {
         </div>
 
         {/* Tasks */}
-        {tasksCategories.length > 0 &&
-          tasksCategories.map((category) => (
+        {projectTasksCategories.length > 0 &&
+          projectTasksCategories.map((category) => (
             <CategoryAccordion
               key={category._id}
               category={category}
@@ -113,29 +96,13 @@ export default function ProjectTasks({ tasks }) {
 
         {/* No Tasks Category */}
         <div className="space-y-3 mb-6">
-          {tasksCategories.length === 0 && (
+          {projectTasksCategories.length === 0 && (
             <div className="text-center py-12">
               <CheckCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-400 mb-2">No tasks categories available</p>
-              {filter === "all" && (
-                <p className="text-sm text-gray-500">Add your first category to get started</p>
-              )}
+              <p className="text-gray-400 mb-2">No tasks available</p>
+              <p className="text-sm text-gray-500">Add a task category to get started</p>
             </div>
           )}
-        </div>
-
-        {/* Add Category */}
-        <div className="border-t border-gray-700 pt-6">
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              onClick={() => taskCategoryModal.current.open()}
-              className="flex items-center gap-2 gradient-blue hover:shadow-lg text-white px-4 py-3 rounded-xl font-medium transition-all duration-300 hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline">Add Task Category</span>
-            </button>
-          </div>
         </div>
       </div>
     </>
