@@ -19,6 +19,7 @@ const AuthContext = createContext({
   resendVerificationCode: () => {},
   forgotPassword: () => {},
   resetPassword: () => {},
+  changePassword: () => {},
   logout: () => {},
 });
 
@@ -222,6 +223,32 @@ export function AuthContextProvider({ children }) {
     }
   }
 
+  async function changePassword(oldPassword, newPassword) {
+    try {
+      const response = await fetch(`${API_URL}/change-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ oldPassword, newPassword }),
+      });
+
+      if (
+        !response.ok &&
+        response.status !== 400 &&
+        response.status !== 401 &&
+        response.status !== 404
+      ) {
+        return { success: false, message: "Password change failed" };
+      }
+      return await response.json();
+    } catch (err) {
+      console.log("Error changing password:", err);
+      return { success: false, message: err.message || "Password change failed" };
+    }
+  }
+
   useEffect(() => {
     checkAuthStatus();
   }, []);
@@ -237,6 +264,7 @@ export function AuthContextProvider({ children }) {
     resendVerificationCode,
     forgotPassword,
     resetPassword,
+    changePassword,
     logout,
   };
   return <AuthContext.Provider value={authCtxValue}>{children}</AuthContext.Provider>;
