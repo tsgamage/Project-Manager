@@ -96,7 +96,7 @@ export default function CategoryAccordion({
           className="w-full flex items-center justify-between p-4 hover:bg-gray-700/50 transition-colors"
         >
           <div className="flex items-center gap-4">
-            <div className={`w-2.5 h-2.5 rounded-full ${category ? category?.color : ""}`}></div>
+            <div className={`w-2.5 h-2.5 rounded-full ${category?.color || ""}`}></div>
             <div className="text-left">
               <h3 className="text-lg font-semibold text-white">{category.name}</h3>
               {projectTitle && <p className="text-sm text-gray-400">Project: {projectTitle}</p>}
@@ -201,3 +201,4 @@ export default function CategoryAccordion({
     </>
   );
 }
+
