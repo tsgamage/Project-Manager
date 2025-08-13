@@ -2,7 +2,11 @@ import { User } from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import crypto from "crypto";
 import generateTokenAndSetCookie from "../utils/generateTokenAndSetCookie.js";
-import { sendPasswordResetEmail, sendVerificationEmail } from "../mail/mails.js";
+import {
+  sendPasswordChangeSuccessEmail,
+  sendPasswordResetEmail,
+  sendVerificationEmail,
+} from "../mail/mails.js";
 
 export async function signup(req, res) {
   const { name, email, password } = req.body;
@@ -254,5 +258,38 @@ export async function checkAuth(req, res) {
     res.status(200).json({ success: true, user });
   } catch (err) {
     return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+}
+
+export async function changePassword(req, res) {
+  const userID = req.userID;
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword) {
+    return res.status(400).json({ success: false, message: "All fields are required" });
+  }
+
+  try {
+    const user = await User.findOne({ _id: userID });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    const isPasswordCorrect = await bcryptjs.compare(oldPassword, user.password);
+
+    if (!isPasswordCorrect) {
+      return res.status(400).json({ success: false, message: "Invalid old password" });
+    }
+
+    const hashedPassword = await bcryptjs.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    await sendPasswordChangeSuccessEmail(user.email);
+
+    res.status(200).json({ success: true, message: "Password changed successfully" });
+  } catch (err) {
+    console.log("Error while changing password: ", err.message);
+    res.status(500).json({ success: false, message: err.message });
   }
 }

@@ -56,3 +56,20 @@ export async function sendPasswordResetEmail(email, passwordResetLink) {
     return { success: false, message: err.message };
   }
 }
+
+export async function sendPasswordChangeSuccessEmail(email) {
+  const errors = isValidEmail(email);
+  if (errors) {
+    return { success: false, message: errors };
+  }
+  try {
+    const info = await transporter.sendMail({
+      from: SENDER,
+      to: email,
+      subject: "Password Reset Successful",
+      html: PASSWORD_RESET_SUCCESS_TEMPLATE,
+    });
+  } catch (err) {
+    return { success: false, message: err.message };
+  }
+}
