@@ -15,7 +15,7 @@ export default function SidebarSection({ items, className = "" }) {
         const uniqueClass = item.name.replace(/\s/g, "");
 
         return (
-          <>
+          <div key={item?.name + item?.path}>
             <Link
               to={item.path}
               className={`_${uniqueClass} group flex items-center transition-all duration-300 hover-lift ${
@@ -38,7 +38,7 @@ export default function SidebarSection({ items, className = "" }) {
                 {item.name}
               </Tooltip>
             )}
-          </>
+          </div>
         );
       })}
     </div>
