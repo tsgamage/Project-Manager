@@ -14,7 +14,7 @@ export default function Navbar() {
   const { isAuthenticated, user, logout } = useContext(AuthContext);
   const { projects, setProjects } = useContext(ProjectContext);
   const { toggleMobileSidebar } = useContext(PageLayoutContext);
-  const { setMembers, setMemberCategories } = useContext(MemberContext);
+  const { setFetchedMembers, setFetchMemberCategories } = useContext(MemberContext);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -33,8 +33,8 @@ export default function Navbar() {
     setIsDropdownOpen(false);
     toast.success("Logged out successfully");
     setProjects([]);
-    setMembers([]);
-    setMemberCategories([]);
+    setFetchedMembers([]);
+    setFetchMemberCategories([]);
     sessionStorage.clear();
     window.location.reload();
   }

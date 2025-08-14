@@ -18,17 +18,19 @@ import {
   LogOut,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
+import MemberContext from "../store/member.context.jsx";
 
 export default function Profile() {
   const { user, logout } = useContext(AuthContext);
-  const { projects, setProjects, setMembers, setMemberCategories } = useContext(ProjectContext);
+  const { projects, setProjects } = useContext(ProjectContext);
+  const { setFetchedMembers, setFetchMemberCategories } = useContext(MemberContext);
 
   function handleLogout() {
     logout();
     toast.success("Logged out successfully");
     setProjects([]);
-    setMembers([]);
-    setMemberCategories([]);
+    setFetchedMembers([]);
+    setFetchMemberCategories([]);
     sessionStorage.clear();
     window.location.reload();
   }
