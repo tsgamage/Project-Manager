@@ -92,7 +92,7 @@ export default function ResetPasswordPage() {
 
       {/* Main Content */}
       <div className="relative z-10 flex items-center justify-center h-full px-4">
-        <div className="w-full max-w-xs sm:max-w-sm space-y-4 sm:space-y-6">
+        <div className="w-full sm:max-w-sm space-y-4 sm:space-y-6">
           {/* Header */}
           <div className="text-center">
             <div className="flex justify-center mb-3 sm:mb-4">

@@ -91,7 +91,7 @@ export default function SignupPage() {
   });
 
   return (
-    <div className="h-screen bg-black overflow-hidden relative">
+    <div className="h-dvh bg-black overflow-hidden relative">
       {/* Animated Background */}
       <div className="absolute inset-0">
         {/* Gradient Orbs */}
@@ -107,7 +107,7 @@ export default function SignupPage() {
 
       {/* Main Content */}
       <div className="relative z-10 flex items-center justify-center h-full px-4">
-        <div className="w-full max-w-xs sm:max-w-sm space-y-4 sm:space-y-6">
+        <div className="w-full sm:max-w-sm space-y-4 sm:space-y-6">
           {/* Header */}
           <div className="text-center">
             <div className="flex justify-center mb-3 sm:mb-4">
@@ -187,7 +187,7 @@ export default function SignupPage() {
               />
 
               {/* Terms and Conditions */}
-              <div className="flex items-start">
+              <div className="flex items-center">
                 <div className="flex items-center h-5">
                   <input
                     id="terms"

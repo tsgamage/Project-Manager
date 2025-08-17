@@ -109,7 +109,7 @@ export default function VerifyCodePage() {
 
       {/* Main Content */}
       <div className="relative z-10 flex items-center justify-center h-full px-4">
-        <div className="w-full max-w-xs sm:max-w-sm space-y-4 sm:space-y-6">
+        <div className="w-full sm:max-w-sm space-y-4 sm:space-y-6">
           {/* Header */}
           <div className="text-center">
             <div className="flex justify-center mb-3 sm:mb-4">
@@ -213,20 +213,19 @@ export default function VerifyCodePage() {
           {/* Back to Login */}
           <div className="text-center relative z-10">
             <Link
-              to="/login"
+              to="/auth/login"
               className="inline-flex items-center gap-2 text-xs sm:text-sm text-blue-400 hover:text-blue-300 transition-colors"
             >
               <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-              Back to sign in
+              Back to Log in
             </Link>
           </div>
-
           {/* Demo Note */}
-          <div className="text-center relative z-10">
+          {/* <div className="text-center relative z-10">
             <p className="text-xs text-gray-500">
               Demo: Use code <span className="font-mono font-medium text-gray-300">123456</span> to verify
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

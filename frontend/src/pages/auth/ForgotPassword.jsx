@@ -55,7 +55,7 @@ export default function ForgotPasswordPage() {
 
         {/* Main Content */}
         <div className="relative z-10 flex items-center justify-center h-full px-4">
-          <div className="w-full max-w-xs sm:max-w-sm space-y-4 sm:space-y-6">
+          <div className="w-full sm:max-w-sm space-y-4 sm:space-y-6">
             {/* Success Card */}
             <div className="backdrop-blur-xl bg-black/40 rounded-xl sm:rounded-2xl shadow-2xl border border-gray-800/50 p-4 sm:p-6 relative overflow-hidden">
               {/* Form Glow Effect */}
@@ -85,14 +85,15 @@ export default function ForgotPasswordPage() {
                 </p>
 
                 <div className="space-y-3 sm:space-y-4">
-                  <Link
-                    to="/verify-code"
+                  <a
+                    href="https://mail.google.com"
+                    target="_blank"
                     className="w-full flex justify-center py-2.5 sm:py-3 px-4 border border-transparent rounded-lg sm:rounded-xl shadow-lg text-sm font-medium text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover-lift relative overflow-hidden group"
                   >
                     {/* Button Glow Effect */}
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <span className="relative z-10">Enter verification code</span>
-                  </Link>
+                    <span className="relative z-10">Open Gmail</span>
+                  </a>
 
                   <button
                     onClick={() => setIsSubmitted(false)}
@@ -135,7 +136,7 @@ export default function ForgotPasswordPage() {
 
       {/* Main Content */}
       <div className="relative z-10 flex items-center justify-center h-full px-4">
-        <div className="w-full max-w-xs sm:max-w-sm space-y-4 sm:space-y-6">
+        <div className="w-full sm:max-w-sm space-y-4 sm:space-y-6">
           {/* Header */}
           <div className="text-center">
             <div className="flex justify-center mb-3 sm:mb-4">

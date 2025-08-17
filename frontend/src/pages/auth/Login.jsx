@@ -27,7 +27,7 @@ export default function LoginPage() {
 
   const [formState, formStateAction, pending] = useActionState(signupAction);
   return (
-    <div className="h-screen bg-black overflow-hidden relative">
+    <div className="h-dvh bg-black overflow-hidden relative">
       {/* Animated Background */}
       <div className="absolute inset-0">
         {/* Gradient Orbs */}
@@ -43,7 +43,7 @@ export default function LoginPage() {
 
       {/* Main Content */}
       <div className="relative z-10 flex items-center justify-center h-full px-4">
-        <div className="w-full max-w-xs sm:max-w-sm space-y-4 sm:space-y-6">
+        <div className="w-full sm:max-w-sm space-y-4 sm:space-y-6">
           {/* Header */}
           <div className="text-center">
             <div className="flex justify-center mb-3 sm:mb-4">
@@ -86,8 +86,7 @@ export default function LoginPage() {
               />
 
               {/* Remember Me & Forgot Password */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
-                <InputAuth name="remember" checkbox label="Remember me" />
+              <div className="flex flex-row items-center justify-end">
                 <TextLink link="/auth/forgot-password" />
               </div>
 
