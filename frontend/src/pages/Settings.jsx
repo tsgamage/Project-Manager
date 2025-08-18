@@ -39,8 +39,8 @@ export default function SettingsPage() {
   }
 
   async function handleSaveProfile() {
-    if (formData.name.trim().length < 3 || formData.name.trim().length > 40) {
-      return toast.error("Name must be between 3 and 40 characters");
+    if (formData.name.trim().length < 3 || formData.name.trim().length > 30) {
+      return toast.error("Name must be between 3 and 30 characters");
     }
 
     if (formData.name && !/^[a-zA-Z\s]+$/.test(formData.name)) {
