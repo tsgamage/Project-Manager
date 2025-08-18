@@ -106,7 +106,7 @@ export default function TeamsPage() {
       <MemberCategoryModal ref={addMemberCategoryModal} onClick={addMemberCategory} />
 
       <div className="min-h-screen">
-        <main className="max-w-7xl mx-auto p-4 sm:p-6">
+        <main className="max-w-7xl mx-auto p-2 sm:p-6">
           <TeamHeader />
           <TeamStats teamStats={teamStats} />
 
@@ -128,7 +128,7 @@ export default function TeamsPage() {
               </div>
             </div>
 
-            <div className="p-4 sm:p-6">
+            <div className="p-2 py-6 sm:p-6">
               {fetchedMembers.length === 0 && (
                 <NoMember onClick={() => memberModal.current.open()} />
               )}
@@ -137,7 +137,7 @@ export default function TeamsPage() {
                 <>
                   {/* Grid View */}
                   {viewMode === "grid" && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                       {fetchedMembers.map((member) => (
                         <GridMemberCard
                           key={member._id}
@@ -155,7 +155,7 @@ export default function TeamsPage() {
               )}
               {/* List View */}
               {viewMode === "list" && (
-                <div className="space-y-4">
+                <div className="space-y-2">
                   {Object.entries(groupedMembers).map(([categoryID, categoryMembers]) => (
                     <ListMemberCard
                       key={categoryID}

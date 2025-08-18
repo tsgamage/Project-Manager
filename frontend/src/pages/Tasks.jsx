@@ -66,7 +66,7 @@ export default function TasksPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto p-4 sm:p-6">
+      <div className="max-w-7xl mx-auto max-sm:px-2 p-4 sm:p-6">
         {/* Header */}
         <div className="mb-8 fade-in">
           <div className="flex items-center gap-3 mb-2">
@@ -82,7 +82,7 @@ export default function TasksPage() {
         </div>
 
         {/* Statistics */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           <div className="gradient-card rounded-xl p-4 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
@@ -134,6 +134,17 @@ export default function TasksPage() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
+                {searchQuery.length > 0 && (
+                  <button
+                    type="button"
+                    aria-label="Clear search"
+                    className="absolute bg-gray-700 cursor-pointer inset-y-0 right-0 pr-3 flex items-center hover:text-gray-300 transition-colors rounded-lg"
+                    onClick={() => setSearchQuery("")}
+                    tabIndex={0}
+                  >
+                    <X className="h-5 w-5 text-gray-400 hover:text-gray-300 transition-colors" />
+                  </button>
+                )}
               </div>
             </div>
             <div>

@@ -26,7 +26,7 @@ export default function MemberCard({ member }) {
 
       <MemberModal ref={updateMemberModal} memberData={member} onClick={updateMember} />
 
-      <div className="gradient-card rounded-lg p-2.5 sm:p-4 pl-4 sm:pl-6 border border-gray-700 hover:border-gray-600 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 relative overflow-hidden">
+      <div className="gradient-card rounded-lg p-4 pl-4 sm:pl-6 border border-gray-700 hover:border-gray-600 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 relative overflow-hidden">
         {/* Color Gradient Indicator */}
         <div className={`absolute left-0 top-0 bottom-0 w-1 ${member.color} opacity-80`}></div>
         <div className="flex items-center justify-between">
@@ -57,13 +57,13 @@ export default function MemberCard({ member }) {
             </div>
           </div>
           {/* Right Section - Actions */}
-          <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 flex-shrink-0">
+          <div className="flex flex-row gap-2 flex-shrink-0">
             <a
               href={`mailto:${member.email}?subject=${`Project Manager: <your subject here>`}&body=${`Hello ${member.name},\n\n I hope this email finds you well`},`}
               className="p-2.5 sm:p-3 rounded-lg hover:bg-gray-700/50 transition-colors"
               title="Send Email"
             >
-              <Mail className="h-4 w-4 sm:h-4 sm:w-4 text-gray-400 hover:text-blue-300" />
+              <Mail className="max-sm:hidden h-4 w-4 sm:h-4 sm:w-4 text-gray-400 hover:text-blue-300" />
             </a>
             <button
               onClick={() => updateMemberModal.current.open()}

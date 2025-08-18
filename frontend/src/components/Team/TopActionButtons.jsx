@@ -42,27 +42,26 @@ export default function TopActionButtons({
       </div>
 
       {/* Expand All Button - Only show in list view */}
-      {viewMode === "list" &&
-        Object.keys(groupedMembers).length > 0 && (
-          <>
-            <button
-              onClick={toggleExpandAll}
-              className="text-xs bg-gray-700/50 hover:bg-gray-700/70 text-gray-300 px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1"
-            >
-              {isExpanded ? (
-                <>
-                  <ChevronDown className="h-3 w-3" />
-                  Collapse All
-                </>
-              ) : (
-                <>
-                  <ChevronRight className="h-3 w-3" />
-                  Expand All
-                </>
-              )}
-            </button>
-          </>
-        )}
+      {viewMode === "list" && Object.keys(groupedMembers).length > 0 && (
+        <>
+          <button
+            onClick={toggleExpandAll}
+            className="text-xs bg-gray-700/50 hover:bg-gray-700/70 text-gray-300 px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center gap-1"
+          >
+            {isExpanded ? (
+              <>
+                <ChevronDown className="h-3 w-3" />
+                Collapse All
+              </>
+            ) : (
+              <>
+                <ChevronRight className="h-3 w-3" />
+                Expand All
+              </>
+            )}
+          </button>
+        </>
+      )}
 
       {/* Add Member Button */}
       <button
@@ -70,12 +69,14 @@ export default function TopActionButtons({
         className="_add-member cursor-pointer gradient-blue hover:shadow-lg text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all duration-300 hover-lift"
       >
         <UserPlus className="h-4 w-4" />
-        <span className="hidden lg:inline">Add Member</span>
+        <span className={`${viewMode === "list" ? "hidden" : "max-sm:inline"} lg:inline`}>
+          Add Member
+        </span>
       </button>
       <Tooltip anchorSelect="._add-member">Add Member</Tooltip>
       <button
         onClick={onAddCategory}
-        className="_add-category cursor-pointer border-1 border-transparent hover:border-1 hover:border-stone-500 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all duration-300"
+        className="_add-category cursor-pointer border-1 border-stone-500 hover:border-1 hover:border-stone-300 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all duration-300"
       >
         <Grid2x2Plus className="h-4 w-4 text-stone-300" />
         <span className="hidden lg:inline text-stone-300">Add a Category</span>

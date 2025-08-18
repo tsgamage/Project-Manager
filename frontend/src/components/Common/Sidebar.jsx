@@ -23,7 +23,7 @@ export default function Sidebar() {
         {/* Backdrop */}
         <div className="fixed inset-0 bg-black/50 z-50 md:hidden" onClick={toggleMobileSidebar} />
         {/* Mobile Sidebar */}
-        <div className="fixed left-0 top-0 h-full w-64 glass border-r border-gray-700 z-50 md:hidden transform transition-transform duration-300 ease-in-out slide-in">
+        <div className="fixed left-0 top-0 h-full w-64 glass border-r border-gray-700 z-50 md:hidden transform transition-transform duration-300 ease-in-out">
           <SidebarContent />
         </div>
       </>

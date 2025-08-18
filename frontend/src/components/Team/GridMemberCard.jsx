@@ -44,7 +44,7 @@ export default function GridMemberCard({ member, category }) {
       <MemberModal ref={memberModal} memberData={member} onClick={updateMember} />
       <div
         key={member._id}
-        className="gradient-card rounded-xl p-4 sm:p-6 hover-lift transition-all duration-300 border border-gray-700"
+        className="gradient-card rounded-xl p-4 sm:p-6 sm:hover-lift transition-all duration-300 border border-gray-700"
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
@@ -102,7 +102,7 @@ export default function GridMemberCard({ member, category }) {
             title="Send Email"
           >
             <Mail className="h-3 w-3" />
-            <span className="hidden sm:inline">Email</span>
+            <span className="inline">Email</span>
           </a>
           <div className="relative dropdown-container">
             <button

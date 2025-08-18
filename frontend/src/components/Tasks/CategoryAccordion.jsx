@@ -86,7 +86,7 @@ export default function CategoryAccordion({
 
       <div
         onClick={onClick}
-        className="glass rounded-2xl shadow-lg border border-gray-700 overflow-hidden mb-4"
+        className="glass rounded-2xl shadow-lg border border-gray-700 overflow-hidden mb-2"
       >
         <div
           onClick={() => {
@@ -110,7 +110,7 @@ export default function CategoryAccordion({
               }}
               className="p-1 cursor-pointer text-gray-400 hover:text-white"
             >
-              <Edit className="h-4 w-4" />
+              <Edit className="h-5 w-5" />
             </button>
             <button
               onClick={(e) => {
@@ -119,7 +119,7 @@ export default function CategoryAccordion({
               }}
               className="p-1 cursor-pointer text-gray-400 hover:text-red-400"
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 className="h-5 w-5" />
             </button>
             {isExpanded ? (
               <ChevronDown className="h-5 w-5 text-gray-400" />
@@ -130,7 +130,7 @@ export default function CategoryAccordion({
         </div>
 
         {isExpanded && (
-          <div className="border-t border-gray-700 p-4 space-y-3">
+          <div className="border-t border-gray-700 max-sm:p-3 p-4 space-y-3">
             {!isAddingTask && (
               <button
                 className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-600 bg-gray-700/50 text-gray-300 hover:bg-gray-700 transition-all duration-200 font-medium"
@@ -142,8 +142,8 @@ export default function CategoryAccordion({
             )}
 
             {isAddingTask && (
-              <div className="p-4 rounded-lg border transition-all duration-200 bg-gray-700/50 border-gray-600">
-                <div className="flex items-start gap-4">
+              <div className="max-sm:p-3 p-4 rounded-lg border bg-gray-700/50 border-gray-600">
+                <div className="flex flex-col gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-col gap-2">
                       <input
@@ -152,7 +152,7 @@ export default function CategoryAccordion({
                         value={editedName}
                         onChange={(e) => setEditedName(e.target.value)}
                         autoComplete="task-name"
-                        className="w-full px-2 py-1 border border-gray-500 rounded bg-gray-800 text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className="w-full px-2 py-2 border border-gray-500 rounded bg-gray-800 text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                       <textarea
                         placeholder="Task description"
@@ -164,22 +164,24 @@ export default function CategoryAccordion({
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col items-center gap-2 flex-shrink-0">
+                  <div className="flex items-center gap-2">
                     <button
-                      onClick={onAddTask}
-                      className="p-1 cursor-pointer text-gray-400 hover:text-white"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
-                    <button
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-600 bg-gray-700/50 text-gray-300 hover:bg-gray-700 transition-all duration-200 font-medium"
                       onClick={() => {
                         setIsAddingTask(false);
                         setEditedName("");
                         setEditedDescription("");
                       }}
-                      className="p-1 cursor-pointer text-gray-400 hover:text-red-400"
                     >
                       <X className="h-4 w-4" />
+                      Cancel
+                    </button>
+                    <button
+                      className="cursor-pointer w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-600 bg-gray-700/50 text-gray-300 hover:bg-gray-700 transition-all duration-200 font-medium"
+                      onClick={onAddTask}
+                    >
+                      <Plus className="h-4 w-4" />
+                      Add Task
                     </button>
                   </div>
                 </div>
@@ -201,4 +203,3 @@ export default function CategoryAccordion({
     </>
   );
 }
-

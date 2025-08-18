@@ -2,7 +2,7 @@ import { Calendar, Target, Users } from "lucide-react";
 
 export default function TeamStats({ teamStats }) {
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-5">
       <div className="gradient-card rounded-xl p-4 sm:p-6 shadow-lg hover-lift transition-all duration-300">
         <div className="flex items-center justify-between">
           <div className="truncate">

@@ -24,6 +24,7 @@ export default function AllProjectsPage() {
   const [searchQuery, setSearchQuery] = useState(SEARCHQUERY);
   const [searchedProjects, setSearchedProjects] = useState([]);
   const [viewMode, setViewMode] = useState(VIEWMODE);
+  const [showSeachFilters, setShowSearchFilters] = useState(false);
 
   useEffect(() => {
     if (sortOption === "newest") {
@@ -113,19 +114,32 @@ export default function AllProjectsPage() {
 
   return (
     <div className="min-h-screen">
-      <main className="max-w-7xl mx-auto p-4 sm:p-6">
-        <Header />
+      <main className="max-w-7xl mx-auto p-2 py-8 sm:p-6">
+        <Header
+          onSearchClick={() => setShowSearchFilters((prevalue) => !prevalue)}
+          showSeach={showSeachFilters}
+          isFiltering={filter !== "All" || searchQuery !== "" || sortOption !== "newest"}
+          onFiltersResetClick={()=>{
+            resetFilters("search");
+            resetFilters("sort");
+            resetFilters("filter");
+            setShowSearchFilters(false);
+          }}
+        />
 
         <div className="max-w-7xl mx-auto">
-          {projects.length > 1 && <Sortings
-            filter={filter}
-            setFilter={setFilter}
-            sortOption={sortOption}
-            setSortOption={setSortOption}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            onReset={resetFilters}
-          />}
+          {projects.length > 1 && (
+            <Sortings
+              filter={filter}
+              setFilter={setFilter}
+              sortOption={sortOption}
+              setSortOption={setSortOption}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              onReset={resetFilters}
+              showSeach={showSeachFilters}
+            />
+          )}
 
           {/* All Projects Title and View Toggle */}
           <div className="flex items-center justify-between gap-3 mb-8 mt-8">
@@ -137,10 +151,11 @@ export default function AllProjectsPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => changeViewMod("grid")}
-                className={`_grid-view cursor-pointer p-2 rounded-lg transition-all duration-200 ${viewMode === "grid"
-                  ? "bg-blue-600/20 text-blue-300 border border-blue-500/30"
-                  : "bg-gray-700/50 text-gray-400 hover:text-gray-300 hover:bg-gray-700/70"
-                  }`}
+                className={`_grid-view cursor-pointer p-2 rounded-lg transition-all duration-200 ${
+                  viewMode === "grid"
+                    ? "bg-blue-600/20 text-blue-300 border border-blue-500/30"
+                    : "bg-gray-700/50 text-gray-400 hover:text-gray-300 hover:bg-gray-700/70"
+                }`}
                 title="Grid View"
               >
                 <Grid3X3 className="h-4 w-4" />
@@ -149,10 +164,11 @@ export default function AllProjectsPage() {
 
               <button
                 onClick={() => changeViewMod("list")}
-                className={`_list-view cursor-pointer p-2 rounded-lg transition-all duration-200 ${viewMode === "list"
-                  ? "bg-blue-600/20 text-blue-300 border border-blue-500/30"
-                  : "bg-gray-700/50 text-gray-400 hover:text-gray-300 hover:bg-gray-700/70"
-                  }`}
+                className={`_list-view cursor-pointer p-2 rounded-lg transition-all duration-200 ${
+                  viewMode === "list"
+                    ? "bg-blue-600/20 text-blue-300 border border-blue-500/30"
+                    : "bg-gray-700/50 text-gray-400 hover:text-gray-300 hover:bg-gray-700/70"
+                }`}
                 title="List View"
               >
                 <List className="h-4 w-4" />
@@ -162,21 +178,21 @@ export default function AllProjectsPage() {
           </div>
 
           {/* Projects Display */}
-          {viewMode === "grid" &&
+          {viewMode === "grid" && (
             <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
               {searchedProjects.map((project) => (
                 <ProjectCard key={project._id} project={project} />
               ))}
             </div>
-          }
+          )}
 
-          {viewMode === "list" &&
+          {viewMode === "list" && (
             <div className="space-y-3">
               {searchedProjects.map((project) => (
                 <ProjectListCard key={project._id} project={project} />
               ))}
             </div>
-          }
+          )}
 
           {/* No Projects */}
           {projects.length === 0 && (
@@ -185,9 +201,7 @@ export default function AllProjectsPage() {
                 <FolderPlus className="h-12 w-12 text-gray-300" />
               </div>
 
-              <h3 className="text-2xl font-bold text-white mt-6">
-                No projects found
-              </h3>
+              <h3 className="text-2xl font-bold text-white mt-6">No projects found</h3>
               <p className="text-gray-400 mt-3 max-w-md mx-auto">
                 Create a new project to get started.
               </p>
@@ -204,9 +218,7 @@ export default function AllProjectsPage() {
                 <FolderSearch className="h-12 w-12 text-gray-300" />
               </div>
 
-              <h3 className="text-2xl font-bold text-white mt-6">
-                No projects found
-              </h3>
+              <h3 className="text-2xl font-bold text-white mt-6">No projects found</h3>
               <p className="text-gray-400 mt-3 max-w-md mx-auto">
                 Try adjusting your search or filter to find what you're looking for.
               </p>

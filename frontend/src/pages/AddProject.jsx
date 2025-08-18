@@ -64,11 +64,11 @@ export default function AddProjectPage() {
         message={modalData.message}
       />
 
-      <div className="min-h-screen">
-        <main className="max-w-7xl mx-auto p-4 sm:p-6">
+      <div className="min-h-screen max-sm:mb-8">
+        <main className="max-w-7xl mx-auto sm:p-6">
           <Header />
 
-          <div className="glass rounded-2xl shadow-lg border border-gray-700 p-6 sm:p-8 ">
+          <div className="glass rounded-2xl shadow-lg border border-gray-700 p-3 sm:p-8 ">
             <form action={formActionState} className="space-y-8 sm:space-y-10">
               {/* Basic Information Section */}
               <div className="space-y-6">

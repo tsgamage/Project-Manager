@@ -87,7 +87,7 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto p-4 sm:p-6">
+      <div className="max-w-7xl mx-auto p-1 sm:p-6">
         {/* Header */}
         <div className="mb-6 sm:mb-8 fade-in">
           <div className="flex items-center gap-3 sm:gap-4 mb-4">
@@ -132,7 +132,7 @@ export default function SettingsPage() {
 
           {/* Main Content */}
           <div className="lg:col-span-3">
-            <div className="glass rounded-2xl shadow-lg border border-gray-700 p-4 sm:p-6">
+            <div className="glass rounded-2xl shadow-lg border border-gray-700 p-3 sm:p-6">
               {/* Profile Tab */}
               {activeTab === "profile" && (
                 <div>
@@ -144,7 +144,7 @@ export default function SettingsPage() {
                     {!isEditing && (
                       <button
                         onClick={() => setIsEditing(true)}
-                        className="flex cursor-pointer items-center gap-2 gradient-blue hover:shadow-lg text-white px-4 py-2 rounded-xl transition-all duration-300 hover-lift"
+                        className="flex cursor-pointer items-center gap-2 bg-blue-500/50 hover:shadow-lg text-white px-4 py-2 rounded-xl transition-all duration-300 hover-lift"
                       >
                         <Edit3 className="h-4 w-4" />
                         Edit Profile
@@ -300,8 +300,13 @@ export default function SettingsPage() {
 
                     <button
                       onClick={handlePasswordChange}
-                      disabled={isLoadingPasswordChange}
-                      className="bg-blue-500/50 cursor-pointer hover:shadow-lg text-white px-6 py-3 rounded-xl transition-all duration-300 hover-lift disabled:bg-blue-500 disabled:opacity-50"
+                      disabled={
+                        isLoadingPasswordChange ||
+                        !formData.newPassword ||
+                        !formData.currentPassword ||
+                        !formData.confirmPassword
+                      }
+                      className="bg-blue-500/50 max-sm:w-full sm:w-auto cursor-pointer hover:shadow-lg text-white px-6 py-3 rounded-xl transition-all duration-300 hover-lift disabled:bg-blue-500 disabled:opacity-50"
                     >
                       {isLoadingPasswordChange ? "Updating..." : "Update Password"}
                     </button>

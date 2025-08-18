@@ -177,7 +177,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-2 sm:p-6">
         {/* Welcome Header */}
         <div className="mb-8 fade-in">
           <div className="flex items-center justify-between">
@@ -205,7 +205,7 @@ export default function HomePage() {
         </div>
 
         {/* Main Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
           <div className="gradient-card rounded-2xl p-6 shadow-lg hover-lift transition-all duration-300">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 gradient-blue rounded-xl flex items-center justify-center">
@@ -264,7 +264,7 @@ export default function HomePage() {
         </div>
 
         {/* Secondary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6">
           <div className="glass rounded-2xl p-6 border border-gray-700">
             <div className="flex items-center gap-3 mb-3">
               <Target className="h-5 w-5 text-blue-400" />
@@ -316,7 +316,7 @@ export default function HomePage() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Recent Projects */}
           <div className="lg:col-span-2">
             <div className="glass rounded-2xl shadow-lg border border-gray-700">
@@ -332,7 +332,7 @@ export default function HomePage() {
                   </Link>
                 </div>
               </div>
-              <div className="p-6">
+              <div className="p-3">
                 {recentProjects.length === 0 ? (
                   <div className="text-center py-8">
                     <div className="w-16 h-16 gradient-card rounded-full flex items-center justify-center mx-auto mb-4">
@@ -351,9 +351,9 @@ export default function HomePage() {
                   <div className="space-y-4">
                     {recentProjects.map((project) => (
                       <Link key={project._id} to={`/project/view/${project._id}`}>
-                        <div className="group hover:bg-gray-700/50 rounded-xl p-4 transition-all duration-200">
+                        <div className="group hover:bg-gray-700/50 sm:rounded-xl max-sm:py-5 p-3 sm:p-6 max-sm:border-y-1 max-sm:border-stone-500/20 transition-all duration-200 ">
                           <div className="flex items-center justify-between mb-3">
-                            <h3 className="font-semibold text-white group-hover:text-blue-300 transition-colors">
+                            <h3 className="font-semibold text-white group-hover:text-blue-300 transition-colors truncate">
                               {project.title}
                             </h3>
                             <span
@@ -362,8 +362,8 @@ export default function HomePage() {
                               {getProjectStatus(project)}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-400 mb-3 line-clamp-2">
-                            {project.description || "No description available"}
+                          <p className="text-sm text-gray-400 mb-3 line-clamp-2 truncate">
+                            {project.description}
                           </p>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4 text-xs text-gray-500">
@@ -400,7 +400,7 @@ export default function HomePage() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Quick Actions */}
-            <div className="glass rounded-2xl shadow-lg border border-gray-700 p-6">
+            <div className="glass rounded-2xl shadow-lg border border-gray-700 max-sm:p-4 sm:p-6">
               <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
               <div className="space-y-3">
                 <Link
@@ -432,7 +432,7 @@ export default function HomePage() {
             </div>
 
             {/* Upcoming Deadlines */}
-            <div className="glass rounded-2xl shadow-lg border border-gray-700 p-6">
+            <div className="glass rounded-2xl shadow-lg border border-gray-700 max-sm:p-4 sm:p-6">
               <h3 className="text-lg font-semibold text-white mb-4">Upcoming Deadlines</h3>
               {upcomingDeadlines.length === 0 ? (
                 <p className="text-sm text-gray-400">No upcoming deadlines</p>
@@ -472,7 +472,7 @@ export default function HomePage() {
             </div>
 
             {/* Project Status Overview */}
-            <div className="glass rounded-2xl shadow-lg border border-gray-700 p-6">
+            <div className="glass rounded-2xl shadow-lg border border-gray-700 p-6 mb-6">
               <h3 className="text-lg font-semibold text-white mb-4">Project Status</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
