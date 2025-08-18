@@ -11,7 +11,7 @@ const formatDate = (dateString) => {
   }
 };
 
-export default forwardRef(function EditProjectModal({ project, onClose, onSave }, ref) {
+export default forwardRef(function EditProjectModal({ project, onSave }, ref) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -56,8 +56,7 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
       endDate: formatDate(project.endDate) || "",
       description: project.description || "",
     });
-    onClose();
-  }, [onClose, project]);
+  }, [project]);
 
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -83,16 +82,12 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
   // Close modal on escape key
   useEffect(() => {
     const handleEscape = (e) => {
-      if (e.key === "Escape" && isOpen) {
-        handleClose();
-      }
+      if (e.key === "Escape" && isOpen) handleClose();
     };
-
     if (isOpen) {
       document.addEventListener("keydown", handleEscape);
       document.body.style.overflow = "hidden";
     }
-
     return () => {
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "unset";
@@ -106,10 +101,11 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
       className="fixed inset-0 z-1000 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
-      <div className="w-full max-w-xs sm:max-w-md mx-auto max-h-[90vh] overflow-y-auto">
+      {/* Full width on mobile, constrained on desktop */}
+      <div className="w-full sm:max-w-md mx-auto max-h-[90vh] overflow-y-auto">
         <div className="glass rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between p-3 sm:p-6 border-b border-gray-700">
+          <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-700">
             <div className="flex items-center gap-2 sm:gap-3">
               <div className="w-7 h-7 sm:w-10 sm:h-10 gradient-blue rounded-lg sm:rounded-xl flex items-center justify-center">
                 <Edit3 className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-white" />
@@ -129,7 +125,7 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="p-3 sm:p-6 space-y-3 sm:space-y-6">
+          <form onSubmit={handleSubmit} className="p-3 sm:p-4 space-y-3 sm:space-y-4">
             {/* Project Title */}
             <div>
               <label htmlFor="title" className="block text-sm font-medium text-white mb-2">
@@ -196,10 +192,10 @@ export default forwardRef(function EditProjectModal({ project, onClose, onSave }
               <textarea
                 id="description"
                 name="description"
-                rows="3"
+                rows="6"
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 rounded-lg sm:rounded-xl bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base resize-none"
+                className="w-full px-3 sm:px-4 py-3 border border-gray-600 rounded-lg sm:rounded-xl bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base resize-y max-h-64 overflow-y-auto"
                 placeholder="Describe the project..."
                 required
               />

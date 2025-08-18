@@ -5,7 +5,7 @@ import useStatusClasses from "../../hooks/useStatusClasses";
 import { Info } from "lucide-react";
 import ProjectActions from "./ProjectActions";
 
-export default function ProjectInfo() {
+export default function ProjectInfo({onEdit}) {
   const { selectedProject } = useContext(ProjectContext);
 
   const progress = useProgress(selectedProject);
@@ -76,7 +76,7 @@ export default function ProjectInfo() {
         </div>
       </div>
       <div className="border-t border-gray-800 pt-4">
-        <ProjectActions />
+        <ProjectActions onEdit={onEdit} />
       </div>
     </div>
   );

@@ -11,14 +11,16 @@ import { X, Search, Users, Plus, Mail, CheckCircle, Clock } from "lucide-react";
 import MemberContext from "../../../store/member.context";
 import ProjectContext from "../../../store/project.context";
 
-// Fake members data based on the member modal structure
-
-const MemberCard = ({ member, onSelect, isSelected }) => {
+const MemberCard = ({ member, onSelect, isSelected, isDisabled }) => {
   return (
     <div
-      onClick={() => onSelect(member)}
-      className={`gradient-card rounded-lg p-3 sm:p-4 border transition-all duration-300 cursor-pointer hover:shadow-lg hover:-translate-y-0.5 relative overflow-hidden ${
-        isSelected ? "border-blue-500 bg-blue-500/10" : "border-gray-700 hover:border-gray-600"
+      onClick={() => !isDisabled && onSelect(member)}
+      className={`gradient-card rounded-lg p-3 sm:p-4 border transition-all duration-300 relative overflow-hidden ${
+        isDisabled
+          ? "border-gray-800 bg-gray-800/50 cursor-not-allowed opacity-50"
+          : isSelected
+          ? "cursor-pointer border-blue-500 bg-blue-500/10 hover:shadow-lg hover:-translate-y-0.5"
+          : "cursor-pointer border-gray-700 hover:border-gray-600 hover:shadow-lg hover:-translate-y-0.5"
       }`}
     >
       {/* Color Gradient Indicator */}
@@ -35,7 +37,11 @@ const MemberCard = ({ member, onSelect, isSelected }) => {
           <p className="text-xs sm:text-sm text-gray-400">{member.role}</p>
         </div>
         <div className="flex items-center gap-2">
-          {member.assignedProjects.length === 0 ? (
+          {isDisabled ? (
+            <span className="text-xs bg-gray-600/40 text-gray-400 border border-gray-600 px-2 py-1 rounded-full">
+              Already in Project
+            </span>
+          ) : member.assignedProjects.length === 0 ? (
             <span className="text-xs bg-green-500/20 text-green-300 border border-green-500/30 px-2 py-1 rounded-full flex items-center gap-1">
               <CheckCircle className="h-3 w-3" />
               Free
@@ -82,7 +88,7 @@ const MemberCard = ({ member, onSelect, isSelected }) => {
   );
 };
 
-const SelectedMemberTag = ({ member, onRemove }) => {
+const SelectedMemberTag = ({ member, onRemove, isDisabled }) => {
   return (
     <div className="flex min-w-fit items-center gap-2 bg-blue-500/20 border border-blue-500/30 text-blue-300 px-3 py-2 rounded-full text-sm">
       <div
@@ -91,13 +97,15 @@ const SelectedMemberTag = ({ member, onRemove }) => {
         {member.name.charAt(0)}
       </div>
       <span className="font-medium">{member.name}</span>
-      <button
-        onClick={() => onRemove(member._id)}
-        className="ml-1 hover:bg-blue-500/30 rounded-full p-1 transition-colors"
-        aria-label={`Remove ${member.name}`}
-      >
-        <X className="h-3 w-3" />
-      </button>
+      {!isDisabled && (
+        <button
+          onClick={() => onRemove(member._id)}
+          className="ml-1 hover:bg-blue-500/30 rounded-full p-1 transition-colors"
+          aria-label={`Remove ${member.name}`}
+        >
+          <X className="h-4 w-4" />
+        </button>
+      )}
     </div>
   );
 };
@@ -192,7 +200,11 @@ export default forwardRef(function AddMemberToProject(props, ref) {
     open: () => {
       setIsOpen(true);
       setSearchTerm("");
-      setSelectedMembers([]);
+      // preload already-added members
+      const alreadyAdded = fetchedMembers.filter((m) =>
+        selectedProject.team.includes(m._id)
+      );
+      setSelectedMembers(alreadyAdded);
     },
     close: () => {
       handleClose();
@@ -206,10 +218,10 @@ export default forwardRef(function AddMemberToProject(props, ref) {
       className="fixed inset-0 z-1000 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
-      <div className="w-full max-w-2xl max-h-[80vh] overflow-scroll">
-        <div className="glass rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
+      <div className="w-full max-w-2xl">
+        <div className="glass rounded-2xl shadow-2xl border border-gray-700 overflow-hidden max-h-[80vh] flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between p-3 sm:p-6 border-b border-gray-700">
+          <div className="flex-shrink-0 flex items-center justify-between p-3 sm:p-6 border-b border-gray-700">
             <div className="flex items-center gap-2 sm:gap-3">
               <div className="w-7 h-7 sm:w-10 sm:h-10 gradient-blue rounded-lg sm:rounded-xl flex items-center justify-center">
                 <Users className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-white" />
@@ -231,9 +243,10 @@ export default forwardRef(function AddMemberToProject(props, ref) {
             </button>
           </div>
 
-          <div className="p-3 sm:p-6">
+          {/* Body */}
+          <div className="flex-1 p-3 sm:p-6 overflow-hidden flex flex-col">
             {/* Search Bar */}
-            <div className="relative mb-4">
+            <div className="relative mb-4 flex-shrink-0">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
               </div>
@@ -248,9 +261,8 @@ export default forwardRef(function AddMemberToProject(props, ref) {
 
             {/* Selected Members Tags */}
             {selectedMembers.length > 0 && (
-              <div className="mb-4 p-3 pb-5 bg-gray-800/50 rounded-lg border border-gray-700 overflow-x-scroll">
+              <div className="mb-4 p-3 pb-5 bg-gray-800/50 rounded-lg border border-gray-700 overflow-x-scroll flex-shrink-0">
                 <div className="flex sticky left-0 items-center gap-2 mb-2">
-                  <Plus className="h-4 w-4 text-blue-400" />
                   <span className="text-sm font-medium text-white">
                     Selected Members ({selectedMembers.length})
                   </span>
@@ -261,6 +273,7 @@ export default forwardRef(function AddMemberToProject(props, ref) {
                       key={member._id}
                       member={member}
                       onRemove={handleRemoveMember}
+                      isDisabled={selectedProject.team.includes(member._id)}
                     />
                   ))}
                 </div>
@@ -268,14 +281,15 @@ export default forwardRef(function AddMemberToProject(props, ref) {
             )}
 
             {/* Members List */}
-            <div className="space-y-1 mb-4">
-              <div className="flex items-center justify-between">
+            <div className="space-y-1 mb-4 flex-1 flex flex-col overflow-hidden">
+              <div className="flex items-center justify-between flex-shrink-0">
                 <span className="text-sm font-medium text-white">
                   Available Members ({filteredMembers.length})
                 </span>
               </div>
 
-              <div className="max-h-96 overflow-y-auto space-y-3 pr-2">
+              {/* Scrollable area */}
+              <div className="flex-1 overflow-y-auto space-y-3 pr-2 mt-2">
                 {filteredMembers.length > 0 ? (
                   filteredMembers.map((member) => (
                     <MemberCard
@@ -283,6 +297,7 @@ export default forwardRef(function AddMemberToProject(props, ref) {
                       member={member}
                       onSelect={handleMemberSelect}
                       isSelected={selectedMembers.some((m) => m._id === member._id)}
+                      isDisabled={selectedProject.team.includes(member._id)}
                     />
                   ))
                 ) : (
@@ -293,36 +308,44 @@ export default forwardRef(function AddMemberToProject(props, ref) {
                 )}
               </div>
             </div>
+          </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4 border-t border-gray-700">
-              <button
-                type="button"
-                onClick={handleClose}
-                disabled={isLoading}
-                className="flex-1 px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 text-gray-300 rounded-lg sm:rounded-xl hover:bg-gray-700 transition-all duration-300 font-medium text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleAddMembers}
-                disabled={isLoading || selectedMembers.length === 0}
-                className="flex-1 px-3 sm:px-4 py-2 sm:py-3 gradient-blue hover:shadow-lg text-white rounded-lg sm:rounded-xl font-medium transition-all duration-300 hover-lift disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base flex items-center justify-center gap-2"
-              >
-                {isLoading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    Adding Members...
-                  </>
-                ) : (
-                  <>
-                    <Plus className="h-4 w-4" />
-                    Add {selectedMembers.length > 0 ? `${selectedMembers.length} ` : ""}Member
-                    {selectedMembers.length !== 1 ? "s" : ""}
-                  </>
-                )}
-              </button>
-            </div>
+          {/* Footer */}
+          <div className="flex-shrink-0 flex flex-col sm:flex-row gap-2 sm:gap-3 p-3 sm:p-6 border-t border-gray-700">
+            <button
+              type="button"
+              onClick={handleClose}
+              disabled={isLoading}
+              className="flex-1 px-3 sm:px-4 py-2 sm:py-3 border border-gray-600 text-gray-300 rounded-lg sm:rounded-xl hover:bg-gray-700 transition-all duration-300 font-medium text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleAddMembers}
+              disabled={isLoading || selectedMembers.filter((m) => !selectedProject.team.includes(m._id)).length === 0}
+              className="flex-1 px-3 sm:px-4 py-2 sm:py-3 gradient-blue hover:shadow-lg text-white rounded-lg sm:rounded-xl font-medium transition-all duration-300 hover-lift disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base flex items-center justify-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  Adding Members...
+                </>
+              ) : (
+                <>
+                  <Plus className="h-4 w-4" />
+                  Add{" "}
+                  {
+                    selectedMembers.filter(
+                      (m) => !selectedProject.team.includes(m._id)
+                    ).length
+                  }{" "}
+                  Member
+                  {selectedMembers.filter((m) => !selectedProject.team.includes(m._id)).length !== 1
+                    ? "s"
+                    : ""}
+                </>
+              )}
+            </button>
           </div>
         </div>
       </div>

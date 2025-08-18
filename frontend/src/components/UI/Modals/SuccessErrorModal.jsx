@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { CheckCircle, XCircle, Home, ArrowLeft, X } from "lucide-react";
+import { CheckCircle, XCircle, X } from "lucide-react";
 
 const ICONS = {
   success: CheckCircle,
@@ -79,7 +79,8 @@ export default forwardRef(function SuccessErrorModal(
       className="fixed inset-0 z-1000 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
-      <div className="w-full max-w-xs sm:max-w-md mx-auto">
+      {/* FULL WIDTH ON MOBILE, CONSTRAINED ON DESKTOP */}
+      <div className="w-full sm:max-w-md mx-auto">
         <div className="glass rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between p-3 sm:p-6 border-b border-gray-700">
@@ -124,14 +125,12 @@ export default forwardRef(function SuccessErrorModal(
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               {type === "success" ? (
-                <>
-                  <button
-                    onClick={onClick}
-                    className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg sm:rounded-xl font-medium transition-all duration-300 hover-lift text-sm sm:text-base flex items-center justify-center gap-2"
-                  >
-                    View Project
-                  </button>
-                </>
+                <button
+                  onClick={onClick}
+                  className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg sm:rounded-xl font-medium transition-all duration-300 hover-lift text-sm sm:text-base flex items-center justify-center gap-2"
+                >
+                  View Project
+                </button>
               ) : (
                 <button
                   onClick={handleClose}

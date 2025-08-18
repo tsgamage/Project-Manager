@@ -39,12 +39,7 @@ export default function ViewProjectPage() {
 
   return (
     <div className="min-h-screen">
-      <EditProjectModal
-        ref={editModalRef}
-        project={selectedProject}
-        onClose={() => editModalRef.current?.close()}
-        onSave={handleEditProject}
-      />
+      <EditProjectModal ref={editModalRef} project={selectedProject} onSave={handleEditProject} />
 
       <div className="max-w-7xl mx-auto">
         <ProjectHeader />
@@ -53,7 +48,7 @@ export default function ViewProjectPage() {
         <div className="px-1 sm:px-6 lg:px-8 mb-8">
           {activeTab === "tasks" && <ProjectTasks tasks={selectedProject.tasks} />}
           {activeTab === "team" && <TeamMembers team={selectedProject.team} />}
-          {activeTab === "info" && <ProjectInfo />}
+          {activeTab === "info" && <ProjectInfo onEdit={() => editModalRef.current?.open()} />}
         </div>
       </div>
     </div>

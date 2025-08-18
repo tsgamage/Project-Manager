@@ -5,7 +5,7 @@ import DeleteWarningModal from "../UI/Modals/DeleteWarningModal";
 import { Download, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
-export default function ProjectActions() {
+export default function ProjectActions({ onEdit }) {
   const deleteModal = useRef();
   const navigate = useNavigate();
   const { deleteProject } = useContext(ProjectContext);
@@ -34,7 +34,7 @@ export default function ProjectActions() {
       />
 
       <div className="flex flex-col sm:flex-row gap-3 justify-end">
-        <button onClick={()=>console.log("Downloading...")} className={downloadBtnClasses}>
+        <button onClick={onEdit} className={downloadBtnClasses}>
           <Download /> Download Project Info
         </button>
         <button onClick={handleDeleteProject} className={deleteBtnClasses}>
