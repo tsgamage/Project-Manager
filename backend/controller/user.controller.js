@@ -1,6 +1,6 @@
 import { User } from "../models/user.model.js";
 
-export async function updateUser(req, res) {
+export async function updateUser(req, res, next) {
   const userID = req.userID;
   const { name } = req.body;
   try {
@@ -24,7 +24,6 @@ export async function updateUser(req, res) {
       user: { ...user._doc, password: undefined },
     });
   } catch (err) {
-    console.log("Error while updating user:", err);
-    res.status(500).json({ success: false, message: err.message });
+    next(err);
   }
 }

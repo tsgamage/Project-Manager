@@ -8,7 +8,7 @@ import {
   sendVerificationEmail,
 } from "../mail/mails.js";
 
-export async function signup(req, res) {
+export async function signup(req, res, next) {
   const { name, email, password } = req.body;
 
   try {
@@ -52,12 +52,11 @@ export async function signup(req, res) {
       user: { ...user._doc, password: undefined },
     });
   } catch (err) {
-    console.log("Error while signing up:", err);
-    res.status(400).json({ success: false, message: err.message });
+    next(err);
   }
 }
 
-export async function login(req, res) {
+export async function login(req, res, next) {
   const { email, password } = req.body;
   try {
     if (!email || !password) {
@@ -88,8 +87,7 @@ export async function login(req, res) {
       user: { ...user._doc, password: undefined },
     });
   } catch (err) {
-    console.log("Error while logging in:", err);
-    res.status(400).json({ success: false, message: err.message });
+    next(err);
   }
 }
 
@@ -98,7 +96,7 @@ export async function logout(req, res) {
   res.status(200).json({ success: true, message: "Logged out successfully" });
 }
 
-export async function verifyEmail(req, res) {
+export async function verifyEmail(req, res, next) {
   const { code } = req.body;
   const userID = req.userID;
 
@@ -129,12 +127,11 @@ export async function verifyEmail(req, res) {
       user: { ...user._doc, password: undefined },
     });
   } catch (err) {
-    console.log("Error while verifying email:", err);
-    res.status(400).json({ success: false, message: err.message });
+    next(err);
   }
 }
 
-export async function resendVerificationCode(req, res) {
+export async function resendVerificationCode(req, res, next) {
   const userID = req.userID;
   try {
     const user = await User.findOne({ _id: userID });
@@ -162,12 +159,11 @@ export async function resendVerificationCode(req, res) {
 
     res.status(200).json({ success: true, message: "Verification code resent successfully" });
   } catch (err) {
-    console.log("Error while resending verification code:", err);
-    res.status(400).json({ success: false, message: err.message });
+    next(err);
   }
 }
 
-export async function forgotPassword(req, res) {
+export async function forgotPassword(req, res, next) {
   const { email } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -199,12 +195,11 @@ export async function forgotPassword(req, res) {
 
     res.status(200).json({ success: true, message: "Password reset email sent successfully" });
   } catch (err) {
-    console.log("Error while sending forgot password email:", err);
-    res.status(400).json({ success: false, message: err.message });
+    next(err);
   }
 }
 
-export async function resetPassword(req, res) {
+export async function resetPassword(req, res, next) {
   const { password } = req.body;
   const { token } = req.params;
   try {
@@ -236,12 +231,11 @@ export async function resetPassword(req, res) {
 
     res.status(200).json({ success: true, message: "Password reset successfully" });
   } catch (err) {
-    console.log("Error while resetting password:", err);
-    res.status(400).json({ success: false, message: err.message });
+    next(err);
   }
 }
 
-export async function checkAuth(req, res) {
+export async function checkAuth(req, res, next) {
   const userID = req.userID;
 
   if (!userID) {
@@ -257,11 +251,11 @@ export async function checkAuth(req, res) {
 
     res.status(200).json({ success: true, user });
   } catch (err) {
-    return res.status(500).json({ success: false, message: "Internal Server Error" });
+    next(err);
   }
 }
 
-export async function changePassword(req, res) {
+export async function changePassword(req, res, next) {
   const userID = req.userID;
   const { oldPassword, newPassword } = req.body;
 
@@ -289,7 +283,6 @@ export async function changePassword(req, res) {
 
     res.status(200).json({ success: true, message: "Password changed successfully" });
   } catch (err) {
-    console.log("Error while changing password: ", err.message);
-    res.status(500).json({ success: false, message: err.message });
+    next(err);
   }
 }

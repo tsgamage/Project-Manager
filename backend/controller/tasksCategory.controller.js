@@ -2,19 +2,18 @@ import mongoose from "mongoose";
 import TaskCategory from "../models/tasksCategory.modal.js";
 import getUserID from "../utils/getUserID.js";
 
-export async function getTasksCategories(req, res) {
+export async function getTasksCategories(req, res, next) {
   const userID = getUserID(req, res);
 
   try {
     const categories = await TaskCategory.find({ userID });
     res.status(200).json({ success: true, data: categories });
   } catch (err) {
-    console.log("Error while getting categories: ", err);
-    res.status(500).json({ success: false, message: err.message || "Cannot get tasks categories" });
+    next(err);
   }
 }
 
-export async function addTaskCategory(req, res) {
+export async function addTaskCategory(req, res, next) {
   const userID = getUserID(req, res);
   const { name, color, projectID } = req.body;
 
@@ -29,14 +28,11 @@ export async function addTaskCategory(req, res) {
       .status(201)
       .json({ success: true, message: "Category created successfully", data: newCategory });
   } catch (err) {
-    console.log("Error while creating category: ", err);
-    res
-      .status(500)
-      .json({ success: false, message: err.message || "Error while creating category" });
+    next(err);
   }
 }
 
-export async function updateTaskCategory(req, res) {
+export async function updateTaskCategory(req, res, next) {
   const { name, color } = req.body;
   const { categoryID } = req.params;
 
@@ -63,14 +59,11 @@ export async function updateTaskCategory(req, res) {
       .status(200)
       .json({ success: true, message: "Category updated successfully", data: category });
   } catch (err) {
-    console.log("Error while updating category: ", err);
-    res
-      .status(500)
-      .json({ success: false, message: err.message || "Error while updating category" });
+    next(err);
   }
 }
 
-export async function deleteTaskCategory(req, res) {
+export async function deleteTaskCategory(req, res, next) {
   const { categoryID } = req.params;
 
   if (!categoryID) {
@@ -91,9 +84,6 @@ export async function deleteTaskCategory(req, res) {
       .status(200)
       .json({ success: true, message: "Category deleted successfully", data: category });
   } catch (err) {
-    console.log("Error while deleting category: ", err);
-    res
-      .status(500)
-      .json({ success: false, message: err.message || "Error while deleting category" });
+    next(err);
   }
 }

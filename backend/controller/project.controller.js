@@ -1,18 +1,17 @@
 import Project from "../models/projects.model.js";
 import mongoose from "mongoose";
 
-export const getAllProjects = async (req, res) => {
+export const getAllProjects = async (req, res, next) => {
   const userID = req.userID;
   try {
     const project = await Project.find({ userID }).sort({ updatedAt: -1 });
     res.status(200).json({ success: true, data: project });
-  } catch (e) {
-    console.log("cannot get project", e.message);
-    res.status(500).json({ success: false, message: e.message });
+  } catch (err) {
+    next(err);
   }
 };
 
-export const getProjectById = async (req, res) => {
+export const getProjectById = async (req, res, next) => {
   const { projectID } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(projectID)) {
@@ -27,13 +26,12 @@ export const getProjectById = async (req, res) => {
     } else {
       return res.status(200).json({ success: true, data: { projects: projects } });
     }
-  } catch (e) {
-    console.log(`cannot get project: ${projectID}`, e.message);
-    return res.status(500).json({ success: false, message: e.message });
+  } catch (err) {
+    next(err);
   }
 };
 
-export const newProject = async (req, res) => {
+export const newProject = async (req, res, next) => {
   const userID = req.userID;
   const projectData = req.body;
 
@@ -55,12 +53,12 @@ export const newProject = async (req, res) => {
       message: "Created project",
       data: newProject,
     });
-  } catch {
-    return res.status(500).json({ success: false, message: "Something went wrong" });
+  } catch (err) {
+    next(err);
   }
 };
 
-export const updateProject = async (req, res) => {
+export const updateProject = async (req, res, next) => {
   const { projectID } = req.params;
   const projectData = req.body;
 
@@ -71,12 +69,12 @@ export const updateProject = async (req, res) => {
   try {
     const updatedProject = await Project.findByIdAndUpdate(projectID, projectData, { new: true });
     return res.status(200).json({ success: true, data: updatedProject });
-  } catch (e) {
-    return res.status(500).json({ success: false, message: e.message });
+  } catch (err) {
+    next(err);
   }
 };
 
-export const deleteProject = async (req, res) => {
+export const deleteProject = async (req, res, next) => {
   const { projectID } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(projectID)) {
@@ -95,7 +93,7 @@ export const deleteProject = async (req, res) => {
       message: "Successfully deleted",
       data: deletedProject,
     });
-  } catch (e) {
-    return res.status(500).json({ success: false, message: e.message });
+  } catch (err) {
+    next(err);
   }
 };

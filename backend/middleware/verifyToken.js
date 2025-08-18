@@ -15,8 +15,9 @@ export default function verifyToken(req, res, next) {
 
     // Adding the user id to the request
     req.userID = decode.userID;
+
     next();
   } catch (err) {
-    res.status(500).json({ success: false, message: "Internal server error" });
+    throw new Error(err);
   }
 }

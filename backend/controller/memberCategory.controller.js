@@ -3,20 +3,17 @@ import Member from "../models/member.modal.js";
 import MemberCategory from "../models/memberCategory.modal.js";
 import getUserID from "../utils/getUserID.js";
 
-export async function getMemberCategories(req, res) {
+export async function getMemberCategories(req, res, next) {
   const userID = getUserID(req, res);
   try {
     const categories = await MemberCategory.find({ userID });
     res.status(200).json({ success: true, data: categories });
   } catch (err) {
-    console.log("Error while getting categories: ", err);
-    res
-      .status(500)
-      .json({ success: false, message: err.message || "Cannot get member categories" });
+    next(err);
   }
 }
 
-export async function addMemberCategory(req, res) {
+export async function addMemberCategory(req, res, next) {
   const userID = getUserID(req, res);
   const { name, color } = req.body;
   if (!name || !color) {
@@ -29,14 +26,11 @@ export async function addMemberCategory(req, res) {
       .status(201)
       .json({ success: true, message: "Category created successfully", data: newCategory });
   } catch (err) {
-    console.log("Error while creating category: ", err);
-    res
-      .status(500)
-      .json({ success: false, message: err.message || "Error while creating category" });
+    next(err);
   }
 }
 
-export async function updateMemberCategory(req, res) {
+export async function updateMemberCategory(req, res, next) {
   const { name, color } = req.body;
   const { categoryID } = req.params;
 
@@ -57,14 +51,11 @@ export async function updateMemberCategory(req, res) {
       .status(200)
       .json({ success: true, message: "Category updated successfully", data: category });
   } catch (err) {
-    console.log("Error while updating category: ", err);
-    res
-      .status(500)
-      .json({ success: false, message: err.message || "Error while updating category" });
+    next(err);
   }
 }
 
-export async function deleteMemberCategory(req, res) {
+export async function deleteMemberCategory(req, res, next) {
   const { categoryID } = req.params;
   if (!categoryID) {
     return res.status(400).json({ success: false, message: "Category ID is required" });
@@ -89,9 +80,6 @@ export async function deleteMemberCategory(req, res) {
       .status(200)
       .json({ success: true, message: "Category deleted successfully", data: category });
   } catch (err) {
-    console.log("Error while deleting category: ", err);
-    res
-      .status(500)
-      .json({ success: false, message: err.message || "Error while deleting category" });
+    next(err);
   }
 }
