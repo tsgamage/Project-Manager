@@ -12,6 +12,8 @@ import {
   getTasksCategories,
   updateTaskCategory,
 } from "../controller/tasksCategory.controller.js";
+import { memberCategoryValidator } from "../validators/memberCategory.validator.js";
+import validateData from "../validators/index.js";
 
 const router = Router();
 
@@ -20,10 +22,10 @@ router.use(verifyToken);
 router.get("/member", getMemberCategories);
 router.get("/tasks", getTasksCategories);
 
-router.post("/member/new", addMemberCategory);
+router.post("/member/new", memberCategoryValidator, validateData, addMemberCategory);
 router.post("/tasks/new", addTaskCategory);
 
-router.put("/member/:categoryID", updateMemberCategory);
+router.put("/member/:categoryID", memberCategoryValidator, validateData, updateMemberCategory);
 router.put("/tasks/:categoryID", updateTaskCategory);
 
 router.delete("/member/:categoryID", deleteMemberCategory);

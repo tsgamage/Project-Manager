@@ -40,10 +40,6 @@ export async function updateMemberCategory(req, res, next) {
   if (!mongoose.Types.ObjectId.isValid(categoryID)) {
     return res.status(400).json({ success: false, message: "Invalid category ID" });
   }
-  if (!categoryID || !name || !color) {
-    return res.status(400).json({ success: false, message: "Category data is required" });
-  }
-
   try {
     const category = await MemberCategory.findByIdAndUpdate(categoryID, { name, color });
     if (!category) return res.status(404).json({ success: false, message: "Category not found" });
