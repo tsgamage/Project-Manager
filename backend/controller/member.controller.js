@@ -44,9 +44,7 @@ export async function getMemberById(req, res, next) {
 export async function newMember(req, res, next) {
   const userID = getUserID(req, res);
   const { name, role, email, color, categoryID } = req.body;
-  if (!name || !role || !email || !color || !categoryID) {
-    return res.status(400).json({ success: false, message: "All fields are required" });
-  }
+
   try {
     const newMember = new Member({
       userID,
