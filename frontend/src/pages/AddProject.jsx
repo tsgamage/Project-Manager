@@ -109,7 +109,7 @@ export default function AddProjectPage() {
                 <button
                   type="submit"
                   disabled={pending}
-                  className="w-full sm:w-auto px-8 py-4 text-base font-semibold gradient-blue hover:shadow-lg text-white rounded-xl flex items-center justify-center transition-all duration-300 hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="cursor-pointer w-full sm:w-auto px-8 py-4 text-base font-semibold gradient-blue hover:shadow-lg text-white rounded-xl flex items-center justify-center transition-all duration-300 hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {pending ? "Creating Project..." : "Create Project"}
                 </button>

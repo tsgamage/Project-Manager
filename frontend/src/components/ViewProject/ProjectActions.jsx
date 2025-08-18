@@ -2,7 +2,7 @@ import { useContext, useRef } from "react";
 import ProjectContext from "../../store/project.context";
 import { useNavigate } from "react-router-dom";
 import DeleteWarningModal from "../UI/Modals/DeleteWarningModal";
-import { Trash2 } from "lucide-react";
+import { Download, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 export default function ProjectActions() {
@@ -16,6 +16,8 @@ export default function ProjectActions() {
 
   const deleteBtnClasses =
     "px-4 py-2 bg-red-500/10 hover:bg-red-500/20 dark:bg-red-900/20 dark:hover:bg-red-900/30 rounded-lg text-red-600 dark:text-red-400 flex items-center justify-center gap-2 transition-colors cursor-pointer";
+  const downloadBtnClasses =
+    "px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400 flex items-center justify-center gap-2 transition-colors cursor-pointer";
 
   return (
     <>
@@ -32,6 +34,9 @@ export default function ProjectActions() {
       />
 
       <div className="flex flex-col sm:flex-row gap-3 justify-end">
+        <button onClick={()=>console.log("Downloading...")} className={downloadBtnClasses}>
+          <Download /> Download Project Info
+        </button>
         <button onClick={handleDeleteProject} className={deleteBtnClasses}>
           <Trash2 /> Delete Project
         </button>

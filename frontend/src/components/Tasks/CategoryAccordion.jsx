@@ -86,7 +86,7 @@ export default function CategoryAccordion({
 
       <div
         onClick={onClick}
-        className="glass rounded-2xl shadow-lg border border-gray-700 overflow-hidden mb-2"
+        className="glass rounded-2xl border border-gray-700 overflow-hidden mb-2"
       >
         <div
           onClick={() => {
@@ -95,11 +95,17 @@ export default function CategoryAccordion({
           }}
           className="w-full flex items-center justify-between p-4 hover:bg-gray-700/50 transition-colors"
         >
-          <div className="flex items-center gap-4">
-            <div className={`w-2.5 h-2.5 rounded-full ${category?.color || ""}`}></div>
-            <div className="text-left">
+          <div className="flex items-center gap-4 min-w-0">
+            <div
+              className={`flex-shrink-0 w-2.5 h-2.5 rounded-full ${category?.color || ""}`}
+            ></div>
+            <div className="text-left min-w-0">
               <h3 className="text-lg font-semibold text-white">{category.name}</h3>
-              {projectTitle && <p className="text-sm text-gray-400">Project: {projectTitle}</p>}
+              {projectTitle && (
+                <p className="text-sm text-gray-400 truncate w-full block" title={projectTitle}>
+                  Project: {projectTitle}
+                </p>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-3">

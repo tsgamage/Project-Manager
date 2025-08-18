@@ -23,9 +23,9 @@ export default function TeamMembers({ team }) {
         projectId={selectedProject._id}
       />
 
-      <div className="glass rounded-2xl shadow-lg border border-gray-700 p-4 sm:p-6">
+      <div className="glass rounded-2xl shadow-lg border border-gray-700 p-2 sm:p-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-2 mb-6">
           <div>
             <h2 className="text-xl sm:text-2xl font-semibold text-white mb-2 flex items-center gap-2">
               <Users className="h-5 w-5 text-green-400" />
@@ -44,7 +44,7 @@ export default function TeamMembers({ team }) {
               <h3 className="text-lg font-semibold text-white">Team Members</h3>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
               {team.length === 0 ? (
                 <div className="col-span-full text-center py-8 sm:py-12">
                   <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />

@@ -50,12 +50,11 @@ export default function ViewProjectPage() {
         <ProjectHeader />
         <NavigationTabs onNavigationClick={setActiveTab} activeTab={activeTab} />
 
-        <div className="px-4 sm:px-6 lg:px-8 pb-8">
+        <div className="px-1 sm:px-6 lg:px-8 mb-8">
           {activeTab === "tasks" && <ProjectTasks tasks={selectedProject.tasks} />}
           {activeTab === "team" && <TeamMembers team={selectedProject.team} />}
           {activeTab === "info" && <ProjectInfo />}
         </div>
-
       </div>
     </div>
   );

@@ -27,10 +27,10 @@ export default function ProjectTasks({ tasks }) {
         onClick={addTaskCategory}
       />
 
-      <div className="glass rounded-2xl shadow-lg border border-gray-700 p-6">
+      <div className="glass rounded-2xl shadow-lg border border-gray-700 p-2 sm:p-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-          <div>
+          <div className="p-2">
             <h2 className="text-xl sm:text-2xl font-semibold text-white mb-2 flex items-center gap-2">
               <Target className="h-5 w-5 text-blue-400" />
               Project Tasks
@@ -52,20 +52,20 @@ export default function ProjectTasks({ tasks }) {
           </div>
 
           {/* Add Category */}
-          <div className="flex items-center justify-end gap-2">
+          <div className=" hidden lg:flex items-center justify-end gap-2">
             <button
               onClick={() => taskCategoryModal.current.open()}
               className="_add-category cursor-pointer border-1 border-stone-500 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all duration-300"
             >
               <Grid2x2Plus className="h-4 w-4 text-stone-300" />
-              <span className="inline text-stone-300">Add a Category</span>
+              <span className="inline text-stone-300">Add a Tasks Category</span>
             </button>
             <Tooltip anchorSelect="._add-category">Add Category</Tooltip>
           </div>
         </div>
 
         {/* Progress Bar */}
-        <div className="mb-6">
+        <div className="mb-5 p-2">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-gray-400">Progress</span>
             <span className="text-sm font-medium text-white">{completionRate}%</span>
@@ -82,6 +82,18 @@ export default function ProjectTasks({ tasks }) {
               style={{ width: `${completionRate}%` }}
             ></div>
           </div>
+        </div>
+
+        {/* Add Category */}
+        <div className="lg:hidden flex items-center w-full justify-end gap-2 mb-5">
+          <button
+            onClick={() => taskCategoryModal.current.open()}
+            className="_add-category w-full cursor-pointer border-1 border-stone-500/50 text-white px-4 py-2 rounded-xl flex items-center gap-2"
+          >
+            <Grid2x2Plus className="h-4 w-4 text-stone-300" />
+            <span className="inline text-stone-300">Add a New Tasks Category</span>
+          </button>
+          <Tooltip anchorSelect="._add-category">Add Category</Tooltip>
         </div>
 
         {/* Tasks */}

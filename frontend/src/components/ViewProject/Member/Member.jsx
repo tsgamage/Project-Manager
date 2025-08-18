@@ -22,7 +22,9 @@ export default function Memeber({ member }) {
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-2 sm:gap-3">
               <div className="relative">
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white font-semibold text-sm sm:text-base ${member.color}`}>
+                <div
+                  className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white font-semibold text-sm sm:text-base ${member.color}`}
+                >
                   {member.name.charAt(0)}
                 </div>
                 {member.isLead && (
@@ -37,18 +39,13 @@ export default function Memeber({ member }) {
               </div>
             </div>
 
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <button className="p-1 text-gray-400 hover:text-gray-300 transition-colors">
-                <MoreVertical className="h-3 w-3 sm:h-4 sm:w-4" />
-              </button>
-              <button
-                onClick={() => deleteModal.current.open()}
-                className="p-1 text-gray-400 hover:text-red-400 transition-colors"
-                title="Remove member"
-              >
-                <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
-              </button>
-            </div>
+            <button
+              onClick={() => deleteModal.current.open()}
+              className="p-1 cursor-pointer text-gray-400 hover:text-red-400 transition-colors"
+              title="Remove member from this project"
+            >
+              <Trash2 className="h-5 w-5 sm:h-4 sm:w-4" />
+            </button>
           </div>
 
           <div className="space-y-2">
@@ -69,12 +66,15 @@ export default function Memeber({ member }) {
             {member.status && (
               <div className="flex items-center gap-2 text-xs sm:text-sm">
                 <Activity className="h-3 w-3" />
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${member.status === 'active'
-                  ? 'bg-green-500/20 text-green-300 border border-green-500/30'
-                  : member.status === 'busy'
-                    ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30'
-                    : 'bg-gray-500/20 text-gray-300 border border-gray-500/30'
-                  }`}>
+                <span
+                  className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    member.status === "active"
+                      ? "bg-green-500/20 text-green-300 border border-green-500/30"
+                      : member.status === "busy"
+                        ? "bg-yellow-500/20 text-yellow-300 border border-yellow-500/30"
+                        : "bg-gray-500/20 text-gray-300 border border-gray-500/30"
+                  }`}
+                >
                   {member.status}
                 </span>
               </div>
