@@ -4,16 +4,17 @@ import {
   addMemberCategory,
   deleteMemberCategory,
   getMemberCategories,
-  updateMemberCategory,
+  updateMemberCategory
 } from "../controller/memberCategory.controller.js";
 import {
   addTaskCategory,
   deleteTaskCategory,
   getTasksCategories,
-  updateTaskCategory,
+  updateTaskCategory
 } from "../controller/tasksCategory.controller.js";
 import { memberCategoryValidator } from "../validators/memberCategory.validator.js";
 import validateData from "../validators/index.js";
+import { taskCategoryValidator } from "../validators/taskCategory.validator.js";
 
 const router = Router();
 
@@ -23,10 +24,10 @@ router.get("/member", getMemberCategories);
 router.get("/tasks", getTasksCategories);
 
 router.post("/member/new", memberCategoryValidator, validateData, addMemberCategory);
-router.post("/tasks/new", addTaskCategory);
+router.post("/tasks/new", taskCategoryValidator, validateData, addTaskCategory);
 
 router.put("/member/:categoryID", memberCategoryValidator, validateData, updateMemberCategory);
-router.put("/tasks/:categoryID", updateTaskCategory);
+router.put("/tasks/:categoryID", taskCategoryValidator, validateData, updateTaskCategory);
 
 router.delete("/member/:categoryID", deleteMemberCategory);
 router.delete("/tasks/:categoryID", deleteTaskCategory);

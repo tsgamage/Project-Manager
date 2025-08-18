@@ -17,8 +17,8 @@ export async function addTaskCategory(req, res, next) {
   const userID = getUserID(req, res);
   const { name, color, projectID } = req.body;
 
-  if (!name || !color || !projectID) {
-    return res.status(400).json({ success: false, message: "All fields are required" });
+  if (!projectID) {
+    return res.status(400).json({ success: false, message: "Project ID is required" });
   }
 
   try {
@@ -41,9 +41,6 @@ export async function updateTaskCategory(req, res, next) {
   }
   if (!mongoose.Types.ObjectId.isValid(categoryID)) {
     return res.status(400).json({ success: false, message: "Invalid category ID" });
-  }
-  if (!name || !color) {
-    return res.status(400).json({ success: false, message: "Category data is required" });
   }
 
   try {
