@@ -12,10 +12,6 @@ export async function signup(req, res, next) {
   const { name, email, password } = req.body;
 
   try {
-    if (!name || !email || !password) {
-      return res.status(400).json({ success: false, message: "All fields are required" });
-    }
-
     const isEmailAlreadyExist = await User.findOne({ email });
 
     if (isEmailAlreadyExist) {
@@ -59,10 +55,6 @@ export async function signup(req, res, next) {
 export async function login(req, res, next) {
   const { email, password } = req.body;
   try {
-    if (!email || !password) {
-      return res.status(400).json({ success: false, message: "All fields are required" });
-    }
-
     // Check if the account is verified
     const user = await User.findOne({ email });
 
@@ -206,9 +198,6 @@ export async function resetPassword(req, res, next) {
     if (!token) {
       return res.status(400).json({ success: false, message: "Token is required" });
     }
-    if (!password) {
-      return res.status(400).json({ success: false, message: "All fields are required" });
-    }
 
     const user = await User.findOne({
       resetPasswordToken: token,
@@ -258,10 +247,6 @@ export async function checkAuth(req, res, next) {
 export async function changePassword(req, res, next) {
   const userID = req.userID;
   const { oldPassword, newPassword } = req.body;
-
-  if (!oldPassword || !newPassword) {
-    return res.status(400).json({ success: false, message: "All fields are required" });
-  }
 
   try {
     const user = await User.findOne({ _id: userID });
