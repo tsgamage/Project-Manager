@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createContext } from "react";
-import { API_ENDPOINTS } from "../config/api.js";
+import { API_ENDPOINTS } from "../../src/config/api.js";
 
 const API_URL = API_ENDPOINTS.AUTH;
 

@@ -1,17 +1,21 @@
 import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-import AuthContext from "../../store/auth.context";
 import { ChevronUp, LogOut, Menu, Settings, SquareArrowOutUpRight, User, Bell } from "lucide-react";
 import { toast } from "react-hot-toast";
 import ProjectContext from "../../store/project.context";
 import PageLayoutContext from "../../store/pageLayout.context";
 import MemberContext from "../../store/member.context";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutThunk } from "../../store/auth.actions";
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.auth.user);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   // Contexts
-  const { isAuthenticated, user, logout } = useContext(AuthContext);
   const { projects, setProjects } = useContext(ProjectContext);
   const { toggleMobileSidebar } = useContext(PageLayoutContext);
   const { setFetchedMembers, setFetchMemberCategories } = useContext(MemberContext);
@@ -29,7 +33,7 @@ export default function Navbar() {
   }, [isDropdownOpen]);
 
   function handleLogout() {
-    logout();
+    dispatch(logoutThunk());
     setIsDropdownOpen(false);
     toast.success("Logged out successfully");
     setProjects([]);
@@ -68,16 +72,6 @@ export default function Navbar() {
               <Bell className="h-5 w-5 text-gray-300" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
             </button>
-
-            {/* Auth Button - Show when not authenticated */}
-            {!isAuthenticated && !user && (
-              <Link
-                to="/auth/login"
-                className="text-gray-300 hover:text-white transition-all duration-300 font-medium hover:bg-gray-800/50 px-3 py-1.5 rounded-lg text-sm"
-              >
-                Sign in
-              </Link>
-            )}
 
             {/* Profile Dropdown - Show when authenticated */}
             {isAuthenticated && user && user.isVerified && (

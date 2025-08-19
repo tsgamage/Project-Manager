@@ -1,16 +1,18 @@
-import { useState, useRef, useEffect, useActionState, useContext } from "react";
-import AuthContext from "../../store/auth.context.jsx";
+import { useState, useRef, useEffect, useActionState } from "react";
 import { toast } from "react-hot-toast";
 import { Shield, Loader, Sparkles, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { resendVerificationCodeRequest, verifyEmailRequest } from "../../services/auth.api";
+import { checkAuthStatusThunk } from "../../store/auth.actions";
+import { useDispatch } from "react-redux";
 
 export default function VerifyCodePage() {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [error, setError] = useState("");
   const [timeLeft, setTimeLeft] = useState(30); // 5 minutes
-  const inputRefs = useRef([]);
 
-  const { verifyEmail, checkAuthStatus, resendVerificationCode } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const inputRefs = useRef([]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -69,7 +71,7 @@ export default function VerifyCodePage() {
   const resendCode = async () => {
     setTimeLeft(300);
     setError("");
-    const response = await resendVerificationCode();
+    const response = await resendVerificationCodeRequest();
     if (response.success) {
       toast.success(response.message);
     } else {
@@ -81,13 +83,13 @@ export default function VerifyCodePage() {
     const dataObj = Object.fromEntries(formData);
     let code = Object.values(dataObj).join("");
 
-    const response = await verifyEmail(code);
+    const response = await verifyEmailRequest(code);
 
     if (!response.success) {
       return setError(response.message);
     } else {
       toast.success(response.message);
-      await checkAuthStatus();
+      await dispatch(checkAuthStatusThunk());
       return;
     }
   }
@@ -102,7 +104,7 @@ export default function VerifyCodePage() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-full -translate-y-48 translate-x-48 animate-pulse"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-br from-green-600/20 to-blue-600/20 rounded-full translate-y-32 -translate-x-32 animate-pulse delay-1000"></div>
         <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-gradient-to-br from-purple-600/10 to-pink-600/10 rounded-full -translate-x-1/2 -translate-y-1/2 animate-pulse delay-500"></div>
-        
+
         {/* Grid Pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
       </div>
@@ -134,7 +136,7 @@ export default function VerifyCodePage() {
           <div className="backdrop-blur-xl bg-black/40 rounded-xl sm:rounded-2xl shadow-2xl border border-gray-800/50 p-4 sm:p-6 relative overflow-hidden">
             {/* Form Glow Effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 rounded-xl sm:rounded-2xl"></div>
-            
+
             <form action={formStateAction} className="space-y-4 sm:space-y-6 relative z-10">
               {/* Code Input Fields */}
               <div>
@@ -154,12 +156,10 @@ export default function VerifyCodePage() {
                       onKeyDown={(e) => handleKeyDown(index, e)}
                       onPaste={handlePaste}
                       autoFocus={index === 0}
-                      autocomplete="off"
+                      autoComplete="off"
                       required
                       className={`w-10 h-10 sm:w-12 sm:h-12 text-center text-base sm:text-lg font-semibold border rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700 text-white transition-all duration-300 ${
-                        error
-                          ? "border-red-500"
-                          : "border-gray-600 outline-none"
+                        error ? "border-red-500" : "border-gray-600 outline-none"
                       }`}
                       placeholder="-"
                     />
@@ -176,7 +176,7 @@ export default function VerifyCodePage() {
               >
                 {/* Button Glow Effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                
+
                 {pending ? (
                   <div className="flex items-center gap-2 relative z-10">
                     <Loader className="animate-spin h-4 w-4 text-white" />
@@ -193,9 +193,7 @@ export default function VerifyCodePage() {
 
             {/* Resend Code */}
             <div className="mt-4 sm:mt-6 text-center relative z-10">
-              <p className="text-xs sm:text-sm text-gray-400 mb-2">
-                Didn't receive the code?
-              </p>
+              <p className="text-xs sm:text-sm text-gray-400 mb-2">Didn't receive the code?</p>
               <button
                 onClick={resendCode}
                 disabled={timeLeft > 0}

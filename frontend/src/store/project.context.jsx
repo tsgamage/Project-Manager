@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { createContext, useState } from "react";
-import AuthContext from "./auth.context";
+import AuthContext from "../../backup/context/auth.context.jsx";
 import { useContext } from "react";
 import { API_ENDPOINTS } from "../config/api.js";
 import {

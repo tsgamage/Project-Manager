@@ -1,21 +1,21 @@
-import { useContext, useEffect } from "react";
-import AuthContext from "../../store/auth.context.jsx";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-export default function ProtectedRoute({ children, viewing }) {
-  const { isAuthenticated, user, isCheckingAuth } = useContext(AuthContext); // Assuming AuthContext provides authentication state
+export default function ProtectedRoute({ children }) {
+  const user = useSelector((state) => state.auth.user);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isChekingAuth = useSelector((state) => state.auth.isChekingAuth);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isCheckingAuth && user && user.isVerified === false) {
-      navigate("/auth/verify-mail", { replace: true });
-    } else if (!isCheckingAuth && !isAuthenticated) {
+    if (!isChekingAuth && !isAuthenticated) {
       navigate("/auth/login", { replace: true });
-    } else if (!isCheckingAuth && user && user.isVerified === true && viewing === "auth") {
-      navigate("/", { replace: true });
+    } else if (!isChekingAuth && user && !user.isVerified) {
+      navigate("/auth/verify-mail", { replace: true });
     }
-    
-  }, [isCheckingAuth, isAuthenticated, user, navigate, viewing]);
+  }, [isAuthenticated, navigate, user, isChekingAuth]);
 
   if (!isAuthenticated) {
     return null;

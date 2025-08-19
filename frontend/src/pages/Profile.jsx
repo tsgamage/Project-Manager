@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import AuthContext from "../store/auth.context.jsx";
 import ProjectContext from "../store/project.context.jsx";
 import {
   User,
@@ -19,14 +18,18 @@ import {
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import MemberContext from "../store/member.context.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutThunk } from "../store/auth.actions.js";
 
 export default function Profile() {
-  const { user, logout } = useContext(AuthContext);
+  const user = useSelector((state) => state.auth.user);
+
+  const dispatch = useDispatch();
   const { projects, setProjects } = useContext(ProjectContext);
   const { setFetchedMembers, setFetchMemberCategories } = useContext(MemberContext);
 
   function handleLogout() {
-    logout();
+    dispatch(logoutThunk());
     toast.success("Logged out successfully");
     setProjects([]);
     setFetchedMembers([]);

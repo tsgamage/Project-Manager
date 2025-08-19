@@ -1,12 +1,16 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import AuthContext from "../store/auth.context.jsx";
 import UserContext from "../store/user.context.jsx";
 import { toast } from "react-hot-toast";
 import { User, Lock, Save, Edit3, Eye, EyeOff, X, ArrowLeft, Settings } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { checkAuthStatusThunk } from "../store/auth.actions.js";
+import { changePasswordRequest } from "../services/auth.api.js";
 
 export default function SettingsPage() {
-  const { user, checkAuthStatus, changePassword } = useContext(AuthContext);
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+
   const { updateName } = useContext(UserContext);
 
   const [activeTab, setActiveTab] = useState("profile");
@@ -51,7 +55,7 @@ export default function SettingsPage() {
     const resData = await updateName(formData.name);
 
     if (resData.success) {
-      checkAuthStatus();
+      dispatch(checkAuthStatusThunk());
       toast.success("Profile updated successfully!");
       setIsEditing(false);
     } else {
@@ -69,7 +73,7 @@ export default function SettingsPage() {
       return toast.error("Password must be at least 8 characters long");
     }
     setIsLoadingPasswordChange(true);
-    const resData = await changePassword(formData.currentPassword, formData.newPassword);
+    const resData = await changePasswordRequest(formData.currentPassword, formData.newPassword);
 
     if (resData.success) {
       toast.success(resData.message || "Password updated successfully");

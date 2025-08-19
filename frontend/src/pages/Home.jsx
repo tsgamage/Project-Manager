@@ -1,7 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ProjectContext from "../store/project.context.jsx";
-import AuthContext from "../store/auth.context.jsx";
 import {
   TrendingUp,
   Calendar,
@@ -9,20 +8,18 @@ import {
   Target,
   CheckCircle,
   Clock,
-  AlertCircle,
   FolderOpen,
   Plus,
   ArrowRight,
-  BarChart3,
-  Activity,
   Star,
   Zap,
-  Home,
 } from "lucide-react";
+import { useSelector } from "react-redux";
 
 export default function HomePage() {
+  const user = useSelector((state) => state.auth.user);
+  
   const { projects } = useContext(ProjectContext);
-  const { user } = useContext(AuthContext);
   const [stats, setStats] = useState({
     totalProjects: 0,
     completedProjects: 0,

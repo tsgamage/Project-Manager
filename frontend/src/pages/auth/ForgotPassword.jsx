@@ -1,15 +1,13 @@
-import { useActionState, useContext, useState } from "react";
+import { useActionState, useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, Loader, CheckCircle, ArrowLeft, Sparkles } from "lucide-react";
-import AuthContext from "../../store/auth.context";
 import InputAuth from "./common/InputAuth";
+import { forgotPasswordRequest } from "../../services/auth.api";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState("");
-
-  const { forgotPassword } = useContext(AuthContext);
 
   async function forgotPasswordAction(preState, formData) {
     const dataObj = Object.fromEntries(formData);
@@ -25,7 +23,7 @@ export default function ForgotPasswordPage() {
       return;
     }
 
-    const response = await forgotPassword(dataObj.email);
+    const response = await forgotPasswordRequest(dataObj.email);
     if (response.error) {
       return setError(response.error);
     } else {
@@ -48,7 +46,7 @@ export default function ForgotPasswordPage() {
           <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-full -translate-y-48 translate-x-48 animate-pulse"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-br from-green-600/20 to-blue-600/20 rounded-full translate-y-32 -translate-x-32 animate-pulse delay-1000"></div>
           <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-gradient-to-br from-purple-600/10 to-pink-600/10 rounded-full -translate-x-1/2 -translate-y-1/2 animate-pulse delay-500"></div>
-          
+
           {/* Grid Pattern */}
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
         </div>
@@ -60,7 +58,7 @@ export default function ForgotPasswordPage() {
             <div className="backdrop-blur-xl bg-black/40 rounded-xl sm:rounded-2xl shadow-2xl border border-gray-800/50 p-4 sm:p-6 relative overflow-hidden">
               {/* Form Glow Effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 via-blue-500/5 to-purple-500/5 rounded-xl sm:rounded-2xl"></div>
-              
+
               <div className="relative z-10 text-center">
                 {/* Success Icon */}
                 <div className="flex justify-center mb-4">
@@ -129,7 +127,7 @@ export default function ForgotPasswordPage() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-full -translate-y-48 translate-x-48 animate-pulse"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-br from-green-600/20 to-blue-600/20 rounded-full translate-y-32 -translate-x-32 animate-pulse delay-1000"></div>
         <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-gradient-to-br from-purple-600/10 to-pink-600/10 rounded-full -translate-x-1/2 -translate-y-1/2 animate-pulse delay-500"></div>
-        
+
         {/* Grid Pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
       </div>
@@ -161,7 +159,7 @@ export default function ForgotPasswordPage() {
           <div className="backdrop-blur-xl bg-black/40 rounded-xl sm:rounded-2xl shadow-2xl border border-gray-800/50 p-4 sm:p-6 relative overflow-hidden">
             {/* Form Glow Effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 rounded-xl sm:rounded-2xl"></div>
-            
+
             <form action={formStateAction} className="space-y-3 sm:space-y-4 relative z-10">
               {/* Email Field */}
               <InputAuth
@@ -170,7 +168,6 @@ export default function ForgotPasswordPage() {
                 label="Email address"
                 icon={<Mail className="h-4 w-4" />}
                 placeholder="Enter your email"
-                value={email}
                 defaultValue={formState?.email || ""}
                 onChange={(e) => setEmail(e.target.value)}
                 errorText={error}
@@ -184,7 +181,7 @@ export default function ForgotPasswordPage() {
               >
                 {/* Button Glow Effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                
+
                 {pending ? (
                   <div className="flex items-center gap-2 relative z-10">
                     <Loader className="animate-spin h-4 w-4 text-white" />

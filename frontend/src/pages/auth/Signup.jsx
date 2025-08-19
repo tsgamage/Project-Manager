@@ -1,17 +1,17 @@
-import { useActionState, useContext, useState } from "react";
+import { useActionState, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AtSign, Loader, UserPlus, Mail, User, Lock, CheckSquare, Sparkles } from "lucide-react";
+import { Loader, UserPlus, Mail, User, Sparkles } from "lucide-react";
 import InputAuth from "./common/InputAuth";
-import AuthContext from "../../store/auth.context";
 import { toast } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { signupThunk } from "../../store/auth.actions";
 
 export default function SignupPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [errors, setErrors] = useState({});
   const [agreeToTerms, setAgreeToTerms] = useState(false);
-
-  const { signup } = useContext(AuthContext);
 
   const validateForm = (formData) => {
     const newErrors = {};
@@ -61,7 +61,7 @@ export default function SignupPage() {
       delete signupData.confirmPassword;
       delete signupData.terms;
 
-      const response = await signup(signupData);
+      const response = await dispatch(signupThunk(signupData));
 
       if (!response.success) {
         toast.error(response.message);
@@ -74,7 +74,7 @@ export default function SignupPage() {
             icon: "📧",
           });
         }, 1000);
-        navigate("/");
+        navigate("/auth/verify-email");
         return { email: "", password: "" };
       }
     }
@@ -98,11 +98,9 @@ export default function SignupPage() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-full -translate-y-48 translate-x-48 animate-pulse"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-br from-green-600/20 to-blue-600/20 rounded-full translate-y-32 -translate-x-32 animate-pulse delay-1000"></div>
         <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-gradient-to-br from-purple-600/10 to-pink-600/10 rounded-full -translate-x-1/2 -translate-y-1/2 animate-pulse delay-500"></div>
-        
+
         {/* Grid Pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
-        
-
       </div>
 
       {/* Main Content */}
@@ -132,7 +130,7 @@ export default function SignupPage() {
           <div className="backdrop-blur-xl bg-black/40 rounded-xl sm:rounded-2xl shadow-2xl border border-gray-800/50 p-4 sm:p-6 relative overflow-hidden">
             {/* Form Glow Effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 rounded-xl sm:rounded-2xl"></div>
-            
+
             <form action={formStateAction} className="space-y-3 sm:space-y-4 relative z-10">
               {/* Name Fields */}
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -227,7 +225,7 @@ export default function SignupPage() {
               >
                 {/* Button Glow Effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                
+
                 {pending ? (
                   <div className="flex items-center gap-2 relative z-10">
                     <Loader className="animate-spin h-4 w-4 text-white" />
@@ -274,17 +272,11 @@ export default function SignupPage() {
           <div className="text-center">
             <p className="text-xs text-gray-500">
               By creating an account, you agree to our{" "}
-              <a
-                href="#"
-                className="text-blue-400 hover:text-blue-300 transition-colors"
-              >
+              <a href="#" className="text-blue-400 hover:text-blue-300 transition-colors">
                 Terms of Service
               </a>{" "}
               and{" "}
-              <a
-                href="#"
-                className="text-blue-400 hover:text-blue-300 transition-colors"
-              >
+              <a href="#" className="text-blue-400 hover:text-blue-300 transition-colors">
                 Privacy Policy
               </a>
             </p>

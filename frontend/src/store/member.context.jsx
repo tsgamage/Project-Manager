@@ -12,7 +12,7 @@ import {
   getMemberCategories,
   updateMemberCategory,
 } from "../services/memberCategory.api.js";
-import AuthContext from "./auth.context.jsx";
+import AuthContext from "../../backup/context/auth.context.jsx";
 import ProjectContext from "./project.context.jsx";
 
 const MemberContext = createContext({

@@ -1,3 +1,4 @@
+import { AuthContextProvider } from "../backup/context/auth.context.jsx";
 import { ProjectContextProvider } from "./store/project.context";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import ViewProjectPage from "./pages/ViewProject";
@@ -10,7 +11,7 @@ import SignupPage from "./pages/auth/Signup";
 import ForgotPasswordPage from "./pages/auth/ForgotPassword";
 import VerifyCodePage from "./pages/auth/VerifyCode";
 import ResetPasswordPage from "./pages/auth/ResetPassword";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/Auth/ProtectedRoute.jsx";
 import RedirectUserIfAuthenticated from "./components/Auth/RedirectUserIfAuthenticated.jsx";
 import { UserContextProvider } from "./store/user.context.jsx";
@@ -22,10 +23,10 @@ import TeamsPage from "./pages/Team.jsx";
 import TasksPage from "./pages/Tasks.jsx";
 import SettingsPage from "./pages/Settings.jsx";
 import { MemberContextProvider } from "./store/member.context.jsx";
+import RedirectToLoginPage from "./components/Auth/RedirectToLoginPage.jsx";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { checkAuthStatusThunk } from "./store/auth.actions.js";
-import RedirectToLoginPage from "./components/Auth/RedirectToLoginPage.jsx";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -33,9 +34,12 @@ export default function App() {
   useEffect(() => {
     const checkAuth = async () => {
       const response = await dispatch(checkAuthStatusThunk());
+
       if (!response.success) {
-        console.log(response.message);
+        toast.error(response.message);
       }
+
+      console.log(response);
     };
     checkAuth();
   }, [dispatch]);
@@ -53,7 +57,7 @@ export default function App() {
     {
       path: "/home",
       element: (
-        <ProtectedRoute>
+        <ProtectedRoute viewing="home">
           <RootLayout />
         </ProtectedRoute>
       ),
@@ -85,7 +89,7 @@ export default function App() {
       path: "/project",
       id: "project",
       element: (
-        <ProtectedRoute>
+        <ProtectedRoute viewing="project">
           <RootLayout />
         </ProtectedRoute>
       ),
@@ -99,7 +103,7 @@ export default function App() {
     {
       path: "/user",
       element: (
-        <ProtectedRoute>
+        <ProtectedRoute viewing="user">
           <RootLayout />
         </ProtectedRoute>
       ),
@@ -111,7 +115,7 @@ export default function App() {
     {
       path: "/team",
       element: (
-        <ProtectedRoute>
+        <ProtectedRoute viewing="team">
           <RootLayout />
         </ProtectedRoute>
       ),
@@ -124,15 +128,17 @@ export default function App() {
   ]);
 
   return (
-    <PageLayoutContextProvider>
-      <UserContextProvider>
-        <ProjectContextProvider>
-          <MemberContextProvider>
-            <Toaster />
-            <RouterProvider router={router}></RouterProvider>
-          </MemberContextProvider>
-        </ProjectContextProvider>
-      </UserContextProvider>
-    </PageLayoutContextProvider>
+    <AuthContextProvider>
+      <PageLayoutContextProvider>
+        <UserContextProvider>
+          <ProjectContextProvider>
+            <MemberContextProvider>
+              <Toaster />
+              <RouterProvider router={router}></RouterProvider>
+            </MemberContextProvider>
+          </ProjectContextProvider>
+        </UserContextProvider>
+      </PageLayoutContextProvider>
+    </AuthContextProvider>
   );
 }

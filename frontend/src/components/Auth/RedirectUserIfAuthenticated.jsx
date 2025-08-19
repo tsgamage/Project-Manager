@@ -1,20 +1,16 @@
-import { useContext, useEffect } from "react";
-import AuthContext from "../../store/auth.context";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function RedirectUserIfAuthenticated({ children }) {
-  const { user, isAuthenticated } = useContext(AuthContext);
+  const user = useSelector((state) => state.auth.user);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Commented out because user cannot visit any other auth pages this will redirect them to login 
-    // if (!user) {
-    //   navigate("/auth/login", { replace: true });
-    // }
     if (isAuthenticated && user && user.isVerified) {
       navigate("/home", { replace: true });
-    } else if (isAuthenticated && user && user.isVerified === false) {
-      navigate("/auth/verify-mail", { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
 

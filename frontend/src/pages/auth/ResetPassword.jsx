@@ -1,9 +1,9 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Lock, Loader, ArrowLeft, Sparkles, Check } from "lucide-react";
 import InputAuth from "./common/InputAuth";
-import AuthContext from "../../store/auth.context";
 import { toast } from "react-hot-toast";
+import { resetPasswordRequest } from "../../services/auth.api";
 
 export default function ResetPasswordPage() {
   const { token } = useParams();
@@ -14,8 +14,6 @@ export default function ResetPasswordPage() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
-
-  const { resetPassword } = useContext(AuthContext);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -66,7 +64,7 @@ export default function ResetPasswordPage() {
     }
     setIsLoading(true);
 
-    const response = await resetPassword(token, formData.password);
+    const response = await resetPasswordRequest(token, formData.password);
 
     if (response.success) {
       toast.success(response.message);
