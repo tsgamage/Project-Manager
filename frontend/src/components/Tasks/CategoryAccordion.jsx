@@ -50,6 +50,10 @@ export default function CategoryAccordion({
   }
 
   async function onAddTask() {
+    if (editedName.length > 100 || editedDescription.length > 500) {
+      return;
+    }
+
     const taskObj = {
       taskName: editedName,
       taskCategory: category._id,
@@ -152,21 +156,39 @@ export default function CategoryAccordion({
                 <div className="flex flex-col gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-col gap-2">
-                      <input
+                      <div className="flex justify-end items-center">
+                        <p className="text-xs text-gray-400">{editedName?.length || 0}/100</p>
+                      </div>
+                      <textarea
                         type="text"
                         placeholder="Task name*"
                         value={editedName}
                         onChange={(e) => setEditedName(e.target.value)}
                         autoComplete="task-name"
-                        className="w-full px-2 py-2 border border-gray-500 rounded bg-gray-800 text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className={`w-full min-h-10 px-2 py-2 border text-white focus:outline-none focus:ring-1 ${
+                          editedName.length > 100
+                            ? "focus:ring-red-500 border-red-500 rounded bg-red-800/30"
+                            : "focus:ring-blue-500 border-gray-500 rounded bg-gray-800"
+                        }`}
+                        rows="2"
                       />
+
+                      <div className="flex justify-end items-center">
+                        <p className="text-xs text-gray-400">
+                          {editedDescription?.length || 0}/500
+                        </p>
+                      </div>
                       <textarea
                         placeholder="Task description"
                         value={editedDescription}
                         autoComplete="task-description"
                         onChange={(e) => setEditedDescription(e.target.value)}
-                        className="w-full min-h-10 px-2 py-1 border border-gray-500 rounded bg-gray-800 text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
-                        rows="2"
+                        className={`w-full min-h-10 px-2 py-1 border  text-white focus:outline-none focus:ring-1 ${
+                          editedDescription.length > 500
+                            ? "focus:ring-red-500 border-red-500 rounded bg-red-800/30"
+                            : "focus:ring-blue-500 border-gray-500 rounded bg-gray-800"
+                        }`}
+                        rows="5"
                       />
                     </div>
                   </div>
@@ -183,8 +205,13 @@ export default function CategoryAccordion({
                       Cancel
                     </button>
                     <button
-                      className="cursor-pointer w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-600 bg-gray-700/50 text-gray-300 hover:bg-gray-700 transition-all duration-200 font-medium"
+                      className="cursor-pointer w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-600 bg-gray-700/50 text-gray-300 hover:bg-gray-700 transition-all duration-200 font-medium disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-70 "
                       onClick={onAddTask}
+                      disabled={
+                        editedName.length === 0 ||
+                        editedName.length > 100 ||
+                        editedDescription.length > 500
+                      }
                     >
                       <Plus className="h-4 w-4" />
                       Add Task

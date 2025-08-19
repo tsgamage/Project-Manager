@@ -2,7 +2,7 @@ import { useContext, useRef } from "react";
 import ProjectContext from "../../store/project.context";
 import { useNavigate } from "react-router-dom";
 import DeleteWarningModal from "../UI/Modals/DeleteWarningModal";
-import { Download, Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 export default function ProjectActions({ onEdit }) {
@@ -35,7 +35,7 @@ export default function ProjectActions({ onEdit }) {
 
       <div className="flex flex-col sm:flex-row gap-3 justify-end">
         <button onClick={onEdit} className={downloadBtnClasses}>
-          <Download /> Download Project Info
+          <Edit /> Edit Project Info
         </button>
         <button onClick={handleDeleteProject} className={deleteBtnClasses}>
           <Trash2 /> Delete Project
