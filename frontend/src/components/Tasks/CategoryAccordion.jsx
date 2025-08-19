@@ -1,4 +1,13 @@
-import { ChevronDown, ChevronRight, Edit, ListCheck, Plus, Trash2, X } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Edit,
+  ListCheck,
+  Plus,
+  Trash2,
+  UndoIcon,
+  X,
+} from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import ProjectContext from "../../store/project.context.jsx";
@@ -14,6 +23,7 @@ export default function CategoryAccordion({
   onClick,
   hideAddTask,
   tasksCount,
+  hideCompletedIcon,
 }) {
   const {
     addTask,
@@ -137,7 +147,7 @@ export default function CategoryAccordion({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {tasks.length - completedTasks.length === 0 && (
+            {!hideCompletedIcon && tasks.length - completedTasks.length === 0 && (
               <div title="All Tasks Completed">
                 <ListCheck className="w-5 h-5  text-green-400" />
               </div>

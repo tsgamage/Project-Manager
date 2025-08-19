@@ -245,6 +245,7 @@ export default function TasksPage() {
                   showFilter !== "all" &&
                   filteredTasks.filter((t) => t.taskCategory === category._id).length
                 }
+                hideCompletedIcon
               />
             ))}
         </div>
