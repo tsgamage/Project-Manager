@@ -1,17 +1,7 @@
 import API_ENDPOINTS from "../config/api";
+import responseNotOkay from "../util/responseNotOkay";
 
 const { AUTH } = API_ENDPOINTS;
-
-function responseNotOkay(response) {
-  if (response.status === 401) {
-    checkAuthStatus();
-    return true;
-  }
-  if (!response.ok && response.status !== 400 && response.status !== 404) {
-    return true;
-  }
-  return false;
-}
 
 export async function loginRequest({ email, password }) {
   try {

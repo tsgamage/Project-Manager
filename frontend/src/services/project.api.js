@@ -111,3 +111,26 @@ export async function updateProject(projectID, newProjectData) {
     return { success: false, message: err.message || "Failed to update project" };
   }
 }
+
+export async function updateProjectByID(projectID, projectData) {
+  try {
+    const response = await fetch(`${API_URL}/${projectID}`, {
+      method: "PUT",
+      body: JSON.stringify(projectData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (responseNotOkay(response)) {
+      return { success: false, message: data.message || "Error while updating project" };
+    }
+
+    return data;
+  } catch (err) {
+    return { success: false, message: err.message || "Error while updating project" };
+  }
+}

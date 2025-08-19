@@ -1,73 +1,64 @@
 import API_ENDPOINTS from "../config/api.js";
+import responseNotOkay from "../util/responseNotOkay.js";
 
-const { MEMBER, PROJECT } = API_ENDPOINTS;
+const { MEMBER } = API_ENDPOINTS;
 
-export async function getAllMembers() {
+export async function getAllMembersRequest() {
   try {
     const response = await fetch(`${MEMBER}/`, {
       credentials: "include",
     });
 
-    if (
-      !response.ok &&
-      response.status !== 400 &&
-      response.status !== 401 &&
-      response.status !== 404
-    ) {
-      return { success: false, message: "Error while fetching members" };
+    const data = await response.json();
+
+    if (responseNotOkay(response)) {
+      return { success: false, message: data.message || "Error while fetching members" };
     }
 
-    return await response.json();
+    return data;
   } catch (err) {
-    console.log(err);
     return { success: false, message: err.message || "Error while fetching members" };
   }
 }
 
-export async function getMemberById(memberID) {
+export async function getMemberByIdRequest(memberID) {
   try {
     const response = await fetch(`${MEMBER}/${memberID}`, {
       credentials: "include",
     });
 
-    if (
-      !response.ok &&
-      response.status !== 400 &&
-      response.status !== 401 &&
-      response.status !== 404
-    ) {
-      return { success: false, message: "Error while fetching member" };
+    const data = await response.json();
+
+    if (responseNotOkay(response)) {
+      return { success: false, message: data.message || "Error while fetching member" };
     }
 
-    return await response.json();
+    return data;
   } catch (err) {
     console.log(err);
     return { success: false, message: err.message || "Error while fetching member" };
   }
 }
 
-export async function deleteMember(memberID) {
+export async function deleteMemberRequest(memberID) {
   try {
     const response = await fetch(`${MEMBER}/${memberID}`, {
       method: "DELETE",
       credentials: "include",
     });
-    if (
-      !response.ok &&
-      response.status !== 400 &&
-      response.status !== 401 &&
-      response.status !== 404
-    ) {
-      return { success: false, message: "Error while deleting member" };
+
+    const data = await response.json();
+
+    if (responseNotOkay(response)) {
+      return { success: false, message: data.message || "Error while deleting member" };
     }
-    return await response.json();
+    return data;
   } catch (err) {
-    console.log(err);
     return { success: false, message: err.message || "Error while deleting member" };
   }
 }
 
-export async function updateMember(memberID, memberData) {
+export async function updateMemberRequest(memberID, memberData) {
   try {
     const response = await fetch(`${MEMBER}/${memberID}`, {
       method: "PUT",
@@ -78,22 +69,18 @@ export async function updateMember(memberID, memberData) {
       body: JSON.stringify(memberData),
     });
 
-    if (
-      !response.ok &&
-      response.status !== 400 &&
-      response.status !== 401 &&
-      response.status !== 404
-    ) {
-      return { success: false, message: "Error while updating member" };
+    const data = await response.json();
+
+    if (responseNotOkay(response)) {
+      return { success: false, message: data.message || "Error while updating member" };
     }
-    return await response.json();
+    return data;
   } catch (err) {
-    console.log(err);
     return { success: false, message: err.message || "Error while updating member" };
   }
 }
 
-export async function createMember(memberData) {
+export async function createMemberRequest(memberData) {
   try {
     const response = await fetch(`${MEMBER}/new`, {
       method: "POST",
@@ -104,45 +91,14 @@ export async function createMember(memberData) {
       body: JSON.stringify(memberData),
     });
 
-    if (
-      !response.ok &&
-      response.status !== 400 &&
-      response.status !== 401 &&
-      response.status !== 404
-    ) {
-      return { success: false, message: "Error while creating member" };
+    const data = await response.json();
+
+    if (responseNotOkay(response)) {
+      return { success: false, message: data.message || "Error while creating member" };
     }
 
-    return await response.json();
+    return data;
   } catch (err) {
-    console.log(err);
     return { success: false, message: err.message || "Error while creating member" };
-  }
-}
-
-export async function updateProjectByID(projectID, projectData) {
-  try {
-    const response = await fetch(`${PROJECT}/${projectID}`, {
-      method: "PUT",
-      body: JSON.stringify(projectData),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    if (
-      !response.ok &&
-      response.status !== 401 &&
-      response.status !== 404 &&
-      response.status !== 400
-    ) {
-      return { success: false, message: "Error while updating project" };
-    }
-
-    return await response.json();
-  } catch (e) {
-    console.log(e.message);
-    return { success: false, message: e.message || "Error while updating project" };
   }
 }

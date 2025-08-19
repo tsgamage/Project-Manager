@@ -1,30 +1,27 @@
 import API_ENDPOINTS from "../config/api.js";
+import responseNotOkay from "../util/responseNotOkay.js";
 
 const { CATEGORY } = API_ENDPOINTS;
 
-export async function getMemberCategories() {
+export async function getMemberCategoriesRequest() {
   try {
     const response = await fetch(`${CATEGORY}/member`, {
       credentials: "include",
     });
 
-    if (
-      !response.ok &&
-      response.status !== 400 &&
-      response.status !== 401 &&
-      response.status !== 404
-    ) {
-      return { success: false, message: "Error while fetching member categories" };
+    const data = await response.json();
+
+    if (responseNotOkay(response)) {
+      return { success: false, messgae: data.message || "Error while fetching member categories" };
     }
 
-    return await response.json();
+    return data;
   } catch (err) {
-    console.log(err);
     return { success: false, message: err.message || "Error while fetching member categories" };
   }
 }
 
-export async function updateMemberCategory(categoryID, category) {
+export async function updateMemberCategoryRequest(categoryID, category) {
   try {
     const response = await fetch(`${CATEGORY}/member/${categoryID}`, {
       method: "PUT",
@@ -35,23 +32,19 @@ export async function updateMemberCategory(categoryID, category) {
       body: JSON.stringify(category),
     });
 
-    if (
-      !response.ok &&
-      response.status !== 400 &&
-      response.status !== 401 &&
-      response.status !== 404
-    ) {
-      return { success: false, message: "Error while updating member category" };
+    const data = await response.json();
+
+    if (responseNotOkay(response)) {
+      return { success: false, message: data.message || "Error while updating member category" };
     }
 
-    return await response.json();
+    return data;
   } catch (err) {
-    console.log(err);
     return { success: false, message: err.message || "Error while updating member category" };
   }
 }
 
-export async function addMemberCategory(category) {
+export async function createMemberCategoryRequest(category) {
   try {
     const response = await fetch(`${CATEGORY}/member/new`, {
       method: "POST",
@@ -62,41 +55,33 @@ export async function addMemberCategory(category) {
       body: JSON.stringify(category),
     });
 
-    if (
-      !response.ok &&
-      response.status !== 400 &&
-      response.status !== 401 &&
-      response.status !== 404
-    ) {
-      return { success: false, message: "Error while creating member category" };
+    const data = await response.json();
+
+    if (responseNotOkay(response)) {
+      return { success: false, message: data.message || "Error while creating member category" };
     }
 
-    return await response.json();
+    return data;
   } catch (err) {
-    console.log(err);
     return { success: false, message: err.message || "Error while creating member category" };
   }
 }
 
-export async function deleteMemberCategory(categoryID) {
+export async function deleteMemberCategoryRequest(categoryID) {
   try {
     const response = await fetch(`${CATEGORY}/member/${categoryID}`, {
       method: "DELETE",
       credentials: "include",
     });
 
-    if (
-      !response.ok &&
-      response.status !== 400 &&
-      response.status !== 401 &&
-      response.status !== 404
-    ) {
-      return { success: false, message: "Error while deleting member category" };
+    const data = await response.json();
+
+    if (responseNotOkay(response)) {
+      return { success: false, message: data.message || "Error while deleting member category" };
     }
 
-    return await response.json();
+    return data;
   } catch (err) {
-    console.log(err);
     return { success: false, message: err.message || "Error while deleting member category" };
   }
 }
