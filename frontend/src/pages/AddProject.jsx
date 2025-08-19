@@ -16,6 +16,7 @@ export default function AddProjectPage() {
 
   const [teamMembers, setTeamMembers] = useState([]);
   const [tasks, setTasks] = useState([]);
+  const [errors, setErrors] = useState({});
   const [modalData, setModalData] = useState({
     type: "success",
     message: "Your project has been created successfully!",
@@ -36,15 +37,24 @@ export default function AddProjectPage() {
     };
 
     const response = await addNewProject(newProjectData);
-    createdProjectID.current = response.data._id;
-
     if (response.success) {
+      createdProjectID.current = response.data._id;
+      setErrors({});
+      setTeamMembers([]);
+      setTasks([]);
+      setModalData({
+        type: "success",
+        message: "Your project has been created successfully!",
+      });
       modal.current.open();
     } else {
       setModalData({
         type: "error",
-        message: response.message,
+        message: response.message || "Failed to create project",
       });
+      setErrors(response?.errors || {});
+      modal.current.open();
+      return formObj;
     }
   }
 
@@ -53,12 +63,7 @@ export default function AddProjectPage() {
     <>
       <SuccessErrorModal
         ref={modal}
-        onClose={() => {
-          navigate("/project/new");
-          setTeamMembers([]);
-          setTasks([]);
-          modal.current.close();
-        }}
+        onClose={() => navigate("/project/new")}
         onClick={() => navigate(`/project/view/${createdProjectID.current}`)}
         type={modalData.type}
         message={modalData.message}
@@ -78,12 +83,30 @@ export default function AddProjectPage() {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <ProjectTitle defaultValue={formState?.title} />
+                  <ProjectTitle
+                    defaultValue={formState?.title}
+                    onChange={() =>
+                      setErrors((preErrors) => {
+                        // eslint-disable-next-line no-unused-vars
+                        const { title, ...others } = preErrors;
+                        return others;
+                      })
+                    }
+                  />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <StartDate defaultValue={formState?.startDate} />
                     <EndDate defaultValue={formState?.endDate} />
                   </div>
-                  <Description defaultValue={formState?.description} />
+                  <Description
+                    defaultValue={formState?.description}
+                    onChange={() =>
+                      setErrors((preErrors) => {
+                        // eslint-disable-next-line no-unused-vars
+                        const { description, ...others } = preErrors;
+                        return others;
+                      })
+                    }
+                  />
                 </div>
               </div>
 
@@ -95,16 +118,18 @@ export default function AddProjectPage() {
                 </p>
               </div>
 
-              {/* Tasks Section */}
-              {/* <div className="space-y-6">
-                  <div className="border-b border-gray-700 pb-4">
-                    <h3 className="text-xl font-semibold text-white mb-2">Project Tasks</h3>
-                    <p className="text-gray-400 text-sm">Define the tasks for your project</p>
-                  </div>
-                  <ProjectTasks tasks={tasks} onAddTask={setTasks} />
-                </div> */}
+              {/* Errors Section  */}
+              {Object.keys(errors).length > 0 && (
+                <div>
+                  <h3 className="text-xl font-semibold text-red-500 mb-2">Errors</h3>
+                  <ul className="text-red-500 text-sm ml-5">
+                    {Object.values(errors).map((error, index) => {
+                      return <li key={index}>{error}</li>;
+                    })}
+                  </ul>
+                </div>
+              )}
 
-              {/* Submit Section */}
               <div className="flex flex-col sm:flex-row justify-end gap-4 pt-8 border-t border-gray-700">
                 <button
                   type="submit"

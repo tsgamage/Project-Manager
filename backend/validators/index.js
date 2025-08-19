@@ -12,6 +12,8 @@ export default function validateData(req, res, next) {
       mappedErrors[err.path] = err.msg;
     });
 
-    return res.status(400).json({ success: false, errors: mappedErrors });
+    return res
+      .status(400)
+      .json({ success: false, message: "Data validation failed", errors: mappedErrors });
   }
 }
