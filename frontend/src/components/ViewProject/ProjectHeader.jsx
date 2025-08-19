@@ -9,7 +9,7 @@ import {
   BarChart3,
   Calendar,
 } from "lucide-react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import ProjectContext from "../../store/project.context";
 import calculateDaysRemaining from "../../util/calculateDaysRemaining.js";
@@ -24,6 +24,8 @@ export default function ProjectHeader() {
   const { daysRemainingClasses } = useDatesRemainingClasses(daysRemaining);
   const progress = useProgress(selectedProject);
   const { status, statusClasses } = useStatusClasses(progress);
+
+  const [showFullDescription, setShowFullDescription] = useState(false);
 
   // Calculate statistics
   const totalTasks = selectedProject.tasks.length;
@@ -125,9 +127,37 @@ export default function ProjectHeader() {
         {/* Description */}
         <div className="w-full border-t border-b border-gray-800 max-sm:py-4 sm:p-6 mt-6">
           <h2 className="text-lg sm:text-xl font-semibold text-white mb-2">Project Overview</h2>
-          <p className="text-gray-300 leading-relaxed max-w-3xl whitespace-pre-wrap text-sm sm:text-base">
+
+          <p className="hidden md:block text-gray-300 leading-relaxed max-w-3xl whitespace-pre-wrap text-sm sm:text-base">
             {selectedProject.description}
           </p>
+
+          <p className="hidden max-md:block text-gray-300 leading-relaxed max-w-3xl whitespace-pre-wrap text-sm sm:text-base">
+            {selectedProject.description &&
+            selectedProject.description.length > 300 &&
+            !showFullDescription
+              ? selectedProject.description.slice(0, 300) + " ..."
+              : selectedProject.description}
+          </p>
+
+          <div className="hidden max-md:block">
+            {selectedProject.description.length > 300 &&
+              (showFullDescription ? (
+                <button
+                  className=" text-blue-300/80 mt-2 underline cursor-pointer"
+                  onClick={() => setShowFullDescription(false)}
+                >
+                  See Less
+                </button>
+              ) : (
+                <button
+                  className="text-blue-300/80 mt-2 underline cursor-pointer"
+                  onClick={() => setShowFullDescription(true)}
+                >
+                  See More
+                </button>
+              ))}
+          </div>
         </div>
       </div>
     </section>
