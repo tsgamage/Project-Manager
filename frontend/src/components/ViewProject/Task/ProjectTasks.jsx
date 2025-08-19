@@ -103,6 +103,7 @@ export default function ProjectTasks({ tasks }) {
               key={category._id}
               category={category}
               tasks={tasks.filter((t) => t.taskCategory === category._id)}
+              closedAccodion={projectTasksCategories.length !== 1}
             />
           ))}
 

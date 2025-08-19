@@ -7,17 +7,23 @@ export default function TasksPage() {
   const { projects, tasksCategories, setSelectedProjectID } = useContext(ProjectContext);
 
   const [tasks, setTasks] = useState([]);
+  const [filteredTasks, setFilteredTasks] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterProject, setFilterProject] = useState("all");
+  const [showFilter, setShowFilter] = useState("all");
+  const [expandAll, setExpandAll] = useState(true);
+
+  console.log(showFilter);
 
   useEffect(() => {
     const allTasks = [];
     projects?.forEach((pro) => pro.tasks.forEach((task) => allTasks.push(task)));
     setTasks(allTasks);
+    setFilteredTasks(allTasks);
   }, [projects]);
 
   // Filtering logic
-  const filteredCategories = tasksCategories.filter((category) => {
+  let filteredCategories = tasksCategories.filter((category) => {
     const project = projects.find((p) => p._id === category.projectID);
     const categoryTasks = tasks.filter((t) => t.taskCategory === category._id);
 
@@ -56,6 +62,18 @@ export default function TasksPage() {
     // Show the category if it has any matching tasks, or if it has no tasks (handled above)
     return tasksToConsider.length > 0;
   });
+
+  function handleShowFilter(value) {
+    if (value === "completed") {
+      setFilteredTasks(tasks.filter((task) => task.completed));
+    }
+    if (value === "not_completed") {
+      setFilteredTasks(tasks.filter((task) => !task.completed));
+    }
+    if (value === "all") {
+      setFilteredTasks(tasks);
+    }
+  }
 
   const stats = {
     total: tasks.length,
@@ -123,7 +141,8 @@ export default function TasksPage() {
 
         {/* Filters */}
         <div className="glass rounded-2xl shadow-lg border border-gray-700 p-4 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Search */}
             <div className="lg:col-span-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -147,6 +166,7 @@ export default function TasksPage() {
                 )}
               </div>
             </div>
+            {/* Project Filter */}
             <div>
               <select
                 value={filterProject}
@@ -156,26 +176,57 @@ export default function TasksPage() {
                 <option value="all">All Projects</option>
                 {projects.map((project) => (
                   <option key={project._id} value={project._id}>
-                    {project.title}
+                    {project.title.length > 30 ? project.title.slice(0, 30) + "..." : project.title}
                   </option>
                 ))}
               </select>
+            </div>
+            {/* Show Filter */}
+            <div>
+              <select
+                value={showFilter}
+                onChange={(e) => {
+                  setShowFilter(e.target.value);
+                  handleShowFilter(e.target.value);
+                }}
+                className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">Show All</option>
+                <option value="completed">Show Completed</option>
+                <option value="not_completed">Show Not Completed</option>
+              </select>
+            </div>
+            {/* Expand/Collapse All Button */}
+            <div className="flex items-center">
+              <button
+                onClick={() => setExpandAll(!expandAll)}
+                className={`w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white font-medium transition-colors hover:bg-blue-600 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                type="button"
+              >
+                {expandAll ? "Expand All" : "Collapse All"}
+              </button>
             </div>
           </div>
         </div>
 
         {/* Tasks by Category */}
         <div className="space-y-4">
-          {filteredCategories.map((category) => (
-            <CategoryAccordion
-              key={category._id}
-              category={category}
-              tasks={tasks.filter((t) => t.taskCategory === category._id)}
-              projectTitle={projects.find((p) => p._id === category.projectID)?.title}
-              onClick={() => setSelectedProjectID(category.projectID)}
-              closedAccodion
-            />
-          ))}
+          {filteredCategories.length > 0 &&
+            filteredCategories.map((category) => (
+              <CategoryAccordion
+                key={category._id + expandAll}
+                category={category}
+                tasks={filteredTasks.filter((t) => t.taskCategory === category._id)}
+                projectTitle={projects.find((p) => p._id === category.projectID)?.title}
+                onClick={() => setSelectedProjectID(category.projectID)}
+                closedAccodion={expandAll}
+                hideAddTask={showFilter === "completed" || showFilter === "not_completed"}
+                tasksCount={
+                  showFilter !== "all" &&
+                  filteredTasks.filter((t) => t.taskCategory === category._id).length
+                }
+              />
+            ))}
         </div>
 
         {filteredCategories.length === 0 && (

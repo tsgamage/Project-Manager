@@ -12,6 +12,8 @@ export default function CategoryAccordion({
   projectTitle,
   closedAccodion,
   onClick,
+  hideAddTask,
+  tasksCount,
 }) {
   const {
     addTask,
@@ -29,6 +31,8 @@ export default function CategoryAccordion({
 
   const categoryEditModal = useRef();
   const categoryDeleteModal = useRef();
+
+  const completedTasks = tasks.filter((task) => task.completed);
 
   async function handleTaskToggle(taskID) {
     await toggleSelectTask(taskID);
@@ -104,7 +108,8 @@ export default function CategoryAccordion({
               className={`flex-shrink-0 w-2.5 h-2.5 rounded-full ${category?.color || ""}`}
             ></div>
             <div className="text-left min-w-0">
-              <h3 className="text-lg font-semibold text-white">{category.name}</h3>
+              <h3 className=" text-lg font-semibold text-white truncate">{category.name}</h3>
+
               {projectTitle && (
                 <p className="text-sm text-gray-400 truncate w-full block" title={projectTitle}>
                   Project: {projectTitle}
@@ -113,6 +118,10 @@ export default function CategoryAccordion({
             </div>
           </div>
           <div className="flex items-center gap-3">
+            <p className="text-sm text-gray-400 ml-2">
+              {!tasksCount && `${completedTasks?.length || 0}/${tasks?.length || 0}`}
+              {tasksCount >= 0 && tasksCount}
+            </p>
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -141,7 +150,7 @@ export default function CategoryAccordion({
 
         {isExpanded && (
           <div className="border-t border-gray-700 max-sm:p-3 p-4 space-y-3">
-            {!isAddingTask && (
+            {!hideAddTask && !isAddingTask && (
               <button
                 className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-600 bg-gray-700/50 text-gray-300 hover:bg-gray-700 transition-all duration-200 font-medium"
                 onClick={() => setIsAddingTask(true)}
