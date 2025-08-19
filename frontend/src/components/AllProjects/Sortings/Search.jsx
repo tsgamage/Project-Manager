@@ -1,14 +1,25 @@
-import { forwardRef } from "react";
+import { useEffect, useRef } from "react";
 import { Search as SearchIcon, X } from "lucide-react";
 
-export default forwardRef(function Search({ onSearch, onReset, ...props }, ref) {
+export default function Search({ onSearch, onReset, ...props }) {
+  const searchBar = useRef();
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey && e.key === "k") || e.key === "K") {
+        e.preventDefault(); // stop default behavior (like form submit)
+        searchBar.current.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <>
       <div className="flex-1">
-        <label
-          htmlFor="search"
-          className="block text-sm font-medium text-white mb-3"
-        >
+        <label htmlFor="search" className="block text-sm font-medium text-white mb-3">
           Search Projects
         </label>
         <div className="relative">
@@ -18,7 +29,7 @@ export default forwardRef(function Search({ onSearch, onReset, ...props }, ref) 
           <input
             id="search"
             type="text"
-            ref={ref}
+            ref={searchBar}
             onChange={(e) => onSearch(e.target.value)}
             className="block w-full pl-12 pr-12 py-4 border border-gray-600 rounded-xl bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
             placeholder="Search by project name or description..."
@@ -40,4 +51,4 @@ export default forwardRef(function Search({ onSearch, onReset, ...props }, ref) 
       </div>
     </>
   );
-});
+}

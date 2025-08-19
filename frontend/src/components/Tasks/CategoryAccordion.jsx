@@ -1,6 +1,6 @@
-import { ChevronDown, ChevronRight, Edit, Plus, Trash2, X } from "lucide-react";
+import { ChevronDown, ChevronRight, Edit, ListCheck, Plus, Trash2, X } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { useContext, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import ProjectContext from "../../store/project.context.jsx";
 import TaskItem from "./TaskItem.jsx";
 import TasksCategoryModal from "../UI/Modals/TasksCategoryModal.jsx";
@@ -53,8 +53,8 @@ export default function CategoryAccordion({
     categoryDeleteModal.current.close();
   }
 
-  async function onAddTask() {
-    if (editedName.length > 100 || editedDescription.length > 500) {
+  const onAddTask = useCallback(async () => {
+    if (editedName.length < 3 || editedName.length > 100 || editedDescription.length > 500) {
       return;
     }
 
@@ -74,7 +74,26 @@ export default function CategoryAccordion({
       console.log(resData.message);
       toast.error(resData.message);
     }
-  }
+  }, [addTask, category._id, editedDescription, editedName, setIsAddingTask]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.ctrlKey && e.key === "Enter") {
+        e.preventDefault(); // stop default behavior (like form submit)
+        if (isAddingTask) {
+          onAddTask();
+        }
+      }
+
+      if ((e.ctrlKey && e.key === ".") || e.key === "Period") {
+        e.preventDefault(); // stop default behavior (like form submit)
+        setIsAddingTask(true);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onAddTask, isAddingTask, editedName, editedDescription]);
 
   return (
     <>
@@ -117,7 +136,12 @@ export default function CategoryAccordion({
               )}
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            {tasks.length - completedTasks.length === 0 && (
+              <div title="All Tasks Completed">
+                <ListCheck className="w-5 h-5  text-green-400" />
+              </div>
+            )}
             <p className="text-sm text-gray-400 ml-2">
               {!tasksCount && `${completedTasks?.length || 0}/${tasks?.length || 0}`}
               {tasksCount >= 0 && tasksCount}
@@ -174,6 +198,7 @@ export default function CategoryAccordion({
                         value={editedName}
                         onChange={(e) => setEditedName(e.target.value)}
                         autoComplete="task-name"
+                        autoFocus
                         className={`w-full min-h-10 px-2 py-2 border text-white focus:outline-none focus:ring-1 ${
                           editedName.length > 100
                             ? "focus:ring-red-500 border-red-500 rounded bg-red-800/30"

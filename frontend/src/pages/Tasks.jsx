@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import CategoryAccordion from "../components/Tasks/CategoryAccordion";
 import { CheckCircle, Clock, Search, X, List, Target } from "lucide-react";
 import ProjectContext from "../store/project.context";
@@ -13,7 +13,7 @@ export default function TasksPage() {
   const [showFilter, setShowFilter] = useState("all");
   const [expandAll, setExpandAll] = useState(true);
 
-  console.log(showFilter);
+  const searchBarRef = useRef();
 
   useEffect(() => {
     const allTasks = [];
@@ -82,6 +82,18 @@ export default function TasksPage() {
     categories: tasksCategories.length,
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey && e.key === "k") || e.key === "K") {
+        e.preventDefault(); // stop default behavior (like form submit)
+        searchBarRef.current.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto max-sm:px-2 p-4 sm:p-6">
@@ -149,6 +161,7 @@ export default function TasksPage() {
                 <input
                   type="text"
                   placeholder="Search tasks or projects..."
+                  ref={searchBarRef}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -216,11 +229,18 @@ export default function TasksPage() {
               <CategoryAccordion
                 key={category._id + expandAll}
                 category={category}
-                tasks={filteredTasks.filter((t) => t.taskCategory === category._id)}
+                tasks={filteredTasks.filter(
+                  (t) =>
+                    t.taskCategory === category._id &&
+                    (t.taskName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      t.taskDescription.toLowerCase().includes(searchQuery.toLowerCase()))
+                )}
                 projectTitle={projects.find((p) => p._id === category.projectID)?.title}
                 onClick={() => setSelectedProjectID(category.projectID)}
                 closedAccodion={expandAll}
-                hideAddTask={showFilter === "completed" || showFilter === "not_completed"}
+                hideAddTask={
+                  showFilter === "completed" || showFilter === "not_completed" || searchQuery !== ""
+                }
                 tasksCount={
                   showFilter !== "all" &&
                   filteredTasks.filter((t) => t.taskCategory === category._id).length
