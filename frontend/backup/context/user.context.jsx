@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { updateUser } from "../services/user.api";
+import { updateUser } from "../../src/services/user.api";
 
 const UserContext = createContext({
   updateName: () => {},

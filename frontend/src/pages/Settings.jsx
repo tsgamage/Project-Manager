@@ -1,17 +1,15 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import UserContext from "../store/user.context.jsx";
 import { toast } from "react-hot-toast";
 import { User, Lock, Save, Edit3, Eye, EyeOff, X, ArrowLeft, Settings } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuthStatusThunk } from "../store/auth.actions.js";
 import { changePasswordRequest } from "../services/auth.api.js";
+import { updateUserRequest } from "../services/user.api.js";
 
 export default function SettingsPage() {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
-
-  const { updateName } = useContext(UserContext);
 
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditing, setIsEditing] = useState(false);
@@ -52,7 +50,7 @@ export default function SettingsPage() {
     }
 
     setIsLoading(true);
-    const resData = await updateName(formData.name);
+    const resData = await updateUserRequest({ name: formData.name });
 
     if (resData.success) {
       dispatch(checkAuthStatusThunk());

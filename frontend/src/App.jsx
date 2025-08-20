@@ -13,7 +13,6 @@ import ResetPasswordPage from "./pages/auth/ResetPassword";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/Auth/ProtectedRoute.jsx";
 import RedirectUserIfAuthenticated from "./components/Auth/RedirectUserIfAuthenticated.jsx";
-import { UserContextProvider } from "./store/user.context.jsx";
 import { PageLayoutContextProvider } from "./store/pageLayout.context.jsx";
 import AllProjects from "./pages/AllProjects.jsx";
 import LanndingPage from "./pages/Landing.jsx";
@@ -138,12 +137,10 @@ export default function App() {
 
   return (
     <PageLayoutContextProvider>
-      <UserContextProvider>
-        <ProjectContextProvider>
-          <Toaster />
-          <RouterProvider router={router}></RouterProvider>
-        </ProjectContextProvider>
-      </UserContextProvider>
+      <ProjectContextProvider>
+        <Toaster />
+        <RouterProvider router={router}></RouterProvider>
+      </ProjectContextProvider>
     </PageLayoutContextProvider>
   );
 }

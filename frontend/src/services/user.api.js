@@ -1,8 +1,9 @@
 import API_ENDPOINTS from "../config/api";
+import responseNotOkay from "../util/responseNotOkay";
 
 const API_URL = API_ENDPOINTS.USER;
 
-export async function updateUser(userData) {
+export async function updateUserRequest(userData) {
   try {
     const response = await fetch(`${API_URL}/update`, {
       method: "POST",
@@ -15,22 +16,12 @@ export async function updateUser(userData) {
 
     const data = await response.json();
 
-    if (
-      !response.ok &&
-      response.status !== 401 &&
-      response.status !== 404 &&
-      response.status !== 400
-    ) {
+    if (responseNotOkay(response)) {
       return { success: false, message: data.message || "Failed to update name" };
     }
 
-    return {
-      success: true,
-      message: data.message || "Name updated successfully",
-      user: data.user,
-    };
+    return data;
   } catch (error) {
-    console.error("Error updating name:", error);
     return { success: false, message: error.message || "An error occurred while updating name" };
   }
 }
