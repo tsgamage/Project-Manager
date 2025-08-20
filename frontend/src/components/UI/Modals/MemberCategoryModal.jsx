@@ -11,12 +11,19 @@ import { X, Check, Loader, Grid2x2Plus } from "lucide-react";
 import ModalInput from "./components/ModalInput";
 import { toast } from "react-hot-toast";
 import colors from "../../../util/colors";
+import { useDispatch } from "react-redux";
+import {
+  createNewMemberCategoryThunk,
+  updateMemberCategoryThunk,
+} from "../../../store/member.action";
 
-export default forwardRef(function AddMemberCategoryModal({ onClick, categoryData }, ref) {
+export default forwardRef(function AddMemberCategoryModal({ categoryData }, ref) {
   const [isOpen, setIsOpen] = useState(false);
   const [formState, formAction, pending] = useActionState(AddMemberAction);
   const [error, setError] = useState("");
   const [resetForm, setResetForm] = useState(false);
+
+  const dispatch = useDispatch();
 
   const MEMBER_COLORS = colors.memberColors;
 
@@ -99,9 +106,9 @@ export default forwardRef(function AddMemberCategoryModal({ onClick, categoryDat
     // checking whether this was a update or a new category and pass necessary data
     let response;
     if (categoryData) {
-      response = await onClick(categoryData._id, updatedObj);
+      response = await dispatch(updateMemberCategoryThunk(categoryData._id, updatedObj));
     } else {
-      response = await onClick(updatedObj);
+      response = await dispatch(createNewMemberCategoryThunk(updatedObj));
     }
 
     // Common response for both update and new category requests

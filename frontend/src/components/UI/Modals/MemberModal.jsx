@@ -5,17 +5,16 @@ import {
   useEffect,
   useCallback,
   useActionState,
-  useContext,
 } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "react-hot-toast";
 import { X, Check, Loader, ChevronDown, Plus } from "lucide-react";
 import ModalInput from "./components/ModalInput.jsx";
-import MemberContext from "../../../store/member.context.jsx";
 import colors from "../../../util/colors.js";
+import { useDispatch, useSelector } from "react-redux";
+import { createNewMemberThunk, updateMemberThunk } from "../../../store/member.action.js";
 
-export default forwardRef(function AddMemberModal({ onClick, onSelectionClick, memberData }, ref) {
-  const { fetchedMemberCategories } = useContext(MemberContext);
+export default forwardRef(function AddMemberModal({ onSelectionClick, memberData }, ref) {
   const [isOpen, setIsOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(memberData ? memberData.categoryID : "");
@@ -23,6 +22,8 @@ export default forwardRef(function AddMemberModal({ onClick, onSelectionClick, m
   const [resetForm, setResetForm] = useState(false);
   const [formState, formAction, pending] = useActionState(AddMemberAction);
 
+  const fetchedMemberCategories = useSelector((state) => state.team.memberCategories);
+  const dispatch = useDispatch();
   const MEMBER_COLORS = colors.memberColors;
 
   const handleClose = useCallback(() => {
@@ -149,9 +150,9 @@ export default forwardRef(function AddMemberModal({ onClick, onSelectionClick, m
     // Actually call the onClick handler (remove quotes and await)
     let response;
     if (memberData) {
-      response = await onClick(memberData._id, memberObj);
+      response = await dispatch(updateMemberThunk(memberData._id, memberObj));
     } else {
-      response = await onClick(memberObj);
+      response = await dispatch(createNewMemberThunk(memberObj));
     }
 
     if (response && response.success) {

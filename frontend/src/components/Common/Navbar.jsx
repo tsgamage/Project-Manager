@@ -4,9 +4,9 @@ import { ChevronUp, LogOut, Menu, Settings, SquareArrowOutUpRight, User, Bell } 
 import { toast } from "react-hot-toast";
 import ProjectContext from "../../store/project.context";
 import PageLayoutContext from "../../store/pageLayout.context";
-import MemberContext from "../../store/member.context";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutThunk } from "../../store/auth.actions";
+import { memberActions } from "../../store/member.slice";
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -18,7 +18,6 @@ export default function Navbar() {
   // Contexts
   const { projects, setProjects } = useContext(ProjectContext);
   const { toggleMobileSidebar } = useContext(PageLayoutContext);
-  const { setFetchedMembers, setFetchMemberCategories } = useContext(MemberContext);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -37,8 +36,8 @@ export default function Navbar() {
     setIsDropdownOpen(false);
     toast.success("Logged out successfully");
     setProjects([]);
-    setFetchedMembers([]);
-    setFetchMemberCategories([]);
+    dispatch(memberActions.clearMembers());
+    dispatch(memberActions.clearMemberCategory());
     sessionStorage.clear();
     window.location.reload();
   }

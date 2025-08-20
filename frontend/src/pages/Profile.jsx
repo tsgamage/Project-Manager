@@ -17,23 +17,22 @@ import {
   LogOut,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
-import MemberContext from "../store/member.context.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutThunk } from "../store/auth.actions.js";
+import { memberActions } from "../store/member.slice.js";
 
 export default function Profile() {
   const user = useSelector((state) => state.auth.user);
 
   const dispatch = useDispatch();
   const { projects, setProjects } = useContext(ProjectContext);
-  const { setFetchedMembers, setFetchMemberCategories } = useContext(MemberContext);
 
   function handleLogout() {
     dispatch(logoutThunk());
     toast.success("Logged out successfully");
     setProjects([]);
-    setFetchedMembers([]);
-    setFetchMemberCategories([]);
+    dispatch(memberActions.clearMemberCategory());
+    dispatch(memberActions.clearMembers());
     sessionStorage.clear();
     window.location.reload();
   }

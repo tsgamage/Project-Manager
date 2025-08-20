@@ -5,12 +5,12 @@ import { Calendar, Clock, CheckCircle } from "lucide-react";
 import { Tooltip } from "react-tooltip";
 import calculateDaysRemaining from "../../util/calculateDaysRemaining";
 import useDatesRemainingClasses from "../../hooks/useDatesRemainingClasses";
-import { useContext } from "react";
-import MemberContext from "../../store/member.context";
+import { useSelector } from "react-redux";
 
 export default function ProjectCard({ project }) {
   const { _id, title, description, startDate, endDate, team } = project;
-  const { fetchedMembers } = useContext(MemberContext);
+
+  const fetchedMembers = useSelector((state) => state.team.members);
 
   const progress = useProgress(project);
   const { status, statusClasses } = useStatusClasses(progress);

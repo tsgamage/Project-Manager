@@ -1,16 +1,18 @@
 import { CheckCircle, Clock, Edit, Mail, MoreVertical, Trash2 } from "lucide-react";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DeleteWarningModal from "../UI/Modals/DeleteWarningModal";
-import MemberContext from "../../store/member.context";
 import toast from "react-hot-toast";
 import MemberModal from "../UI/Modals/MemberModal";
+import { useDispatch } from "react-redux";
+import { deleteMemberThunk } from "../../store/member.action";
 
 export default function GridMemberCard({ member, category }) {
   const [openDropdown, setOpenDropdown] = useState(null);
-  const { deleteMember, updateMember } = useContext(MemberContext);
 
   const deleteModal = useRef();
   const memberModal = useRef();
+
+  const dispatch = useDispatch();
 
   function toggleDropdown(memberId) {
     setOpenDropdown(openDropdown === memberId ? null : memberId);
@@ -37,11 +39,14 @@ export default function GridMemberCard({ member, category }) {
         onCancel={() => deleteModal.current.close()}
         onConfirm={async () => {
           deleteModal.current.close();
-          await deleteMember(member._id);
+          await dispatch(deleteMemberThunk(member._id));
           toast.success("Member deleted successfully");
         }}
       />
-      <MemberModal ref={memberModal} memberData={member} onClick={updateMember} />
+      <MemberModal
+        ref={memberModal}
+        memberData={member}
+      />
       <div
         key={member._id}
         className="gradient-card rounded-xl p-4 sm:p-6 sm:hover-lift transition-all duration-300 border border-gray-700"

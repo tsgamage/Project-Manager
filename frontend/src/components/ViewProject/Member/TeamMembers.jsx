@@ -4,12 +4,13 @@ import Memeber from "./Member";
 import ProjectContext from "../../../store/project.context";
 import { Users } from "lucide-react";
 import AddMemberToProject from "../../UI/Modals/AddMemberToProject";
-import MemberContext from "../../../store/member.context";
+import { useSelector } from "react-redux";
 
 export default function TeamMembers({ team }) {
   const { selectedProject } = useContext(ProjectContext);
-  const { fetchedMembers } = useContext(MemberContext);
   const modal = useRef();
+
+  const fetchedMembers = useSelector((state) => state.team.members);
 
   // Calculate team statistics
 

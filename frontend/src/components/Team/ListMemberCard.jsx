@@ -1,10 +1,11 @@
 import { ChevronDown, ChevronRight, Edit, MoreVertical, Trash2 } from "lucide-react";
-import { useContext, useEffect, useRef, useState } from "react";
-import MemberContext from "../../store/member.context";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 import MemberCategoryModal from "../UI/Modals/MemberCategoryModal";
 import NoMemberCard from "./ListMemberCard/NoMemberCard";
 import MemberCard from "./ListMemberCard/MemberCard";
+import { useDispatch } from "react-redux";
+import { deleteMemberCategoryThunk } from "../../store/member.action";
 
 let EXPANDED_CATEGORIES = {};
 
@@ -21,7 +22,7 @@ export default function ListMemberCard({
 
   const updateMemberCategoryModal = useRef();
 
-  const { deleteCategory, updateMemberCategory } = useContext(MemberContext);
+  const dispatch = useDispatch();
 
   function handleEditCategory() {
     //? This is the function that calls when user clicks on the edit category button
@@ -30,7 +31,7 @@ export default function ListMemberCard({
   }
 
   async function handleDeleteCategory() {
-    const response = await deleteCategory(categoryID);
+    const response = await dispatch(deleteMemberCategoryThunk(categoryID));
     if (response.success) {
       toast.success(response.message);
     } else {
@@ -90,11 +91,7 @@ export default function ListMemberCard({
 
   return (
     <>
-      <MemberCategoryModal
-        ref={updateMemberCategoryModal}
-        categoryData={categoryData}
-        onClick={updateMemberCategory}
-      />
+      <MemberCategoryModal ref={updateMemberCategoryModal} categoryData={categoryData} />
 
       <div className="border border-gray-700 rounded-xl relative">
         {/* Category Header */}

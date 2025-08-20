@@ -5,7 +5,7 @@ import memberSlice from "./member.slice";
 const store = configureStore({
   reducer: {
     auth: authSlice.reducer,
-    members: memberSlice.reducer,
+    team: memberSlice.reducer,
   },
 });
 

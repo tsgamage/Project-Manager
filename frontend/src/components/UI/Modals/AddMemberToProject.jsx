@@ -8,8 +8,8 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { X, Search, Users, Plus, Mail, CheckCircle, Clock } from "lucide-react";
-import MemberContext from "../../../store/member.context";
 import ProjectContext from "../../../store/project.context";
+import { useSelector } from "react-redux";
 
 const MemberCard = ({ member, onSelect, isSelected, isDisabled }) => {
   return (
@@ -19,8 +19,8 @@ const MemberCard = ({ member, onSelect, isSelected, isDisabled }) => {
         isDisabled
           ? "border-gray-800 bg-gray-800/50 cursor-not-allowed opacity-50"
           : isSelected
-          ? "cursor-pointer border-blue-500 bg-blue-500/10 hover:shadow-lg hover:-translate-y-0.5"
-          : "cursor-pointer border-gray-700 hover:border-gray-600 hover:shadow-lg hover:-translate-y-0.5"
+            ? "cursor-pointer border-blue-500 bg-blue-500/10 hover:shadow-lg hover:-translate-y-0.5"
+            : "cursor-pointer border-gray-700 hover:border-gray-600 hover:shadow-lg hover:-translate-y-0.5"
       }`}
     >
       {/* Color Gradient Indicator */}
@@ -111,8 +111,9 @@ const SelectedMemberTag = ({ member, onRemove, isDisabled }) => {
 };
 
 export default forwardRef(function AddMemberToProject(props, ref) {
-  const { fetchedMembers } = useContext(MemberContext);
   const { addMember, selectedProject } = useContext(ProjectContext);
+
+  const fetchedMembers = useSelector((state) => state.team.members);
 
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -201,9 +202,7 @@ export default forwardRef(function AddMemberToProject(props, ref) {
       setIsOpen(true);
       setSearchTerm("");
       // preload already-added members
-      const alreadyAdded = fetchedMembers.filter((m) =>
-        selectedProject.team.includes(m._id)
-      );
+      const alreadyAdded = fetchedMembers.filter((m) => selectedProject.team.includes(m._id));
       setSelectedMembers(alreadyAdded);
     },
     close: () => {
@@ -322,7 +321,10 @@ export default forwardRef(function AddMemberToProject(props, ref) {
             </button>
             <button
               onClick={handleAddMembers}
-              disabled={isLoading || selectedMembers.filter((m) => !selectedProject.team.includes(m._id)).length === 0}
+              disabled={
+                isLoading ||
+                selectedMembers.filter((m) => !selectedProject.team.includes(m._id)).length === 0
+              }
               className="flex-1 px-3 sm:px-4 py-2 sm:py-3 gradient-blue hover:shadow-lg text-white rounded-lg sm:rounded-xl font-medium transition-all duration-300 hover-lift disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base flex items-center justify-center gap-2"
             >
               {isLoading ? (
@@ -333,11 +335,8 @@ export default forwardRef(function AddMemberToProject(props, ref) {
               ) : (
                 <>
                   <Plus className="h-4 w-4" />
-                  Add{" "}
-                  {
-                    selectedMembers.filter(
-                      (m) => !selectedProject.team.includes(m._id)
-                    ).length
+                  Add {
+                    selectedMembers.filter((m) => !selectedProject.team.includes(m._id)).length
                   }{" "}
                   Member
                   {selectedMembers.filter((m) => !selectedProject.team.includes(m._id)).length !== 1

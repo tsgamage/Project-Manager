@@ -21,14 +21,16 @@ import HomePage from "./pages/Home.jsx";
 import TeamsPage from "./pages/Team.jsx";
 import TasksPage from "./pages/Tasks.jsx";
 import SettingsPage from "./pages/Settings.jsx";
-import { MemberContextProvider } from "./store/member.context.jsx";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuthStatusThunk } from "./store/auth.actions.js";
 import RedirectToLoginPage from "./components/Auth/RedirectToLoginPage.jsx";
+import { fetchMemberCategoriesThunk, fetchMembersThunk } from "./store/member.action.js";
 
 export default function App() {
   const dispatch = useDispatch();
+
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -39,6 +41,17 @@ export default function App() {
     };
     checkAuth();
   }, [dispatch]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      await dispatch(fetchMembersThunk());
+      await dispatch(fetchMemberCategoriesThunk());
+    };
+
+    if (isAuthenticated) {
+      fetch();
+    }
+  }, [dispatch, isAuthenticated]);
 
   const router = createBrowserRouter([
     {
@@ -127,10 +140,8 @@ export default function App() {
     <PageLayoutContextProvider>
       <UserContextProvider>
         <ProjectContextProvider>
-          <MemberContextProvider>
-            <Toaster />
-            <RouterProvider router={router}></RouterProvider>
-          </MemberContextProvider>
+          <Toaster />
+          <RouterProvider router={router}></RouterProvider>
         </ProjectContextProvider>
       </UserContextProvider>
     </PageLayoutContextProvider>

@@ -1,6 +1,5 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import ProjectContext from "../store/project.context.jsx";
-import MemberContext from "../store/member.context.jsx";
 import TeamHeader from "../components/Team/TeamHeader.jsx";
 import TeamStats from "../components/Team/TeamStats.jsx";
 import TopActionButtons from "../components/Team/TopActionButtons.jsx";
@@ -9,11 +8,13 @@ import NoMember from "../components/Team/NoMember.jsx";
 import ListMemberCard from "../components/Team/ListMemberCard.jsx";
 import MemberModal from "../components/UI/Modals/MemberModal.jsx";
 import MemberCategoryModal from "../components/UI/Modals/MemberCategoryModal.jsx";
+import { useSelector } from "react-redux";
 
 export default function TeamsPage() {
   const { projects } = useContext(ProjectContext);
-  const { fetchedMembers, addMember, fetchedMemberCategories, addMemberCategory } =
-    useContext(MemberContext);
+
+  const fetchedMembers = useSelector((state) => state.team.members);
+  const fetchedMemberCategories = useSelector((state) => state.team.memberCategories);
 
   const memberModal = useRef();
   const addMemberCategoryModal = useRef();
@@ -99,11 +100,10 @@ export default function TeamsPage() {
     <>
       <MemberModal
         ref={memberModal}
-        onClick={addMember}
         onSelectionClick={() => addMemberCategoryModal.current.open()}
       />
 
-      <MemberCategoryModal ref={addMemberCategoryModal} onClick={addMemberCategory} />
+      <MemberCategoryModal ref={addMemberCategoryModal} />
 
       <div className="min-h-screen">
         <main className="max-w-7xl mx-auto p-2 sm:p-6">

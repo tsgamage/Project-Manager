@@ -5,15 +5,15 @@ import {
   getAllMembers,
   updateMember,
   updateProjectByID,
-} from "../services/member.api.js";
+} from "../../src/services/member.api.js";
 import {
   addMemberCategory,
   deleteMemberCategory,
   getMemberCategories,
   updateMemberCategory,
-} from "../services/memberCategory.api.js";
-import AuthContext from "../../backup/context/auth.context.jsx";
-import ProjectContext from "./project.context.jsx";
+} from "../../src/services/memberCategory.api.js";
+import AuthContext from "./auth.context.jsx";
+import ProjectContext from "../../src/store/project.context.jsx";
 
 const MemberContext = createContext({
   fetchedMembers: [],

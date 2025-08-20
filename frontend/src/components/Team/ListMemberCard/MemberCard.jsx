@@ -1,15 +1,16 @@
-import { useContext, useRef } from "react";
-import MemberContext from "../../../store/member.context";
+import { useRef } from "react";
 import { toast } from "react-hot-toast";
 import DeleteWarningModal from "../../UI/Modals/DeleteWarningModal";
 import MemberModal from "../../UI/Modals/MemberModal";
 import { Edit, Mail, Target, Trash2 } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { deleteMemberThunk } from "../../../store/member.action";
 
 export default function MemberCard({ member }) {
-  const { updateMember, deleteMember } = useContext(MemberContext);
-
   const deleteModal = useRef();
   const updateMemberModal = useRef();
+
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -19,12 +20,15 @@ export default function MemberCard({ member }) {
         onCancel={() => deleteModal.current.close()}
         onConfirm={async () => {
           deleteModal.current.close();
-          await deleteMember(member._id);
+          await dispatch(deleteMemberThunk(member._id));
           toast.success("Member deleted successfully");
         }}
       />
 
-      <MemberModal ref={updateMemberModal} memberData={member} onClick={updateMember} />
+      <MemberModal
+        ref={updateMemberModal}
+        memberData={member}
+      />
 
       <div className="gradient-card rounded-lg p-4 pl-4 sm:pl-6 border border-gray-700 hover:border-gray-600 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 relative overflow-hidden">
         {/* Color Gradient Indicator */}
