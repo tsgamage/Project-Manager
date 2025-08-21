@@ -1,10 +1,13 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CategoryAccordion from "../components/Tasks/CategoryAccordion";
 import { CheckCircle, Clock, Search, X, List, Target } from "lucide-react";
-import ProjectContext from "../store/project.context";
+import { useDispatch, useSelector } from "react-redux";
+import { projectActions } from "../store/project.slice";
 
 export default function TasksPage() {
-  const { projects, tasksCategories, setSelectedProjectID } = useContext(ProjectContext);
+  const projects = useSelector((state) => state.project.projects);
+  const tasksCategories = useSelector((state) => state.project.tasksCategories);
+  const dispatch = useDispatch();
 
   const [tasks, setTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
@@ -236,7 +239,7 @@ export default function TasksPage() {
                       t.taskDescription.toLowerCase().includes(searchQuery.toLowerCase()))
                 )}
                 projectTitle={projects.find((p) => p._id === category.projectID)?.title}
-                onClick={() => setSelectedProjectID(category.projectID)}
+                onClick={() => dispatch(projectActions.setSelecteProjectID(category.projectID))}
                 closedAccodion={expandAll}
                 hideAddTask={
                   showFilter === "completed" || showFilter === "not_completed" || searchQuery !== ""

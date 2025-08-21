@@ -1,12 +1,14 @@
-import { useContext, useRef } from "react";
+import { useRef } from "react";
 import { Target, CheckCircle, Clock, TrendingUp, Grid2x2Plus } from "lucide-react";
 import { Tooltip } from "react-tooltip";
-import ProjectContext from "../../../store/project.context.jsx";
 import TasksCategoryModal from "../../UI/Modals/TasksCategoryModal.jsx";
 import CategoryAccordion from "../../Tasks/CategoryAccordion.jsx";
+import { useSelector } from "react-redux";
 
 export default function ProjectTasks({ tasks }) {
-  const { tasksCategories, addTaskCategory, selectedProject } = useContext(ProjectContext);
+  const tasksCategories = useSelector((state) => state.project.tasksCategories);
+  const selectedProject = useSelector((state) => state.project.selectedProject);
+
   const taskCategoryModal = useRef();
 
   const projectTasksCategories = tasksCategories.filter(
@@ -21,11 +23,7 @@ export default function ProjectTasks({ tasks }) {
 
   return (
     <>
-      <TasksCategoryModal
-        ref={taskCategoryModal}
-        projectID={selectedProject._id}
-        onClick={addTaskCategory}
-      />
+      <TasksCategoryModal ref={taskCategoryModal} projectID={selectedProject._id} />
 
       <div className="glass rounded-2xl shadow-lg border border-gray-700 p-2 sm:p-6">
         {/* Header */}

@@ -1,4 +1,3 @@
-import { ProjectContextProvider } from "./store/project.context";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import ViewProjectPage from "./pages/ViewProject";
 import RootLayout from "./pages/Root";
@@ -25,11 +24,17 @@ import { useEffect } from "react";
 import { checkAuthStatusThunk } from "./store/auth.actions.js";
 import RedirectToLoginPage from "./components/Auth/RedirectToLoginPage.jsx";
 import { fetchMemberCategoriesThunk, fetchMembersThunk } from "./store/member.action.js";
+import {
+  fetchProjectByIdThunk,
+  fetchProjectsThunk,
+  fetchTaskCategoryThunk,
+} from "./store/project.action.js";
 
 export default function App() {
   const dispatch = useDispatch();
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const selectedProjectID = useSelector((state) => state.project.selectedProjectID);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -45,12 +50,23 @@ export default function App() {
     const fetch = async () => {
       await dispatch(fetchMembersThunk());
       await dispatch(fetchMemberCategoriesThunk());
+      await dispatch(fetchProjectsThunk());
+      await dispatch(fetchTaskCategoryThunk());
     };
 
     if (isAuthenticated) {
       fetch();
     }
   }, [dispatch, isAuthenticated]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      dispatch(fetchProjectByIdThunk());
+    };
+    if (selectedProjectID !== 0) {
+      fetch();
+    }
+  }, [dispatch, selectedProjectID]);
 
   const router = createBrowserRouter([
     {
@@ -137,10 +153,8 @@ export default function App() {
 
   return (
     <PageLayoutContextProvider>
-      <ProjectContextProvider>
-        <Toaster />
-        <RouterProvider router={router}></RouterProvider>
-      </ProjectContextProvider>
+      <Toaster />
+      <RouterProvider router={router}></RouterProvider>
     </PageLayoutContextProvider>
   );
 }

@@ -1,11 +1,12 @@
-import { useContext, useRef } from "react";
-import ProjectContext from "../../../store/project.context.jsx";
+import { useRef } from "react";
 import DeleteWarningModal from "../../UI/Modals/DeleteWarningModal.jsx";
 import { Trash2, Mail, Calendar, Activity, MoreVertical, Crown } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { removeMemberFromProjectThunk } from "../../../store/project.action.js";
 
 export default function Memeber({ member }) {
-  const { removeMember } = useContext(ProjectContext);
   const deleteModal = useRef();
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -13,7 +14,7 @@ export default function Memeber({ member }) {
         ref={deleteModal}
         title={`Remove ${member.name}?`}
         message={`Are you sure you want to remove ${member.name} from this Project?`}
-        onConfirm={() => removeMember(member._id)}
+        onConfirm={() => dispatch(removeMemberFromProjectThunk(member._id))}
         onCancel={() => deleteModal.current.close()}
       />
 

@@ -1,17 +1,22 @@
 import { useContext, useState } from "react";
 import PageLayoutContext from "../../../../store/pageLayout.context";
-import ProjectContext from "../../../../store/project.context";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, FolderOpen } from "lucide-react";
 import { Tooltip } from "react-tooltip";
+import { useSelector } from "react-redux";
 
 export default function ProjectsDropdown() {
   const location = useLocation();
-  const isActive =
-    location.pathname === "/project/all" || location.pathname.startsWith("/project/view/");
-  const { projects } = useContext(ProjectContext);
+
+  // States
   const [isProjectsDropdownOpen, setIsProjectsDropdownOpen] = useState(false);
   const { isDesktopSideBarCollapsed, toggleSidebar } = useContext(PageLayoutContext);
+
+  // Store
+  const projects = useSelector((state) => state.project.projects);
+
+  const isActive =
+    location.pathname === "/project/all" || location.pathname.startsWith("/project/view/");
 
   const ProjectsDropdownItem = ({ project }) => {
     const isActive = location.pathname === `/project/view/${project._id}`;

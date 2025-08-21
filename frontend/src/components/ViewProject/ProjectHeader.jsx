@@ -1,24 +1,14 @@
-import {
-  ArrowLeft,
-  Users,
-  CheckCircle,
-  Target,
-  MoreVertical,
-  Share2,
-  Download,
-  BarChart3,
-  Calendar,
-} from "lucide-react";
-import { useContext, useState } from "react";
+import { ArrowLeft, Users, CheckCircle, Target, BarChart3, Calendar } from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import ProjectContext from "../../store/project.context";
 import calculateDaysRemaining from "../../util/calculateDaysRemaining.js";
 import useDatesRemainingClasses from "../../hooks/useDatesRemainingClasses.jsx";
 import useProgress from "../../hooks/useProgress";
 import useStatusClasses from "../../hooks/useStatusClasses";
+import { useSelector } from "react-redux";
 
 export default function ProjectHeader() {
-  const { selectedProject } = useContext(ProjectContext);
+  const selectedProject = useSelector((state) => state.project.selectedProject);
 
   const daysRemaining = calculateDaysRemaining(selectedProject.endDate);
   const { daysRemainingClasses } = useDatesRemainingClasses(daysRemaining);

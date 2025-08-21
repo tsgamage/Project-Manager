@@ -1,19 +1,17 @@
-import {
-  ChevronDown,
-  ChevronRight,
-  Edit,
-  ListCheck,
-  Plus,
-  Trash2,
-  UndoIcon,
-  X,
-} from "lucide-react";
+import { ChevronDown, ChevronRight, Edit, ListCheck, Plus, Trash2, X } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import ProjectContext from "../../store/project.context.jsx";
+import { useCallback, useEffect, useRef, useState } from "react";
 import TaskItem from "./TaskItem.jsx";
 import TasksCategoryModal from "../UI/Modals/TasksCategoryModal.jsx";
 import DeleteWarningModal from "../UI/Modals/DeleteWarningModal.jsx";
+import { useDispatch } from "react-redux";
+import {
+  addTaskToProjectThunk,
+  removeTaskCategoryThunk,
+  removeTaskFromProjectThunk,
+  toggleSelectTaskThunk,
+  updateTaskThunk,
+} from "../../store/project.action.js";
 
 export default function CategoryAccordion({
   category,
@@ -25,14 +23,7 @@ export default function CategoryAccordion({
   tasksCount,
   hideCompletedIcon,
 }) {
-  const {
-    addTask,
-    toggleSelectTask,
-    removeTask,
-    updateTask,
-    updateTaskCategory,
-    deleteTaskCategory,
-  } = useContext(ProjectContext);
+  const dispatch = useDispatch();
 
   const [isExpanded, setIsExpanded] = useState(!closedAccodion);
   const [isAddingTask, setIsAddingTask] = useState(false);
@@ -45,13 +36,15 @@ export default function CategoryAccordion({
   const completedTasks = tasks.filter((task) => task.completed);
 
   async function handleTaskToggle(taskID) {
-    await toggleSelectTask(taskID);
+    await dispatch(toggleSelectTaskThunk(taskID));
   }
   async function handleTaskDelete(taskID) {
-    await removeTask(taskID);
+    await dispatch(removeTaskFromProjectThunk(taskID));
   }
   async function handleTaskSave(taskId, name, description) {
-    await updateTask(taskId, name, description);
+    await dispatch(
+      updateTaskThunk(category.projectID, taskId, { taskName: name, taskDescription: description })
+    );
   }
 
   async function onDeleteCategory() {
@@ -59,7 +52,7 @@ export default function CategoryAccordion({
       return toast.error("You can't delete a category with tasks.");
     }
 
-    await deleteTaskCategory(category._id);
+    await dispatch(removeTaskCategoryThunk(category._id));
     categoryDeleteModal.current.close();
   }
 
@@ -74,7 +67,7 @@ export default function CategoryAccordion({
       taskDescription: editedDescription,
       completed: false,
     };
-    const resData = await addTask(taskObj);
+    const resData = await dispatch(addTaskToProjectThunk(taskObj));
 
     if (resData) {
       setEditedName("");
@@ -84,7 +77,7 @@ export default function CategoryAccordion({
       console.log(resData.message);
       toast.error(resData.message);
     }
-  }, [addTask, category._id, editedDescription, editedName, setIsAddingTask]);
+  }, [dispatch, editedName, editedDescription, category._id]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -110,7 +103,6 @@ export default function CategoryAccordion({
       <TasksCategoryModal
         ref={categoryEditModal}
         projectID={category.projectID}
-        onClick={updateTaskCategory}
         categoryData={category}
       />
       <DeleteWarningModal

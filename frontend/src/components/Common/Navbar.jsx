@@ -2,21 +2,22 @@ import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ChevronUp, LogOut, Menu, Settings, SquareArrowOutUpRight, User, Bell } from "lucide-react";
 import { toast } from "react-hot-toast";
-import ProjectContext from "../../store/project.context";
 import PageLayoutContext from "../../store/pageLayout.context";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutThunk } from "../../store/auth.actions";
 import { memberActions } from "../../store/member.slice";
+import { projectActions } from "../../store/project.slice";
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dispatch = useDispatch();
 
+  // Store
   const user = useSelector((state) => state.auth.user);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const projects = useSelector((state) => state.project.projects);
 
   // Contexts
-  const { projects, setProjects } = useContext(ProjectContext);
   const { toggleMobileSidebar } = useContext(PageLayoutContext);
 
   // Close dropdown when clicking outside
@@ -35,7 +36,9 @@ export default function Navbar() {
     dispatch(logoutThunk());
     setIsDropdownOpen(false);
     toast.success("Logged out successfully");
-    setProjects([]);
+    dispatch(projectActions.clearProjects());
+    dispatch(projectActions.clearSelectedProject());
+    dispatch(projectActions.clearSelectedProjectID());
     dispatch(memberActions.clearMembers());
     dispatch(memberActions.clearMemberCategory());
     sessionStorage.clear();

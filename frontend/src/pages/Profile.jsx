@@ -1,6 +1,4 @@
-import { useContext } from "react";
 import { Link } from "react-router-dom";
-import ProjectContext from "../store/project.context.jsx";
 import {
   User,
   Mail,
@@ -20,21 +18,23 @@ import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutThunk } from "../store/auth.actions.js";
 import { memberActions } from "../store/member.slice.js";
+import { projectActions } from "../store/project.slice.js";
 
 export default function Profile() {
   const user = useSelector((state) => state.auth.user);
+  const projects = useSelector((state) => state.project.projects);
 
   const dispatch = useDispatch();
-  const { projects, setProjects } = useContext(ProjectContext);
 
   function handleLogout() {
     dispatch(logoutThunk());
     toast.success("Logged out successfully");
-    setProjects([]);
+    dispatch(projectActions.clearProjects());
+    dispatch(projectActions.clearSelectedProject());
+    dispatch(projectActions.clearSelectedProjectID());
     dispatch(memberActions.clearMemberCategory());
     dispatch(memberActions.clearMembers());
     sessionStorage.clear();
-    window.location.reload();
   }
 
   // Calculate account age

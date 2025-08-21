@@ -1,121 +1,27 @@
 import API_ENDPOINTS from "../config/api";
+import responseNotOkay from "../util/responseNotOkay";
 
-const API_URL = API_ENDPOINTS.PROJECT;
+const { PROJECT } = API_ENDPOINTS;
 
-function responseNotOkay(response) {
-  if (
-    !response.ok &&
-    response.status !== 401 &&
-    response.status !== 404 &&
-    response.status !== 400
-  ) {
-    return true;
-  }
-  return false;
-}
-
-export async function getAllProjects() {
+export async function getAllProjectsRequest() {
   try {
-    const response = await fetch(`${API_URL}/`, { credentials: "include" });
+    const response = await fetch(`${PROJECT}/`, { credentials: "include" });
+
+    const data = await response.json();
 
     if (responseNotOkay(response)) {
-      return { success: false, message: "Failed to fetch projects" };
+      return { success: false, message: data.message || "Failed to fetch projects" };
     }
 
-    return await response.json();
+    return data;
   } catch (err) {
-    console.log("Failed to fetch projects", err);
     return { success: false, message: err.message || "Failed to fetch projects" };
   }
 }
-export async function addNewProject(projectData) {
+export async function addNewProjectRequest(projectData) {
   try {
-    const response = await fetch(`${API_URL}/new`, {
+    const response = await fetch(`${PROJECT}/new`, {
       method: "POST",
-      body: JSON.stringify(projectData),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    if (responseNotOkay(response)) {
-      return { success: false, message: "Failed to create project" };
-    }
-
-    return await response.json();
-  } catch (err) {
-    console.log("Failed to create project", err);
-    return { success: false, message: err.message || "Failed to create project" };
-  }
-}
-export async function deleteProject(selectedProjectID) {
-  try {
-    const response = await fetch(`${API_URL}/${selectedProjectID}`, {
-      method: "DELETE",
-      credentials: "include",
-    });
-
-    if (responseNotOkay(response)) {
-      return { success: false, message: "Failed to Delete project" };
-    }
-
-    return await response.json();
-  } catch (err) {
-    console.log("Failed to Delete project", err);
-    return { success: false, message: err.message || "Failed to Delete project" };
-  }
-}
-export async function getProjectById(projectID) {
-  try {
-    const response = await fetch(`${API_URL}/${projectID}`, {
-      credentials: "include",
-    });
-
-    if (response.status === 401) {
-      return window.location.replace("/auth/login");
-    } else if (responseNotOkay(response)) {
-      return { success: false, message: "Failed to fetch project data" };
-    }
-
-    return await response.json();
-  } catch (err) {
-    console.error("Error fetching project data:", err);
-    return {
-      success: false,
-      message: err.message || "An error occurred while fetching project data",
-    };
-  }
-}
-export async function updateProject(projectID, newProjectData) {
-  try {
-    const response = await fetch(`${API_URL}/${projectID}`, {
-      method: "PUT",
-      body: JSON.stringify(newProjectData),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    if (responseNotOkay(response)) {
-      return { success: false, message: "Failed to update project" };
-    }
-    if (response.status === 401) {
-      window.location.replace("/auth/login");
-    }
-
-    return await response.json();
-  } catch (err) {
-    console.log("Failed to update project", err);
-    return { success: false, message: err.message || "Failed to update project" };
-  }
-}
-
-export async function updateProjectByID(projectID, projectData) {
-  try {
-    const response = await fetch(`${API_URL}/${projectID}`, {
-      method: "PUT",
       body: JSON.stringify(projectData),
       headers: {
         "Content-Type": "application/json",
@@ -126,11 +32,71 @@ export async function updateProjectByID(projectID, projectData) {
     const data = await response.json();
 
     if (responseNotOkay(response)) {
-      return { success: false, message: data.message || "Error while updating project" };
+      return { success: false, message: data.message || "Failed to create project" };
     }
 
     return data;
   } catch (err) {
-    return { success: false, message: err.message || "Error while updating project" };
+    return { success: false, message: err.message || "Failed to create project" };
+  }
+}
+export async function deleteProjectRequest(selectedProjectID) {
+  try {
+    const response = await fetch(`${PROJECT}/${selectedProjectID}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (responseNotOkay(response)) {
+      return { success: false, message: data.message || "Failed to Delete project" };
+    }
+
+    return data;
+  } catch (err) {
+    return { success: false, message: err.message || "Failed to Delete project" };
+  }
+}
+export async function getProjectByIdRequest(projectID) {
+  try {
+    const response = await fetch(`${PROJECT}/${projectID}`, {
+      credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (responseNotOkay(response)) {
+      return { success: false, message: data.message || "Failed to fetch project data" };
+    }
+
+    return data;
+  } catch (err) {
+    return {
+      success: false,
+      message: err.message || "An error occurred while fetching project data",
+    };
+  }
+}
+export async function updateProjectRequest(projectID, newProjectData) {
+  try {
+    const response = await fetch(`${PROJECT}/${projectID}`, {
+      method: "PUT",
+      body: JSON.stringify(newProjectData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (responseNotOkay(response)) {
+      return { success: false, message: data.message || "Failed to update project" };
+    }
+
+    return data;
+  } catch (err) {
+    return { success: false, message: err.message || "Failed to update project" };
   }
 }

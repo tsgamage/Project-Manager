@@ -1,13 +1,13 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ProjectCard from "../components/AllProjects/ProjectCard.jsx";
 import ProjectListCard from "../components/AllProjects/ProjectListCard.jsx";
 import Header from "../components/AllProjects/Header.jsx";
 import Sortings from "../components/AllProjects/Sortings.jsx";
-import ProjectContext from "../store/project.context.jsx";
 import { sortListAccordingToDealine } from "../util/Sorting.js";
 import { FolderPlus, FolderSearch, Grid3X3, List } from "lucide-react";
 import LinkButton from "../components/UI/Elements/LinkButton.jsx";
 import { Tooltip } from "react-tooltip";
+import { useSelector } from "react-redux";
 
 let FILTER = "All";
 let SORTOPTION = "newest";
@@ -15,7 +15,7 @@ let SEARCHQUERY = "";
 let VIEWMODE = "grid";
 
 export default function AllProjectsPage() {
-  const { projects } = useContext(ProjectContext);
+  const projects = useSelector((state) => state.project.projects);
 
   const [sortOption, setSortOption] = useState(SORTOPTION);
   const [sortedProjects, setSortedProjects] = useState(projects);
@@ -119,7 +119,7 @@ export default function AllProjectsPage() {
           onSearchClick={() => setShowSearchFilters((prevalue) => !prevalue)}
           showSeach={showSeachFilters}
           isFiltering={filter !== "All" || searchQuery !== "" || sortOption !== "newest"}
-          onFiltersResetClick={()=>{
+          onFiltersResetClick={() => {
             resetFilters("search");
             resetFilters("sort");
             resetFilters("filter");

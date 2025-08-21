@@ -1,28 +1,22 @@
-import { useContext, useRef } from "react";
+import { useRef } from "react";
 import AddMember from "./AddMember";
 import Memeber from "./Member";
-import ProjectContext from "../../../store/project.context";
 import { Users } from "lucide-react";
 import AddMemberToProject from "../../UI/Modals/AddMemberToProject";
 import { useSelector } from "react-redux";
 
 export default function TeamMembers({ team }) {
-  const { selectedProject } = useContext(ProjectContext);
   const modal = useRef();
 
+  // Store
+  const selectedProject = useSelector((state) => state.project.selectedProject);
   const fetchedMembers = useSelector((state) => state.team.members);
 
   // Calculate team statistics
 
   return (
     <>
-      <AddMemberToProject
-        ref={modal}
-        onAddMembers={() => {
-          console.log("Hellow");
-        }}
-        projectId={selectedProject._id}
-      />
+      <AddMemberToProject ref={modal} projectId={selectedProject._id} />
 
       <div className="glass rounded-2xl shadow-lg border border-gray-700 p-2 sm:p-6">
         {/* Header */}

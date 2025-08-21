@@ -1,6 +1,5 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import ProjectContext from "../store/project.context.jsx";
 import {
   TrendingUp,
   Calendar,
@@ -18,8 +17,8 @@ import { useSelector } from "react-redux";
 
 export default function HomePage() {
   const user = useSelector((state) => state.auth.user);
-  
-  const { projects } = useContext(ProjectContext);
+  const projects = useSelector((state) => state.project.projects);
+
   const [stats, setStats] = useState({
     totalProjects: 0,
     completedProjects: 0,

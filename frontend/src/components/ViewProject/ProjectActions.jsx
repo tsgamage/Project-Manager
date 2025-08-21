@@ -1,14 +1,16 @@
-import { useContext, useRef } from "react";
-import ProjectContext from "../../store/project.context";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import DeleteWarningModal from "../UI/Modals/DeleteWarningModal";
 import { Edit, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { deleteProjectThunk } from "../../store/project.action";
+import { projectActions } from "../../store/project.slice";
 
 export default function ProjectActions({ onEdit }) {
   const deleteModal = useRef();
   const navigate = useNavigate();
-  const { deleteProject } = useContext(ProjectContext);
+  const dispatch = useDispatch();
 
   function handleDeleteProject() {
     deleteModal.current.open();
@@ -27,9 +29,16 @@ export default function ProjectActions({ onEdit }) {
         onCancel={() => deleteModal.current.close()}
         onConfirm={async () => {
           deleteModal.current.close();
-          await deleteProject();
-          navigate("/project/all");
-          toast.success("Project deleted successfully");
+          const response = await dispatch(deleteProjectThunk());
+
+          if (response.success) {
+            navigate("/project/all");
+            toast.success("Project deleted successfully");
+            dispatch(projectActions.clearSelectedProjectID());
+            dispatch(projectActions.clearSelectedProject());
+          } else {
+            toast.error(response.message || "Failed to delete project");
+          }
         }}
       />
 

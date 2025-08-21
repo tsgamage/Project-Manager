@@ -1,5 +1,4 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import ProjectContext from "../store/project.context.jsx";
+import { useCallback, useEffect, useRef, useState } from "react";
 import TeamHeader from "../components/Team/TeamHeader.jsx";
 import TeamStats from "../components/Team/TeamStats.jsx";
 import TopActionButtons from "../components/Team/TopActionButtons.jsx";
@@ -11,7 +10,7 @@ import MemberCategoryModal from "../components/UI/Modals/MemberCategoryModal.jsx
 import { useSelector } from "react-redux";
 
 export default function TeamsPage() {
-  const { projects } = useContext(ProjectContext);
+  const projects = useSelector((state) => state.project.projects);
 
   const fetchedMembers = useSelector((state) => state.team.members);
   const fetchedMemberCategories = useSelector((state) => state.team.memberCategories);

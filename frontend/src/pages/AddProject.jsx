@@ -3,15 +3,15 @@ import StartDate from "../components/AddProject/StartDate.jsx";
 import EndDate from "../components/AddProject/EndDate.jsx";
 import Description from "../components/AddProject/Description.jsx";
 import Header from "../components/AddProject/Header.jsx";
-import { useActionState, useContext, useState } from "react";
-import ProjectContext from "../store/project.context";
+import { useActionState, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SuccessErrorModal from "../components/UI/Modals/SuccessErrorModal.jsx";
 import { useRef } from "react";
+import { useDispatch } from "react-redux";
+import { createNewProjectThunk } from "../store/project.action.js";
 
 export default function AddProjectPage() {
-  const { addNewProject } = useContext(ProjectContext);
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [teamMembers, setTeamMembers] = useState([]);
@@ -36,7 +36,7 @@ export default function AddProjectPage() {
       tasks: tasks.map(({ id, ...rest }) => rest),
     };
 
-    const response = await addNewProject(newProjectData);
+    const response = await dispatch(createNewProjectThunk(newProjectData));
     if (response.success) {
       createdProjectID.current = response.data._id;
       setErrors({});

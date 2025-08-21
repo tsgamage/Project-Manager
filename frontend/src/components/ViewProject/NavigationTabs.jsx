@@ -1,9 +1,8 @@
 import { Info, Target, Users } from "lucide-react";
-import { useContext } from "react";
-import ProjectContext from "../../store/project.context";
+import { useSelector } from "react-redux";
 
 export default function NavigationTabs({ onNavigationClick, activeTab }) {
-  const { selectedProject } = useContext(ProjectContext);
+  const selectedProject = useSelector((state) => state.project.selectedProject);
 
   const totalTasks = selectedProject.tasks.length;
   const teamSize = selectedProject.team.length;

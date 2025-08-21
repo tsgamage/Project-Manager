@@ -1,15 +1,8 @@
-import {
-  useState,
-  useEffect,
-  forwardRef,
-  useImperativeHandle,
-  useCallback,
-  useContext,
-} from "react";
+import { useState, useEffect, forwardRef, useImperativeHandle, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { X, Search, Users, Plus, Mail, CheckCircle, Clock } from "lucide-react";
-import ProjectContext from "../../../store/project.context";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addMemberToProjectThunk } from "../../../store/project.action";
 
 const MemberCard = ({ member, onSelect, isSelected, isDisabled }) => {
   return (
@@ -110,10 +103,10 @@ const SelectedMemberTag = ({ member, onRemove, isDisabled }) => {
   );
 };
 
-export default forwardRef(function AddMemberToProject(props, ref) {
-  const { addMember, selectedProject } = useContext(ProjectContext);
-
+export default forwardRef(function AddMemberToProject({ projectID }, ref) {
   const fetchedMembers = useSelector((state) => state.team.members);
+  const selectedProject = useSelector((state) => state.project.selectedProject);
+  const dispatch = useDispatch();
 
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -169,7 +162,7 @@ export default forwardRef(function AddMemberToProject(props, ref) {
 
     selectedMembersIDs = selectedMembersIDs.filter((id) => !selectedProject.team.includes(id));
 
-    const resData = await addMember(selectedMembersIDs);
+    const resData = await dispatch(addMemberToProjectThunk(projectID, selectedMembersIDs));
 
     if (resData.success) {
       setIsLoading(false);

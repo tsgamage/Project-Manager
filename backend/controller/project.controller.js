@@ -19,12 +19,12 @@ export const getProjectById = async (req, res, next) => {
   }
 
   try {
-    const projects = await Project.findById(projectID);
+    const project = await Project.findById(projectID);
 
-    if (!projects) {
+    if (!project) {
       return res.status(404).json({ success: false, message: "Project not found" });
     } else {
-      return res.status(200).json({ success: true, data: { projects: projects } });
+      return res.status(200).json({ success: true, data: project });
     }
   } catch (err) {
     next(err);

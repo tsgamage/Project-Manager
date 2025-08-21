@@ -1,12 +1,11 @@
-import { useContext } from "react";
-import ProjectContext from "../../store/project.context";
 import useProgress from "../../hooks/useProgress";
 import useStatusClasses from "../../hooks/useStatusClasses";
 import { Info } from "lucide-react";
 import ProjectActions from "./ProjectActions";
+import { useSelector } from "react-redux";
 
-export default function ProjectInfo({onEdit}) {
-  const { selectedProject } = useContext(ProjectContext);
+export default function ProjectInfo({ onEdit }) {
+  const selectedProject = useSelector((state) => state.project.selectedProject);
 
   const progress = useProgress(selectedProject);
   const { status, statusClasses } = useStatusClasses(progress);

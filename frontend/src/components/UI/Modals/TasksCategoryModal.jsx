@@ -11,12 +11,16 @@ import { X, Check, Loader, Grid2x2Plus } from "lucide-react";
 import ModalInput from "./components/ModalInput";
 import { toast } from "react-hot-toast";
 import colors from "../../../util/colors";
+import { useDispatch } from "react-redux";
+import { createTaskCategoryThunk, updateTaskCategoryThunk } from "../../../store/project.action";
 
-export default forwardRef(function TasksCategoryModal({ onClick, projectID, categoryData }, ref) {
+export default forwardRef(function TasksCategoryModal({ projectID, categoryData }, ref) {
   const [isOpen, setIsOpen] = useState(false);
   const [formState, formAction, pending] = useActionState(AddTaskCategoryAction);
   const [error, setError] = useState("");
   const [resetForm, setResetForm] = useState(false);
+
+  const dispatch = useDispatch();
 
   const MEMBER_COLORS = colors.memberColors;
 
@@ -85,9 +89,9 @@ export default forwardRef(function TasksCategoryModal({ onClick, projectID, cate
 
     let response;
     if (categoryData) {
-      response = await onClick(categoryData._id, updatedObj);
+      response = await dispatch(updateTaskCategoryThunk(categoryData._id, updatedObj));
     } else {
-      response = await onClick(updatedObj);
+      response = await dispatch(createTaskCategoryThunk(updatedObj));
     }
 
     if (response?.success) {

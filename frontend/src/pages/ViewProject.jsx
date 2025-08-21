@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useContext, useEffect, useState, useRef } from "react";
-import ProjectContext from "../store/project.context.jsx";
+import { useEffect, useState, useRef } from "react";
 import ProjectTasks from "../components/ViewProject/Task/ProjectTasks.jsx";
 import TeamMembers from "../components/ViewProject/Member/TeamMembers.jsx";
 import EditProjectModal from "../components/UI/Modals/EditProjectModal.jsx";
@@ -8,26 +7,32 @@ import LoadingSpinner from "../components/UI/Elements/LoadingSpinner.jsx";
 import ProjectHeader from "../components/ViewProject/ProjectHeader.jsx";
 import NavigationTabs from "../components/ViewProject/NavigationTabs.jsx";
 import ProjectInfo from "../components/ViewProject/ProjectInfo.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { projectActions } from "../store/project.slice.js";
+import { updateProjectThunk } from "../store/project.action.js";
 
 export default function ViewProjectPage() {
   const [activeTab, setActiveTab] = useState("tasks");
-  const { setSelectedProjectID, selectedProject, updateProject } = useContext(ProjectContext);
+  const selectedProject = useSelector((state) => state.project.selectedProject);
 
   const params = useParams();
   const editModalRef = useRef();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setSelectedProjectID(params.projectID);
-  }, [params.projectID, setSelectedProjectID]);
+    dispatch(projectActions.setSelecteProjectID(params.projectID));
+  }, [dispatch, params.projectID]);
 
   // Calculate statistics
 
   const handleEditProject = async (updatedData) => {
     try {
-      await updateProject({
-        ...selectedProject,
-        ...updatedData,
-      });
+      await dispatch(
+        updateProjectThunk({
+          ...selectedProject,
+          ...updatedData,
+        })
+      );
     } catch (error) {
       console.error("Error updating project:", error);
     }

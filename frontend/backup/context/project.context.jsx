@@ -1,21 +1,21 @@
 import { useEffect } from "react";
 import { createContext, useState } from "react";
-import AuthContext from "../../backup/context/auth.context.jsx";
+import AuthContext from "./auth.context.jsx";
 import { useContext } from "react";
-import { API_ENDPOINTS } from "../config/api.js";
+import { API_ENDPOINTS } from "../../src/config/api.js";
 import {
   addNewProject,
   deleteProject,
   getAllProjects,
   getProjectById,
   updateProject,
-} from "../services/project.api.js";
+} from "../../src/services/project.api.js";
 import {
   createTaskCategory,
   deleteTaskCategory,
   getTasksCategories,
   updateTaskCategory,
-} from "../services/tasksCategory.api.js";
+} from "../../src/services/tasksCategory.api.js";
 
 const API_URL = API_ENDPOINTS.PROJECT;
 
