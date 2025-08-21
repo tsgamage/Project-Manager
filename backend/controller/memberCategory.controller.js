@@ -41,7 +41,11 @@ export async function updateMemberCategory(req, res, next) {
     return res.status(400).json({ success: false, message: "Invalid category ID" });
   }
   try {
-    const category = await MemberCategory.findByIdAndUpdate(categoryID, { name, color });
+    const category = await MemberCategory.findByIdAndUpdate(
+      categoryID,
+      { name, color },
+      { new: true }
+    );
     if (!category) return res.status(404).json({ success: false, message: "Category not found" });
     res
       .status(200)

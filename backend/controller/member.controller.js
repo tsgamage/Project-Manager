@@ -52,7 +52,7 @@ export async function newMember(req, res, next) {
       role,
       email,
       color,
-      categoryID,
+      categoryID
     });
     await newMember.save();
     res

@@ -103,7 +103,7 @@ export const addMemberToProjectThunk = (memberIDs) => {
 
     const updatedProject = {
       ...selectedProject,
-      team: [...selectedProject.team, memberIDs],
+      team: [...selectedProject.team, ...memberIDs],
     };
     const projectList = projects.filter((p) => p._id !== selectedProject._id);
 
@@ -126,7 +126,7 @@ export const removeMemberFromProjectThunk = (memberID) => {
 
     const updatedProject = {
       ...selectedProject,
-      team: [...selectedProject.team.filter((m) => m._id !== memberID)],
+      team: [...selectedProject.team.filter((mID) => mID !== memberID)],
     };
 
     const projectList = projects.filter((p) => p._id !== selectedProject._id);

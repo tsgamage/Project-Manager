@@ -14,8 +14,6 @@ export default function TeamsPage() {
 
   const fetchedMembers = useSelector((state) => state.team.members);
 
-  console.log(fetchedMembers);
-
   const fetchedMemberCategories = useSelector((state) => state.team.memberCategories);
 
   const memberModal = useRef();
@@ -56,13 +54,13 @@ export default function TeamsPage() {
     (member) => {
       if (member.categoryID) {
         const category = fetchedMemberCategories.filter((cat) => cat._id === member.categoryID);
-        return category[0]._id;
+        return category[0]?._id;
       }
     },
     [fetchedMemberCategories]
   );
 
-  const groupMembersByCategory = useCallback(() => {
+  useEffect(() => {
     const grouped = {};
 
     // Group members by category
@@ -89,14 +87,8 @@ export default function TeamsPage() {
         sortedGrouped[category] = grouped[category];
       });
 
-    return sortedGrouped;
-  }, [getMemberCategory, fetchedMembers, fetchedMemberCategories]);
-
-  useEffect(() => {
-    if (fetchedMemberCategories.length > 0) {
-      setGroupedMembers(groupMembersByCategory());
-    }
-  }, [fetchedMemberCategories, fetchedMembers, groupMembersByCategory]);
+    setGroupedMembers(sortedGrouped);
+  }, [fetchedMemberCategories, fetchedMembers, getMemberCategory]);
 
   return (
     <>
