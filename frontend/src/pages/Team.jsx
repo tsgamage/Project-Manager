@@ -13,6 +13,9 @@ export default function TeamsPage() {
   const projects = useSelector((state) => state.project.projects);
 
   const fetchedMembers = useSelector((state) => state.team.members);
+
+  console.log(fetchedMembers);
+
   const fetchedMemberCategories = useSelector((state) => state.team.memberCategories);
 
   const memberModal = useRef();

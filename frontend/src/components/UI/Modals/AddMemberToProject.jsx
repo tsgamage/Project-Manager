@@ -103,7 +103,7 @@ const SelectedMemberTag = ({ member, onRemove, isDisabled }) => {
   );
 };
 
-export default forwardRef(function AddMemberToProject({ projectID }, ref) {
+export default forwardRef(function AddMemberToProject(props, ref) {
   const fetchedMembers = useSelector((state) => state.team.members);
   const selectedProject = useSelector((state) => state.project.selectedProject);
   const dispatch = useDispatch();
@@ -162,7 +162,7 @@ export default forwardRef(function AddMemberToProject({ projectID }, ref) {
 
     selectedMembersIDs = selectedMembersIDs.filter((id) => !selectedProject.team.includes(id));
 
-    const resData = await dispatch(addMemberToProjectThunk(projectID, selectedMembersIDs));
+    const resData = await dispatch(addMemberToProjectThunk(selectedMembersIDs));
 
     if (resData.success) {
       setIsLoading(false);

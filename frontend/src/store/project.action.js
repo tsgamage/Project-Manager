@@ -97,13 +97,13 @@ export const deleteProjectThunk = () => {
   };
 };
 
-export const addMemberToProjectThunk = (memberID) => {
+export const addMemberToProjectThunk = (memberIDs) => {
   return async (dispatch, getState) => {
     const { selectedProject, projects } = getState().project;
 
     const updatedProject = {
       ...selectedProject,
-      team: [...selectedProject.team, memberID],
+      team: [...selectedProject.team, memberIDs],
     };
     const projectList = projects.filter((p) => p._id !== selectedProject._id);
 
