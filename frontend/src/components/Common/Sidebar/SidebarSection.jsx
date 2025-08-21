@@ -1,10 +1,11 @@
-import { useContext } from "react";
-import PageLayoutContext from "../../../store/pageLayout.context";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
+import { uiActions } from "../../../store/ui.slice";
 
 export default function SidebarSection({ items, className = "" }) {
-  const { isDesktopSideBarCollapsed, toggleSidebar } = useContext(PageLayoutContext);
+  const dispatch = useDispatch();
+  const isDesktopSideBarCollapsed = useSelector((state) => state.ui.desktopDideBarCollapsed);
   const location = useLocation();
 
   return (
@@ -26,7 +27,7 @@ export default function SidebarSection({ items, className = "" }) {
               key={item.path}
             >
               <item.icon
-                onDoubleClick={toggleSidebar}
+                onDoubleClick={() => dispatch(uiActions.toggleDesktopSideBar())}
                 className={`transition-transform duration-200 group-hover:scale-110 ${isDesktopSideBarCollapsed ? "h-5 w-5" : "h-5 w-5 mr-3"}`}
               />
               {!isDesktopSideBarCollapsed && (

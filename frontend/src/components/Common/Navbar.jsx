@@ -1,12 +1,12 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChevronUp, LogOut, Menu, Settings, SquareArrowOutUpRight, User, Bell } from "lucide-react";
 import { toast } from "react-hot-toast";
-import PageLayoutContext from "../../store/pageLayout.context";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutThunk } from "../../store/auth.actions";
 import { memberActions } from "../../store/member.slice";
 import { projectActions } from "../../store/project.slice";
+import { uiActions } from "../../store/ui.slice";
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -16,9 +16,6 @@ export default function Navbar() {
   const user = useSelector((state) => state.auth.user);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const projects = useSelector((state) => state.project.projects);
-
-  // Contexts
-  const { toggleMobileSidebar } = useContext(PageLayoutContext);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -51,7 +48,7 @@ export default function Navbar() {
         <nav className="flex items-center justify-between">
           <button
             className="md:hidden p-1.5 rounded-lg hover:bg-gray-800/50 transition-all duration-300 mr-2 focus-ring"
-            onClick={toggleMobileSidebar}
+            onClick={() => dispatch(uiActions.toggleMobileSideBar())}
             aria-label="Open sidebar"
           >
             <Menu className="h-5 w-5 text-white" />

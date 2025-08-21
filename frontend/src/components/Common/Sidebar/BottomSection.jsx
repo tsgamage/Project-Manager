@@ -1,8 +1,7 @@
-import { useContext } from "react";
-import PageLayoutContext from "../../../store/pageLayout.context";
 import SidebarSection from "./SidebarSection";
 import { Plus, Settings, UserRound } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function BottomSection() {
   const bottomItems = [
@@ -18,7 +17,8 @@ export default function BottomSection() {
     },
   ];
 
-  const { isDesktopSideBarCollapsed } = useContext(PageLayoutContext);
+  const isDesktopSideBarCollapsed = useSelector((state) => state.ui.desktopDideBarCollapsed);
+
   return (
     <div className="border-t border-gray-700 glass flex-shrink-0">
       <div className="p-4 space-y-4">

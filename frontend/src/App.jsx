@@ -9,26 +9,26 @@ import SignupPage from "./pages/auth/Signup";
 import ForgotPasswordPage from "./pages/auth/ForgotPassword";
 import VerifyCodePage from "./pages/auth/VerifyCode";
 import ResetPasswordPage from "./pages/auth/ResetPassword";
-import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/Auth/ProtectedRoute.jsx";
 import RedirectUserIfAuthenticated from "./components/Auth/RedirectUserIfAuthenticated.jsx";
-import { PageLayoutContextProvider } from "./store/pageLayout.context.jsx";
 import AllProjects from "./pages/AllProjects.jsx";
 import LanndingPage from "./pages/Landing.jsx";
 import HomePage from "./pages/Home.jsx";
 import TeamsPage from "./pages/Team.jsx";
 import TasksPage from "./pages/Tasks.jsx";
 import SettingsPage from "./pages/Settings.jsx";
+import RedirectToLoginPage from "./components/Auth/RedirectToLoginPage.jsx";
+import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuthStatusThunk } from "./store/auth.actions.js";
-import RedirectToLoginPage from "./components/Auth/RedirectToLoginPage.jsx";
 import { fetchMemberCategoriesThunk, fetchMembersThunk } from "./store/member.action.js";
 import {
   fetchProjectByIdThunk,
   fetchProjectsThunk,
   fetchTaskCategoryThunk,
 } from "./store/project.action.js";
+import { uiActions } from "./store/ui.slice.js";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -36,16 +36,15 @@ export default function App() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const selectedProjectID = useSelector((state) => state.project.selectedProjectID);
 
+  // Checking auth status when reloading the page
   useEffect(() => {
     const checkAuth = async () => {
-      const response = await dispatch(checkAuthStatusThunk());
-      if (!response.success) {
-        console.log(response.message);
-      }
+      await dispatch(checkAuthStatusThunk());
     };
     checkAuth();
   }, [dispatch]);
 
+  // Fetching all data if user authenticated
   useEffect(() => {
     const fetch = async () => {
       await dispatch(fetchMembersThunk());
@@ -53,20 +52,31 @@ export default function App() {
       await dispatch(fetchProjectsThunk());
       await dispatch(fetchTaskCategoryThunk());
     };
-
     if (isAuthenticated) {
       fetch();
     }
   }, [dispatch, isAuthenticated]);
 
+  // Fetching project Data when user clicks on a project
   useEffect(() => {
     const fetch = async () => {
       dispatch(fetchProjectByIdThunk());
     };
-    if (selectedProjectID !== 0) {
+    if (isAuthenticated && selectedProjectID !== 0) {
       fetch();
     }
-  }, [dispatch, selectedProjectID]);
+  }, [dispatch, selectedProjectID, isAuthenticated]);
+
+  // Handeling the side bar when user resizing the page
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        dispatch(uiActions.setMobileSideBarOpen(false));
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [dispatch]);
 
   const router = createBrowserRouter([
     {
@@ -152,9 +162,9 @@ export default function App() {
   ]);
 
   return (
-    <PageLayoutContextProvider>
+    <>
       <Toaster />
       <RouterProvider router={router}></RouterProvider>
-    </PageLayoutContextProvider>
+    </>
   );
 }

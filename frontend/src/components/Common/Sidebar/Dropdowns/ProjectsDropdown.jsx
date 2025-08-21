@@ -1,19 +1,20 @@
-import { useContext, useState } from "react";
-import PageLayoutContext from "../../../../store/pageLayout.context";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, FolderOpen } from "lucide-react";
 import { Tooltip } from "react-tooltip";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { uiActions } from "../../../../store/ui.slice";
 
 export default function ProjectsDropdown() {
   const location = useLocation();
 
   // States
   const [isProjectsDropdownOpen, setIsProjectsDropdownOpen] = useState(false);
-  const { isDesktopSideBarCollapsed, toggleSidebar } = useContext(PageLayoutContext);
 
   // Store
+  const dispatch = useDispatch();
   const projects = useSelector((state) => state.project.projects);
+  const isDesktopSideBarCollapsed = useSelector((state) => state.ui.desktopDideBarCollapsed);
 
   const isActive =
     location.pathname === "/project/all" || location.pathname.startsWith("/project/view/");
@@ -49,7 +50,7 @@ export default function ProjectsDropdown() {
           } ${isDesktopSideBarCollapsed ? "justify-center w-10 h-10 rounded-xl mx-auto" : "px-3 py-3 rounded-xl justify-start"}`}
         >
           <FolderOpen
-            onDoubleClick={toggleSidebar}
+            onDoubleClick={() => dispatch(uiActions.toggleDesktopSideBar())}
             className={`transition-transform duration-200 group-hover:scale-110 ${isDesktopSideBarCollapsed ? "h-5 w-5" : "h-5 w-5 mr-3"}`}
           />
           {!isDesktopSideBarCollapsed && (

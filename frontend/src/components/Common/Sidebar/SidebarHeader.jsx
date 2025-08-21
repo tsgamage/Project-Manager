@@ -1,10 +1,12 @@
-import { useContext } from "react";
-import PageLayoutContext from "../../../store/pageLayout.context";
 import { PanelRightClose, PanelRightOpen } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { uiActions } from "../../../store/ui.slice";
 
 export default function SidebarHeader() {
-  const { isMobileSidebarOpen, toggleMobileSidebar, toggleSidebar, isDesktopSideBarCollapsed } =
-    useContext(PageLayoutContext);
+  const dispatch = useDispatch();
+  const isMobileSidebarOpen = useSelector((state) => state.ui.mobileSideBarOpen);
+  const isDesktopSideBarCollapsed = useSelector((state) => state.ui.desktopDideBarCollapsed);
+
   return (
     <div className="flex items-center justify-between p-4 border-b border-gray-700 flex-shrink-0">
       {isMobileSidebarOpen ? (
@@ -16,7 +18,7 @@ export default function SidebarHeader() {
             <h2 className="text-lg font-semibold text-white">Project Manager</h2>
           </div>
           <button
-            onClick={toggleMobileSidebar}
+            onClick={() => dispatch(uiActions.toggleMobileSideBar())}
             className="p-2 rounded-lg hover:bg-gray-700 transition-colors focus-ring"
           >
             <PanelRightOpen className="h-5 w-5 text-gray-300" />
@@ -24,7 +26,7 @@ export default function SidebarHeader() {
         </>
       ) : (
         <button
-          onClick={toggleSidebar}
+          onClick={() => dispatch(uiActions.toggleDesktopSideBar())}
           className={`mx-auto hover:bg-gray-700 transition-colors flex items-center justify-center focus-ring ${
             isDesktopSideBarCollapsed ? "w-10 h-10 rounded-xl" : "p-2 rounded-lg w-full"
           }`}

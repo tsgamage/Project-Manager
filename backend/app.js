@@ -31,6 +31,14 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
 
+// Fake delay middleware that affects all requests
+if (process.env.NODE_ENV !== "production") {
+  app.use(async (req, res, next) => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    next();
+  });
+}
+
 // Routes
 app.use("/api/project", projectRoutes);
 app.use("/api/auth", authRoutes);
