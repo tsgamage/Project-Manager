@@ -51,10 +51,10 @@ export const signupThunk = ({ email, name, password }) => {
 
 export const logoutThunk = () => {
   return async (dispatch) => {
+    dispatch(authActions.setAuthendicated(false));
     const resData = await logoutRequest();
 
     if (resData.success) {
-      dispatch(authActions.setAuthendicated(false));
       dispatch(authActions.setUser({}));
     }
 

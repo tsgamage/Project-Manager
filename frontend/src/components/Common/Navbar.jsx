@@ -39,7 +39,6 @@ export default function Navbar() {
     dispatch(memberActions.clearMembers());
     dispatch(memberActions.clearMemberCategory());
     sessionStorage.clear();
-    window.location.reload();
   }
 
   return (
