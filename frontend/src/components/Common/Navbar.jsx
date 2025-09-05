@@ -54,7 +54,7 @@ export default function Navbar() {
           </button>
 
           {/* Logo */}
-          <Link to="/" className="hidden md:flex items-center space-x-2 group">
+          <Link to={isAuthenticated ? "/home" : "/"} className="hidden md:flex items-center space-x-2 group">
             <div className="w-7 h-7 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/25">
               <span className="text-white font-bold text-xs">PM</span>
             </div>
@@ -80,9 +80,7 @@ export default function Navbar() {
                 >
                   <div className="relative">
                     <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 flex items-center justify-center rounded-full transition-all duration-300 shadow-lg shadow-blue-500/25 w-7 h-7 hover-lift">
-                      <span className="text-white font-semibold text-xs">
-                        {user ? user.name[0] : "P"}
-                      </span>
+                      <span className="text-white font-semibold text-xs">{user ? user.name[0] : "P"}</span>
                     </div>
                     <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-900 shadow-sm"></div>
                   </div>
@@ -114,9 +112,7 @@ export default function Navbar() {
                             <p className="text-sm font-semibold text-white truncate">
                               {user ? user.name : "User Name"}
                             </p>
-                            <p className="text-sm text-gray-400 truncate">
-                              {user ? user.email : "user@example.com"}
-                            </p>
+                            <p className="text-sm text-gray-400 truncate">{user ? user.email : "user@example.com"}</p>
                             <div className="flex items-center mt-1">
                               <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
                               <span className="text-xs text-green-400 font-medium">Online</span>
