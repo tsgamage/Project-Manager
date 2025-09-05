@@ -18,6 +18,7 @@ import { useSelector } from "react-redux";
 export default function HomePage() {
   const user = useSelector((state) => state.auth.user);
   const projects = useSelector((state) => state.project.projects);
+  const isLoading = useSelector((state) => state.project.isLoading);
 
   const [stats, setStats] = useState({
     totalProjects: 0,
@@ -209,7 +210,10 @@ export default function HomePage() {
               </div>
               <TrendingUp className="h-5 w-5 text-green-400" />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-1">{stats.totalProjects}</h3>
+            {!isLoading && (
+              <h3 className="text-2xl font-bold text-white mb-1">{stats.totalProjects}</h3>
+            )}
+            {isLoading && <span class="loading loading-dots loading-sm"></span>}
             <p className="text-gray-400 text-sm">Total Projects</p>
           </div>
 
@@ -228,7 +232,10 @@ export default function HomePage() {
                 </span>
               </div>
             </div>
-            <h3 className="text-2xl font-bold text-white mb-1">{stats.completedProjects}</h3>
+            {!isLoading && (
+              <h3 className="text-2xl font-bold text-white mb-1">{stats.completedProjects}</h3>
+            )}
+            {isLoading && <span class="loading loading-dots loading-sm"></span>}
             <p className="text-gray-400 text-sm">Completed</p>
           </div>
 
@@ -241,7 +248,10 @@ export default function HomePage() {
                 <span className="text-xs text-yellow-400 font-medium">Active</span>
               </div>
             </div>
-            <h3 className="text-2xl font-bold text-white mb-1">{stats.inProgressProjects}</h3>
+            {!isLoading && (
+              <h3 className="text-2xl font-bold text-white mb-1">{stats.inProgressProjects}</h3>
+            )}
+            {isLoading && <span class="loading loading-dots loading-sm"></span>}
             <p className="text-gray-400 text-sm">In Progress</p>
           </div>
 
@@ -254,7 +264,10 @@ export default function HomePage() {
                 <span className="text-xs text-purple-400 font-medium">Team</span>
               </div>
             </div>
-            <h3 className="text-2xl font-bold text-white mb-1">{stats.totalTeamMembers}</h3>
+            {!isLoading && (
+              <h3 className="text-2xl font-bold text-white mb-1">{stats.totalTeamMembers}</h3>
+            )}
+            {isLoading && <span class="loading loading-dots loading-sm"></span>}
             <p className="text-gray-400 text-sm">Team Members</p>
           </div>
         </div>
@@ -266,18 +279,23 @@ export default function HomePage() {
               <Target className="h-5 w-5 text-blue-400" />
               <h3 className="font-semibold text-white">Task Completion</h3>
             </div>
-            <div className="flex items-end gap-2">
-              <span className="text-3xl font-bold text-white">{stats.completedTasks}</span>
-              <span className="text-blue-400 mb-1">/ {stats.totalTasks}</span>
-            </div>
-            <div className="w-full bg-gray-700 rounded-full h-2 mt-3">
-              <div
-                className="gradient-blue h-2 rounded-full transition-all duration-500"
-                style={{
-                  width: `${stats.totalTasks > 0 ? (stats.completedTasks / stats.totalTasks) * 100 : 0}%`,
-                }}
-              ></div>
-            </div>
+            {isLoading && <span class="loading loading-dots loading-sm"></span>}
+            {!isLoading && (
+              <div>
+                <div className="flex items-end gap-2">
+                  <span className="text-3xl font-bold text-white">{stats.completedTasks}</span>
+                  <span className="text-blue-400 mb-1">/ {stats.totalTasks}</span>
+                </div>
+                <div className="w-full bg-gray-700 rounded-full h-2 mt-3">
+                  <div
+                    className="gradient-blue h-2 rounded-full transition-all duration-500"
+                    style={{
+                      width: `${stats.totalTasks > 0 ? (stats.completedTasks / stats.totalTasks) * 100 : 0}%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="glass rounded-2xl p-6 border border-gray-700">
@@ -285,17 +303,22 @@ export default function HomePage() {
               <Zap className="h-5 w-5 text-green-400" />
               <h3 className="font-semibold text-white">Productivity</h3>
             </div>
-            <div className="flex items-end gap-2">
-              <span className="text-3xl font-bold text-white">{stats.productivityScore}%</span>
-            </div>
-            <div className="flex items-center gap-1 mt-2">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={`h-4 w-4 ${i < Math.floor(stats.productivityScore / 20) ? "text-yellow-400 fill-current" : "text-gray-600"}`}
-                />
-              ))}
-            </div>
+            {!isLoading && (
+              <div>
+                <div className="flex items-end gap-2">
+                  <span className="text-3xl font-bold text-white">{stats.productivityScore}%</span>
+                </div>
+                <div className="flex items-center gap-1 mt-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-4 w-4 ${i < Math.floor(stats.productivityScore / 20) ? "text-yellow-400 fill-current" : "text-gray-600"}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+            {isLoading && <span class="loading loading-dots loading-sm"></span>}
           </div>
 
           <div className="glass rounded-2xl p-6 border border-gray-700">
@@ -303,11 +326,18 @@ export default function HomePage() {
               <Calendar className="h-5 w-5 text-purple-400" />
               <h3 className="font-semibold text-white">Avg. Completion</h3>
             </div>
-            <div className="flex items-end gap-2">
-              <span className="text-3xl font-bold text-white">{stats.averageCompletionTime}</span>
-              <span className="text-purple-400 mb-1">days</span>
-            </div>
-            <p className="text-sm text-purple-400 mt-1">Per project</p>
+            {!isLoading && (
+              <div>
+                <div className="flex items-end gap-2">
+                  <span className="text-3xl font-bold text-white">
+                    {stats.averageCompletionTime}
+                  </span>
+                  <span className="text-purple-400 mb-1">days</span>
+                </div>
+                <p className="text-sm text-purple-400 mt-1">Per project</p>
+              </div>
+            )}
+            {isLoading && <span class="loading loading-dots loading-sm"></span>}
           </div>
         </div>
 
@@ -328,68 +358,75 @@ export default function HomePage() {
                   </Link>
                 </div>
               </div>
-              <div className="p-3">
-                {recentProjects.length === 0 ? (
-                  <div className="text-center py-8">
-                    <div className="w-16 h-16 gradient-card rounded-full flex items-center justify-center mx-auto mb-4">
-                      <FolderOpen className="h-8 w-8 text-gray-300" />
-                    </div>
-                    <p className="text-gray-400 mb-4">No projects yet</p>
-                    <Link
-                      to="/project/new"
-                      className="inline-flex items-center gap-2 gradient-blue hover:shadow-lg text-white px-4 py-2 rounded-xl transition-all duration-300 hover-lift"
-                    >
-                      <Plus className="h-4 w-4" />
-                      Create First Project
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {recentProjects.map((project) => (
-                      <Link key={project._id} to={`/project/view/${project._id}`}>
-                        <div className="group hover:bg-gray-700/50 sm:rounded-xl max-sm:py-5 p-3 sm:p-6 max-sm:border-y-1 max-sm:border-stone-500/20 transition-all duration-200 ">
-                          <div className="flex items-center justify-between mb-3">
-                            <h3 className="font-semibold text-white group-hover:text-blue-300 transition-colors truncate">
-                              {project.title}
-                            </h3>
-                            <span
-                              className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(getProjectStatus(project))}`}
-                            >
-                              {getProjectStatus(project)}
-                            </span>
-                          </div>
-                          <p className="text-sm text-gray-400 mb-3 line-clamp-2 truncate">
-                            {project.description}
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4 text-xs text-gray-500">
-                              <span className="flex items-center gap-1">
-                                <Users className="h-3 w-3" />
-                                {project.team.length} members
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <Target className="h-3 w-3" />
-                                {project.tasks.length} tasks
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <div className="w-16 bg-gray-700 rounded-full h-2">
-                                <div
-                                  className="gradient-blue h-2 rounded-full transition-all duration-300"
-                                  style={{ width: `${getProgressPercentage(project)}%` }}
-                                ></div>
-                              </div>
-                              <span className="text-xs font-medium text-gray-400">
-                                {getProgressPercentage(project)}%
-                              </span>
-                            </div>
-                          </div>
-                        </div>
+              {isLoading && (
+                <div className="p-10 space-y-4 flex items-center justify-center">
+                  <span class="loading loading-bars loading-md"></span>
+                </div>
+              )}
+              {!isLoading && (
+                <div className="p-3">
+                  {recentProjects.length === 0 ? (
+                    <div className="text-center py-8">
+                      <div className="w-16 h-16 gradient-card rounded-full flex items-center justify-center mx-auto mb-4">
+                        <FolderOpen className="h-8 w-8 text-gray-300" />
+                      </div>
+                      <p className="text-gray-400 mb-4">No projects yet</p>
+                      <Link
+                        to="/project/new"
+                        className="inline-flex items-center gap-2 gradient-blue hover:shadow-lg text-white px-4 py-2 rounded-xl transition-all duration-300 hover-lift"
+                      >
+                        <Plus className="h-4 w-4" />
+                        Create First Project
                       </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {recentProjects.map((project) => (
+                        <Link key={project._id} to={`/project/view/${project._id}`}>
+                          <div className="group hover:bg-gray-700/50 sm:rounded-xl max-sm:py-5 p-3 sm:p-6 max-sm:border-y-1 max-sm:border-stone-500/20 transition-all duration-200 ">
+                            <div className="flex items-center justify-between mb-3">
+                              <h3 className="font-semibold text-white group-hover:text-blue-300 transition-colors truncate">
+                                {project.title}
+                              </h3>
+                              <span
+                                className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(getProjectStatus(project))}`}
+                              >
+                                {getProjectStatus(project)}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-400 mb-3 line-clamp-2 truncate">
+                              {project.description}
+                            </p>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-4 text-xs text-gray-500">
+                                <span className="flex items-center gap-1">
+                                  <Users className="h-3 w-3" />
+                                  {project.team.length} members
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <Target className="h-3 w-3" />
+                                  {project.tasks.length} tasks
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <div className="w-16 bg-gray-700 rounded-full h-2">
+                                  <div
+                                    className="gradient-blue h-2 rounded-full transition-all duration-300"
+                                    style={{ width: `${getProgressPercentage(project)}%` }}
+                                  ></div>
+                                </div>
+                                <span className="text-xs font-medium text-gray-400">
+                                  {getProgressPercentage(project)}%
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -430,7 +467,12 @@ export default function HomePage() {
             {/* Upcoming Deadlines */}
             <div className="glass rounded-2xl shadow-lg border border-gray-700 max-sm:p-4 sm:p-6">
               <h3 className="text-lg font-semibold text-white mb-4">Upcoming Deadlines</h3>
-              {upcomingDeadlines.length === 0 ? (
+              {isLoading && (
+                <div className="p-10 space-y-4 flex items-center justify-center">
+                  <span class="loading loading-bars loading-md"></span>
+                </div>
+              )}
+              {!isLoading && upcomingDeadlines.length === 0 ? (
                 <p className="text-sm text-gray-400">No upcoming deadlines</p>
               ) : (
                 <div className="space-y-3">
@@ -473,19 +515,31 @@ export default function HomePage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-400">Completed</span>
-                  <span className="font-semibold text-green-400">{stats.completedProjects}</span>
+                  {isLoading && <span class="loading loading-dots loading-xs"></span>}
+                  {!isLoading && (
+                    <span className="font-semibold text-green-400">{stats.completedProjects}</span>
+                  )}
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-400">In Progress</span>
-                  <span className="font-semibold text-blue-400">{stats.inProgressProjects}</span>
+                  {isLoading && <span class="loading loading-dots loading-xs"></span>}
+                  {!isLoading && (
+                    <span className="font-semibold text-blue-400">{stats.inProgressProjects}</span>
+                  )}
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-400">Not Started</span>
-                  <span className="font-semibold text-gray-400">{stats.notStartedProjects}</span>
+                  {isLoading && <span class="loading loading-dots loading-xs"></span>}
+                  {!isLoading && (
+                    <span className="font-semibold text-gray-400">{stats.notStartedProjects}</span>
+                  )}
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-400">Overdue</span>
-                  <span className="font-semibold text-red-400">{stats.overdueProjects}</span>
+                  {isLoading && <span class="loading loading-dots loading-xs"></span>}
+                  {!isLoading && (
+                    <span className="font-semibold text-red-400">{stats.overdueProjects}</span>
+                  )}
                 </div>
               </div>
             </div>

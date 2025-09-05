@@ -30,6 +30,7 @@
     "react-redux": "^9.2.0"
   },
   "devDependencies": {
+    "daisyui": "^5.0.50",
     "prettier": "^3.6.2"
   }
 }

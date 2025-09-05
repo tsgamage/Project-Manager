@@ -2,7 +2,13 @@ import { CircleArrowRight, FolderOpen, Plus, Rotate3D, RotateCw, Search, X } fro
 import PulsingLineUnderTitles from "../UI/Elements/PulsingLineUnderTitles";
 import LinkButton from "../UI/Elements/LinkButton";
 
-export default function Header({ onSearchClick, showSeach, onFiltersResetClick, isFiltering }) {
+export default function Header({
+  onSearchClick,
+  showSeach,
+  onFiltersResetClick,
+  isFiltering,
+  projectsCount,
+}) {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 sm:gap-6 fade-in">
       <div>
@@ -26,13 +32,15 @@ export default function Header({ onSearchClick, showSeach, onFiltersResetClick, 
           New Project
         </LinkButton>
         <div className="flex w-full gap-1 sm:hidden">
-          <button
-            onClick={onSearchClick}
-            className="bg-gray-700/50 py-4 px-6 group w-full sm:w-auto flex justify-center items-center rounded-xl shadow-lg text-sm font-semibold text-white hover:shadow-xl transition-all duration-300 hover-lift"
-          >
-            {showSeach ? <X className="w-5 h-5 mr-2" /> : <Search className="w-5 h-5 mr-2 " />}
-            {showSeach ? "Close Search" : "Search Projects"}
-          </button>
+          {projectsCount > 0 && (
+            <button
+              onClick={onSearchClick}
+              className="bg-gray-700/50 py-4 px-6 group w-full sm:w-auto flex justify-center items-center rounded-xl shadow-lg text-sm font-semibold text-white hover:shadow-xl transition-all duration-300 hover-lift"
+            >
+              {showSeach ? <X className="w-5 h-5 mr-2" /> : <Search className="w-5 h-5 mr-2 " />}
+              {showSeach ? "Close Search" : "Search Projects"}
+            </button>
+          )}
           {isFiltering && (
             <button
               onClick={onFiltersResetClick}

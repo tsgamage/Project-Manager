@@ -3,10 +3,13 @@ import CategoryAccordion from "../components/Tasks/CategoryAccordion";
 import { CheckCircle, Clock, Search, X, List, Target } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { projectActions } from "../store/project.slice";
+import LoadingSpinner from "../components/UI/Elements/LoadingSpinner";
 
 export default function TasksPage() {
   const projects = useSelector((state) => state.project.projects);
+  const isProjectsLoading = useSelector((state) => state.project.isLoading);
   const tasksCategories = useSelector((state) => state.project.tasksCategories);
+  const isCategoriesLoading = useSelector((state) => state.project.isLoading);
   const dispatch = useDispatch();
 
   const [tasks, setTasks] = useState([]);
@@ -120,7 +123,10 @@ export default function TasksPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-400">Total Tasks</p>
-                <p className="text-2xl font-bold text-white">{stats.total}</p>
+                {isProjectsLoading && <span class="loading loading-dots loading-xs"></span>}
+                {!isProjectsLoading && (
+                  <p className="text-2xl font-bold text-white">{stats.total}</p>
+                )}
               </div>
               <Target className="h-8 w-8 text-blue-400" />
             </div>
@@ -129,7 +135,10 @@ export default function TasksPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-400">Completed</p>
-                <p className="text-2xl font-bold text-green-400">{stats.completed}</p>
+                {isProjectsLoading && <span class="loading loading-dots loading-xs"></span>}
+                {!isProjectsLoading && (
+                  <p className="text-2xl font-bold text-green-400">{stats.completed}</p>
+                )}
               </div>
               <CheckCircle className="h-8 w-8 text-green-400" />
             </div>
@@ -138,7 +147,10 @@ export default function TasksPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-400">Pending</p>
-                <p className="text-2xl font-bold text-yellow-400">{stats.pending}</p>
+                {isProjectsLoading && <span class="loading loading-dots loading-xs"></span>}
+                {!isProjectsLoading && (
+                  <p className="text-2xl font-bold text-yellow-400">{stats.pending}</p>
+                )}
               </div>
               <Clock className="h-8 w-8 text-yellow-400" />
             </div>
@@ -147,7 +159,10 @@ export default function TasksPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-400">Categories</p>
-                <p className="text-2xl font-bold text-purple-400">{stats.categories}</p>
+                {isProjectsLoading && <span class="loading loading-dots loading-xs"></span>}
+                {!isProjectsLoading && (
+                  <p className="text-2xl font-bold text-purple-400">{stats.categories}</p>
+                )}
               </div>
               <List className="h-8 w-8 text-purple-400" />
             </div>
@@ -226,34 +241,40 @@ export default function TasksPage() {
         </div>
 
         {/* Tasks by Category */}
-        <div className="space-y-4">
-          {filteredCategories.length > 0 &&
-            filteredCategories.map((category) => (
-              <CategoryAccordion
-                key={category._id + expandAll}
-                category={category}
-                tasks={filteredTasks.filter(
-                  (t) =>
-                    t.taskCategory === category._id &&
-                    (t.taskName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                      t.taskDescription.toLowerCase().includes(searchQuery.toLowerCase()))
-                )}
-                projectTitle={projects.find((p) => p._id === category.projectID)?.title}
-                onClick={() => dispatch(projectActions.setSelecteProjectID(category.projectID))}
-                closedAccodion={expandAll}
-                hideAddTask={
-                  showFilter === "completed" || showFilter === "not_completed" || searchQuery !== ""
-                }
-                tasksCount={
-                  showFilter !== "all" &&
-                  filteredTasks.filter((t) => t.taskCategory === category._id).length
-                }
-                hideCompletedIcon
-              />
-            ))}
-        </div>
+        {!isProjectsLoading && !isCategoriesLoading && (
+          <div className="space-y-4">
+            {filteredCategories.length > 0 &&
+              filteredCategories.map((category) => (
+                <CategoryAccordion
+                  key={category._id + expandAll}
+                  category={category}
+                  tasks={filteredTasks.filter(
+                    (t) =>
+                      t.taskCategory === category._id &&
+                      (t.taskName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        t.taskDescription.toLowerCase().includes(searchQuery.toLowerCase()))
+                  )}
+                  projectTitle={projects.find((p) => p._id === category.projectID)?.title}
+                  onClick={() => dispatch(projectActions.setSelecteProjectID(category.projectID))}
+                  closedAccodion={expandAll}
+                  hideAddTask={
+                    showFilter === "completed" ||
+                    showFilter === "not_completed" ||
+                    searchQuery !== ""
+                  }
+                  tasksCount={
+                    showFilter !== "all" &&
+                    filteredTasks.filter((t) => t.taskCategory === category._id).length
+                  }
+                  hideCompletedIcon
+                />
+              ))}
+          </div>
+        )}
 
-        {filteredCategories.length === 0 && (
+        {isCategoriesLoading && isCategoriesLoading && <LoadingSpinner />}
+
+        {!isCategoriesLoading && !isCategoriesLoading && filteredCategories.length === 0 && (
           <div className="text-center py-12">
             <div className="w-16 h-16 gradient-card rounded-full flex items-center justify-center mx-auto mb-4">
               <Target className="h-8 w-8 text-gray-300" />

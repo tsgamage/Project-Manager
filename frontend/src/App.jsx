@@ -47,10 +47,12 @@ export default function App() {
   // Fetching all data if user authenticated
   useEffect(() => {
     const fetch = async () => {
-      await dispatch(fetchMembersThunk());
-      await dispatch(fetchMemberCategoriesThunk());
-      await dispatch(fetchProjectsThunk());
-      await dispatch(fetchTaskCategoryThunk());
+      await Promise.all([
+        dispatch(fetchMembersThunk()),
+        dispatch(fetchMemberCategoriesThunk()),
+        dispatch(fetchProjectsThunk()),
+        dispatch(fetchTaskCategoryThunk()),
+      ]);
     };
     if (isAuthenticated) {
       fetch();

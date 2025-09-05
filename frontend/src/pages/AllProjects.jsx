@@ -8,6 +8,8 @@ import { FolderPlus, FolderSearch, Grid3X3, List } from "lucide-react";
 import LinkButton from "../components/UI/Elements/LinkButton.jsx";
 import { Tooltip } from "react-tooltip";
 import { useSelector } from "react-redux";
+import ProjectCardSkeleton from "../components/Loading/ProjectCardSkeleton.jsx";
+import ProjectListSkeleton from "../components/Loading/ProjectListSkeleton.jsx";
 
 let FILTER = "All";
 let SORTOPTION = "newest";
@@ -16,6 +18,7 @@ let VIEWMODE = "grid";
 
 export default function AllProjectsPage() {
   const projects = useSelector((state) => state.project.projects);
+  const isLoading = useSelector((state) => state.project.isLoading);
 
   const [sortOption, setSortOption] = useState(SORTOPTION);
   const [sortedProjects, setSortedProjects] = useState(projects);
@@ -56,9 +59,7 @@ export default function AllProjectsPage() {
     } else if (filter === "Not Started") {
       FILTER = "Not Started";
       setFilteredPRojects(() => {
-        return sortedProjects.filter((project) =>
-          project.tasks.every((task) => task.completed === false)
-        );
+        return sortedProjects.filter((project) => project.tasks.every((task) => task.completed === false));
       });
     } else if (filter === "In Progress") {
       FILTER = "In Progress";
@@ -78,9 +79,7 @@ export default function AllProjectsPage() {
     try {
       const regex = new RegExp(`^${wildcard.replace(/\*/g, ".*")}$`, "i");
       const titleSeachResearch = filteredProjects.filter((project) => regex.test(project.title));
-      const descriptionSeachResearch = filteredProjects.filter((project) =>
-        regex.test(project.description)
-      );
+      const descriptionSeachResearch = filteredProjects.filter((project) => regex.test(project.description));
       const allResult = [...new Set([...titleSeachResearch, ...descriptionSeachResearch])];
       setSearchedProjects(allResult);
     } catch {
@@ -125,10 +124,11 @@ export default function AllProjectsPage() {
             resetFilters("filter");
             setShowSearchFilters(false);
           }}
+          projectsCount={projects.length}
         />
 
         <div className="max-w-7xl mx-auto">
-          {projects.length > 1 && (
+          {projects.length > 0 && (
             <Sortings
               filter={filter}
               setFilter={setFilter}
@@ -143,9 +143,7 @@ export default function AllProjectsPage() {
 
           {/* All Projects Title and View Toggle */}
           <div className="flex items-center justify-between gap-3 mb-8 mt-8">
-            <h2 className="text-2xl md:text-3xl lg:text-2xl font-bold text-para-light">
-              Showing: {filter} Projects
-            </h2>
+            <h2 className="text-2xl md:text-3xl lg:text-2xl font-bold text-para-light">Showing: {filter} Projects</h2>
 
             {/* View Toggle Buttons */}
             <div className="flex items-center gap-2">
@@ -177,37 +175,56 @@ export default function AllProjectsPage() {
             </div>
           </div>
 
-          {/* Projects Display */}
-          {viewMode === "grid" && (
-            <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-              {searchedProjects.map((project) => (
-                <ProjectCard key={project._id} project={project} />
-              ))}
-            </div>
-          )}
+          {!isLoading && projects.length > 0 && (
+            <div>
+              {/* Projects Display */}
+              {viewMode === "grid" && (
+                <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+                  {searchedProjects.map((project) => (
+                    <ProjectCard key={project._id} project={project} />
+                  ))}
+                </div>
+              )}
 
-          {viewMode === "list" && (
-            <div className="space-y-3">
-              {searchedProjects.map((project) => (
-                <ProjectListCard key={project._id} project={project} />
-              ))}
+              {viewMode === "list" && (
+                <div className="space-y-3">
+                  {searchedProjects.map((project) => (
+                    <ProjectListCard key={project._id} project={project} />
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
           {/* No Projects */}
-          {projects.length === 0 && (
+          {!isLoading && projects.length === 0 && (
             <div className="text-center py-20">
               <div className="w-24 h-24 gradient-card rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <FolderPlus className="h-12 w-12 text-gray-300" />
               </div>
 
               <h3 className="text-2xl font-bold text-white mt-6">No projects found</h3>
-              <p className="text-gray-400 mt-3 max-w-md mx-auto">
-                Create a new project to get started.
-              </p>
+              <p className="text-gray-400 mt-3 max-w-md mx-auto">Create a new project to get started.</p>
               <LinkButton paddingClasses="px-8 py-4 inline-block mt-4" link="/project/new">
                 Create New Project
               </LinkButton>
+            </div>
+          )}
+
+          {isLoading && (
+            <div>
+              {viewMode === "grid" && (
+                <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+                  <ProjectCardSkeleton />
+                  <ProjectCardSkeleton />
+                </div>
+              )}
+              {viewMode === "list" && (
+                <div className="space-y-3">
+                  <ProjectListSkeleton />
+                  <ProjectListSkeleton />
+                </div>
+              )}
             </div>
           )}
 
