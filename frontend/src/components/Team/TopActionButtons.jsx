@@ -9,6 +9,7 @@ export default function TopActionButtons({
   groupedMembers,
   isExpanded,
   toggleExpandAll,
+  isLoading,
 }) {
   return (
     <div className="flex items-center gap-3">
@@ -66,17 +67,17 @@ export default function TopActionButtons({
       {/* Add Member Button */}
       <button
         onClick={onAddMember}
-        className="_add-member cursor-pointer gradient-blue hover:shadow-lg text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all duration-300 hover-lift"
+        disabled={isLoading}
+        className={`${!isLoading && "gradient-blue hover-lift "} _add-member cursor-pointer hover:shadow-lg text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all duration-300 disabled:opacity-55 disabled:bg-gray-600 disabled:cursor-not-allowed `}
       >
         <UserPlus className="h-4 w-4" />
-        <span className={`${viewMode === "list" ? "hidden" : "max-sm:inline"} lg:inline`}>
-          Add Member
-        </span>
+        <span className={`${viewMode === "list" ? "hidden" : "max-sm:inline"} lg:inline`}>Add Member</span>
       </button>
       <Tooltip anchorSelect="._add-member">Add Member</Tooltip>
       <button
         onClick={onAddCategory}
-        className="_add-category cursor-pointer border-1 border-stone-500 hover:border-1 hover:border-stone-300 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all duration-300"
+        disabled={isLoading}
+        className={`${!isLoading && "hover-lift "} _add-category cursor-pointer border-1 border-stone-500 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all duration-300  disabled:opacity-55 disabled:bg-gray-600 disabled:cursor-not-allowed`}
       >
         <Grid2x2Plus className="h-4 w-4 text-stone-300" />
         <span className="hidden lg:inline text-stone-300">Add a Category</span>

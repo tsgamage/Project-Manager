@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ChevronDown, FolderOpen } from "lucide-react";
+import { ChevronDown, FolderOpen, Loader2 } from "lucide-react";
 import { Tooltip } from "react-tooltip";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../../../store/ui.slice";
 
 export default function ProjectsDropdown() {
   const location = useLocation();
+  const isFetchingProjects = useSelector((state) => state.project.isLoading);
 
   // States
   const [isProjectsDropdownOpen, setIsProjectsDropdownOpen] = useState(false);
@@ -16,8 +17,7 @@ export default function ProjectsDropdown() {
   const projects = useSelector((state) => state.project.projects);
   const isDesktopSideBarCollapsed = useSelector((state) => state.ui.desktopDideBarCollapsed);
 
-  const isActive =
-    location.pathname === "/project/all" || location.pathname.startsWith("/project/view/");
+  const isActive = location.pathname === "/project/all" || location.pathname.startsWith("/project/view/");
 
   const ProjectsDropdownItem = ({ project }) => {
     const isActive = location.pathname === `/project/view/${project._id}`;
@@ -44,9 +44,7 @@ export default function ProjectsDropdown() {
         <Link
           to="/project/all"
           className={`group flex items-center transition-all duration-300 hover-lift ${
-            isActive
-              ? "gradient-blue text-white shadow-lg"
-              : "text-gray-300 hover:bg-gray-700 hover:text-white"
+            isActive ? "gradient-blue text-white shadow-lg" : "text-gray-300 hover:bg-gray-700 hover:text-white"
           } ${isDesktopSideBarCollapsed ? "justify-center w-10 h-10 rounded-xl mx-auto" : "px-3 py-3 rounded-xl justify-start"}`}
         >
           <FolderOpen
@@ -57,9 +55,10 @@ export default function ProjectsDropdown() {
             <>
               <span className="font-medium text-sm flex-1">Projects</span>
               <div className="flex items-center space-x-2">
-                <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full">
-                  {projects.length}
-                </span>
+                {!isFetchingProjects && (
+                  <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full">{projects.length}</span>
+                )}
+                {isFetchingProjects && <Loader2 size={15} className="animate-spin" />}
                 <button
                   onClick={(e) => {
                     e.preventDefault();

@@ -23,6 +23,7 @@ import { projectActions } from "../store/project.slice.js";
 export default function Profile() {
   const user = useSelector((state) => state.auth.user);
   const projects = useSelector((state) => state.project.projects);
+  const isFetchingProjects = useSelector((state) => state.project.isLoading);
 
   const dispatch = useDispatch();
 
@@ -40,8 +41,7 @@ export default function Profile() {
   // Calculate account age
   const createdAtIndays =
     user?.createdAt && Math.floor((new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
-  const createtAtInHours =
-    user?.createdAt && Math.floor((new Date() - new Date(user.createdAt)) / (1000 * 60 * 60));
+  const createtAtInHours = user?.createdAt && Math.floor((new Date() - new Date(user.createdAt)) / (1000 * 60 * 60));
   let accountAge;
 
   if (createdAtIndays > 0) {
@@ -109,9 +109,7 @@ export default function Profile() {
                   <UserRound className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">
-                    Profile
-                  </h1>
+                  <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">Profile</h1>
                   <p className="text-sm sm:text-base text-gray-400">Manage your account</p>
                 </div>
               </div>
@@ -169,9 +167,7 @@ export default function Profile() {
               <div className="text-center w-full">
                 <div className="mb-4">
                   <div className="flex flex-col items-center gap-3">
-                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
-                      {user.name}
-                    </h2>
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{user.name}</h2>
                   </div>
                 </div>
 
@@ -203,7 +199,8 @@ export default function Profile() {
               </div>
               <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
             </div>
-            <h3 className="text-lg sm:text-2xl font-bold text-white mb-1">{totalProjects}</h3>
+            {isFetchingProjects && <span class="loading loading-dots loading-sm"></span>}
+            {!isFetchingProjects && <h3 className="text-lg sm:text-2xl font-bold text-white mb-1">{totalProjects}</h3>}
             <p className="text-xs sm:text-sm text-gray-400">Total Projects</p>
           </div>
 
@@ -214,15 +211,14 @@ export default function Profile() {
               </div>
               <div className="text-right">
                 <span className="text-xs text-green-400 font-medium">
-                  +
-                  {completedProjects > 0
-                    ? Math.round((completedProjects / totalProjects) * 100)
-                    : 0}
-                  %
+                  +{completedProjects > 0 ? Math.round((completedProjects / totalProjects) * 100) : 0}%
                 </span>
               </div>
             </div>
-            <h3 className="text-lg sm:text-2xl font-bold text-white mb-1">{completedProjects}</h3>
+            {isFetchingProjects && <span class="loading loading-dots loading-sm"></span>}
+            {!isFetchingProjects && (
+              <h3 className="text-lg sm:text-2xl font-bold text-white mb-1">{completedProjects}</h3>
+            )}
             <p className="text-xs sm:text-sm text-gray-400">Completed</p>
           </div>
 
@@ -235,7 +231,10 @@ export default function Profile() {
                 <span className="text-xs text-yellow-400 font-medium">Active</span>
               </div>
             </div>
-            <h3 className="text-lg sm:text-2xl font-bold text-white mb-1">{inProgressProjects}</h3>
+            {isFetchingProjects && <span class="loading loading-dots loading-sm"></span>}
+            {!isFetchingProjects && (
+              <h3 className="text-lg sm:text-2xl font-bold text-white mb-1">{inProgressProjects}</h3>
+            )}
             <p className="text-xs sm:text-sm text-gray-400">In Progress</p>
           </div>
 
@@ -248,7 +247,8 @@ export default function Profile() {
                 <span className="text-xs text-purple-400 font-medium">Tasks</span>
               </div>
             </div>
-            <h3 className="text-lg sm:text-2xl font-bold text-white mb-1">{completedTasks}</h3>
+            {isFetchingProjects && <span class="loading loading-dots loading-sm"></span>}
+            {!isFetchingProjects && <h3 className="text-lg sm:text-2xl font-bold text-white mb-1">{completedTasks}</h3>}
             <p className="text-xs sm:text-sm text-gray-400">Completed Tasks</p>
           </div>
         </div>

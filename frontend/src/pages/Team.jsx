@@ -11,10 +11,9 @@ import { useSelector } from "react-redux";
 
 export default function TeamsPage() {
   const projects = useSelector((state) => state.project.projects);
-
   const fetchedMembers = useSelector((state) => state.team.members);
-
   const fetchedMemberCategories = useSelector((state) => state.team.memberCategories);
+  const isFetchingMembers = useSelector((state) => state.team.isLoading);
 
   const memberModal = useRef();
   const addMemberCategoryModal = useRef();
@@ -35,8 +34,7 @@ export default function TeamsPage() {
     const stats = {
       totalMembers: fetchedMembers.length,
       activeMembers: fetchedMembers.filter((member) => member.assignedProjects.length > 0).length,
-      assignableMembers: fetchedMembers.filter((member) => member.assignedProjects.length === 0)
-        .length,
+      assignableMembers: fetchedMembers.filter((member) => member.assignedProjects.length === 0).length,
       totalProjects: projects.length,
     };
     setTeamStats(stats);
@@ -92,17 +90,13 @@ export default function TeamsPage() {
 
   return (
     <>
-      <MemberModal
-        ref={memberModal}
-        onSelectionClick={() => addMemberCategoryModal.current.open()}
-      />
-
+      <MemberModal ref={memberModal} onSelectionClick={() => addMemberCategoryModal.current.open()} />
       <MemberCategoryModal ref={addMemberCategoryModal} />
 
       <div className="min-h-screen">
         <main className="max-w-7xl mx-auto p-2 sm:p-6">
           <TeamHeader />
-          <TeamStats teamStats={teamStats} />
+          <TeamStats teamStats={teamStats} isLoading={isFetchingMembers} />
 
           {/* Team Members Section */}
           <div className="gradient-card rounded-xl shadow-lg border border-gray-700 mb-8">
@@ -118,16 +112,22 @@ export default function TeamsPage() {
                   groupedMembers={groupedMembers}
                   isExpanded={expandAll}
                   toggleExpandAll={toggleExpandAll}
+                  isLoading={isFetchingMembers}
                 />
               </div>
             </div>
 
             <div className="p-2 py-6 sm:p-6">
-              {fetchedMembers.length === 0 && (
+              {isFetchingMembers && (
+                <div className="p-10 space-y-4 flex items-center justify-center">
+                  <span class="loading loading-bars loading-md"></span>
+                </div>
+              )}
+              {!isFetchingMembers && fetchedMembers.length === 0 && (
                 <NoMember onClick={() => memberModal.current.open()} />
               )}
 
-              {!(fetchedMembers.length === 0) && (
+              {!isFetchingMembers && fetchedMembers.length > 0 && (
                 <>
                   {/* Grid View */}
                   {viewMode === "grid" && (
@@ -136,11 +136,7 @@ export default function TeamsPage() {
                         <GridMemberCard
                           key={member._id}
                           member={member}
-                          category={
-                            fetchedMemberCategories.filter(
-                              (cat) => cat._id === member.categoryID
-                            )[0]?.name
-                          }
+                          category={fetchedMemberCategories.filter((cat) => cat._id === member.categoryID)[0]?.name}
                         />
                       ))}
                     </div>
